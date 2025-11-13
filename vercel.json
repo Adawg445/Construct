@@ -47,7 +47,15 @@
       "destination": "/public/Bureau of Land Management/:path*"
     },
     {
+      "source": "/Bureau%20of%20Land%20Management/:path*",
+      "destination": "/public/Bureau of Land Management/:path*"
+    },
+    {
       "source": "/Central Commercial Building Renovation/:path*",
+      "destination": "/public/Central Commercial Building Renovation/:path*"
+    },
+    {
+      "source": "/Central%20Commercial%20Building%20Renovation/:path*",
       "destination": "/public/Central Commercial Building Renovation/:path*"
     },
     {
@@ -55,7 +63,15 @@
       "destination": "/public/College Condos and Stadium Condos/:path*"
     },
     {
+      "source": "/College%20Condos%20and%20Stadium%20Condos/:path*",
+      "destination": "/public/College Condos and Stadium Condos/:path*"
+    },
+    {
       "source": "/Mohave Mental Health/:path*",
+      "destination": "/public/Mohave Mental Health/:path*"
+    },
+    {
+      "source": "/Mohave%20Mental%20Health/:path*",
       "destination": "/public/Mohave Mental Health/:path*"
     },
     {
