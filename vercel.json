@@ -5,19 +5,15 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/Cube.svg",
-      "destination": "/public/Cube.svg"
+      "source": "/public/(.*)",
+      "destination": "/public/$1"
     },
     {
-      "source": "/cube2.svg",
-      "destination": "/public/cube2.svg"
+      "source": "/(.*\\.(svg|webp|jpg|jpeg|png|gif|ico|ttf|woff|woff2))",
+      "destination": "/public/$1"
     },
     {
-      "source": "/(Mesa|Turkey|Cooledge|Home|commercial|contact|Residential)/(.*)",
-      "destination": "/public/$1/$2"
-    },
-    {
-      "source": "/(Bureau of Land Management|Central Commercial Building Renovation|College Condos and Stadium Condos|Mohave Mental Health|navigation bar)/(.*)",
+      "source": "/(Mesa|Turkey|Cooledge|Home|commercial|contact|Residential|Bureau of Land Management|Central Commercial Building Renovation|College Condos and Stadium Condos|Mohave Mental Health|navigation bar)/(.*)",
       "destination": "/public/$1/$2"
     },
     {
