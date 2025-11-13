@@ -5,16 +5,60 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/public/(.*)",
-      "destination": "/public/$1"
+      "source": "/Cube.svg",
+      "destination": "/public/Cube.svg"
     },
     {
-      "source": "/(.*\\.(svg|webp|jpg|jpeg|png|gif|ico|ttf|woff|woff2))",
-      "destination": "/public/$1"
+      "source": "/cube2.svg",
+      "destination": "/public/cube2.svg"
     },
     {
-      "source": "/(Mesa|Turkey|Cooledge|Home|commercial|contact|Residential|Bureau of Land Management|Central Commercial Building Renovation|College Condos and Stadium Condos|Mohave Mental Health|navigation bar)/(.*)",
-      "destination": "/public/$1/$2"
+      "source": "/Mesa/:path*",
+      "destination": "/public/Mesa/:path*"
+    },
+    {
+      "source": "/Turkey/:path*",
+      "destination": "/public/Turkey/:path*"
+    },
+    {
+      "source": "/Cooledge/:path*",
+      "destination": "/public/Cooledge/:path*"
+    },
+    {
+      "source": "/Home/:path*",
+      "destination": "/public/Home/:path*"
+    },
+    {
+      "source": "/commercial/:path*",
+      "destination": "/public/commercial/:path*"
+    },
+    {
+      "source": "/contact/:path*",
+      "destination": "/public/contact/:path*"
+    },
+    {
+      "source": "/Residential/:path*",
+      "destination": "/public/Residential/:path*"
+    },
+    {
+      "source": "/Bureau of Land Management/:path*",
+      "destination": "/public/Bureau of Land Management/:path*"
+    },
+    {
+      "source": "/Central Commercial Building Renovation/:path*",
+      "destination": "/public/Central Commercial Building Renovation/:path*"
+    },
+    {
+      "source": "/College Condos and Stadium Condos/:path*",
+      "destination": "/public/College Condos and Stadium Condos/:path*"
+    },
+    {
+      "source": "/Mohave Mental Health/:path*",
+      "destination": "/public/Mohave Mental Health/:path*"
+    },
+    {
+      "source": "/navigation bar/:path*",
+      "destination": "/public/navigation bar/:path*"
     },
     {
       "source": "/",
