@@ -1,9 +1,11 @@
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
-import Lenis from "lenis";
-
+// Wait for GSAP and Lenis to load from CDN
 document.addEventListener("DOMContentLoaded", () => {
+  // Check if GSAP is loaded
+  if (typeof gsap === 'undefined') {
+    console.error('GSAP is not loaded');
+    return;
+  }
+  
   // Mobile-specific script for home.html (3-column layout)
   const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   
@@ -37,8 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Scroll detected! Y position:', window.pageYOffset);
   });
   
-  gsap.registerPlugin(ScrollTrigger, SplitText);
+  gsap.registerPlugin(ScrollTrigger);
 
+  // Check if Lenis is loaded
+  if (typeof Lenis === 'undefined') {
+    console.error('Lenis is not loaded');
+    return;
+  }
+  
   const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -70,13 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const initialOffset = spotlightContainerHeight * 0.05;
   const totalMovement = spotlightContainerHeight + initialOffset + viewportHeight;
 
-  let headerSplit = null;
+  // SplitText is a premium plugin, so we'll use a simpler approach
+  let headerWords = null;
   if (maskHeader) {
-    headerSplit = SplitText.create(maskHeader, {
-      type: "words",
-      wordsClass: "spotlight-word",
-    });
-    gsap.set(headerSplit.words, { opacity: 0 });
+    // Simple word splitting without SplitText plugin
+    const text = maskHeader.textContent;
+    maskHeader.innerHTML = text.split(' ').map(word => `<span class="spotlight-word">${word}</span>`).join(' ');
+    headerWords = maskHeader.querySelectorAll('.spotlight-word');
+    gsap.set(headerWords, { opacity: 0 });
   }
 
   // Mobile ScrollTrigger - Mask container fixed to viewport
@@ -147,12 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Text animation - works with pinned mask
-      if (headerSplit && headerSplit.words.length > 0) {
+      if (headerWords && headerWords.length > 0) {
         if (progress >= 0.6 && progress <= 0.9) {
           const textProgress = (progress - 0.6) / 0.3;
-          const totalWords = headerSplit.words.length;
+          const totalWords = headerWords.length;
 
-          headerSplit.words.forEach((word, index) => {
+          headerWords.forEach((word, index) => {
             const wordRevealProgress = index / totalWords;
 
             if (textProgress >= wordRevealProgress) {
@@ -162,9 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
         } else if (progress < 0.6) {
-          gsap.set(headerSplit.words, { opacity: 0 });
+          gsap.set(headerWords, { opacity: 0 });
         } else if (progress > 0.9) {
-          gsap.set(headerSplit.words, { opacity: 1 });
+          gsap.set(headerWords, { opacity: 1 });
         }
       }
     },
