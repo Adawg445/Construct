@@ -9,6 +9,12 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="/Home/img0.jpg" as="image" />
     <link rel="preload" href="/Cube.svg" as="image" />
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+    <!-- Lenis CDN -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="loader.js" defer></script>
     <style>
       .img {
@@ -401,7 +407,7 @@
       </div>
     </footer>
 
-    <script type="module" src="/script.js"></script>
+    <script src="/script.js"></script>
     <!-- Mobile navigation JavaScript - DISABLED TO PREVENT CONFLICTS -->
     <!-- <script src="js/mobile-nav.js"></script> -->
     
@@ -411,20 +417,7 @@
       const commercialLink = document.getElementById('commercial-link');
       const contactLink = document.querySelector('a[href="contact.html"]');
       
-      if (window.innerWidth <= 768) {
-        commercialLink.href = 'commercial-mobile.html';
-        if (contactLink) {
-          contactLink.href = 'contact-mobile.html';
-        }
-      } else {
-        commercialLink.href = 'commercial.html';
-        if (contactLink) {
-          contactLink.href = 'contact.html';
-        }
-      }
-      
-      // Update on window resize
-      window.addEventListener('resize', function() {
+      if (commercialLink) {
         if (window.innerWidth <= 768) {
           commercialLink.href = 'commercial-mobile.html';
           if (contactLink) {
@@ -436,7 +429,22 @@
             contactLink.href = 'contact.html';
           }
         }
-      });
+        
+        // Update on window resize
+        window.addEventListener('resize', function() {
+          if (window.innerWidth <= 768) {
+            commercialLink.href = 'commercial-mobile.html';
+            if (contactLink) {
+              contactLink.href = 'contact-mobile.html';
+            }
+          } else {
+            commercialLink.href = 'commercial.html';
+            if (contactLink) {
+              contactLink.href = 'contact.html';
+            }
+          }
+        });
+      }
       
       // Handle first image view-more button click for two-step navigation
       document.addEventListener('DOMContentLoaded', function() {
