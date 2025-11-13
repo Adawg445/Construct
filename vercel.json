@@ -8,6 +8,24 @@
       "source": "/",
       "destination": "/index.html"
     }
+  ],
+  "routes": [
+    {
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/(Cube\\.svg|cube2\\.svg)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/(Mesa|Turkey|Cooledge|Home|commercial|contact|Residential)/(.*)",
+      "dest": "/public/$1/$2"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
 
