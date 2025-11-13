@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM Gallery - Technology Innovation Hub | Mecom</title>
+    <script src="loader.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        font-family: "DM Sans", sans-serif;
+        background-color: #000;
+        overflow: hidden;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        /* Performance optimizations */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        /* Hardware acceleration */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+      }
+
+      .navigation-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100px;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-arrow {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: white;
+      }
+
+      .nav-arrow:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+      }
+
+      .nav-arrow svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .nav-thumbnails {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .thumbnail {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .thumbnail:hover {
+        transform: scale(1.1);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .thumbnail.active {
+        border-color: #fff;
+        transform: scale(1.1);
+      }
+
+      .thumbnail       img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        max-width: 1920px;
+        max-height: 1080px;
+      }
+
+      .slider {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 100px);
+        height: calc(calc(var(--vh, 1vh) * 100) - 100px);
+        background-color: #000;
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        will-change: transform, opacity;
+        /* Hardware acceleration for smoother animations */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        /* Optimize for animations */
+        contain: layout style paint;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slide-img {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #000;
+      }
+
+      .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+        background-color: #000;
+      }
+
+      .slide-title {
+        position: absolute;
+        top: 4rem;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        color: white;
+        z-index: 100;
+        max-width: 80%;
+      }
+
+      .slide-tags {
+        position: absolute;
+        bottom: 4rem;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        color: white;
+        z-index: 100;
+        max-width: 80%;
+        margin-top: 0;
+      }
+
+      .slide-title h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-family: "DM Sans", sans-serif;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .slide-description p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .slide-tags {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .slide-tags p {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideInUp 0.6s ease forwards;
+      }
+
+      .slide-tags p:nth-child(1) {
+        animation-delay: 0.2s;
+        order: 1;
+      }
+
+      .slide-tags p:nth-child(2) {
+        animation-delay: 0.4s;
+        order: 2;
+      }
+
+      .slide-tags p:nth-child(3) {
+        animation-delay: 0.6s;
+        order: 3;
+      }
+
+      @keyframes slideInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .line,
+      .word {
+        position: relative;
+        display: inline-block;
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
+
+      .back-button {
+        position: fixed;
+        top: 100px;
+        left: 2rem;
+        z-index: 1001;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        border: 2px solid #fff;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        color: #fff;
+        text-decoration: none;
+        font-family: "DM Mono", monospace;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: -0.01rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-button:hover {
+        background: #fff;
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+      }
+
+      .back-button svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s ease;
+      }
+
+      .back-button:hover svg {
+        transform: translateX(-3px);
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 1000px) {
+        .navigation-bar {
+          height: 80px;
+          padding: 0 1rem;
+        }
+
+        .slider {
+          top: 80px;
+          height: calc(100vh - 80px);
+          height: calc(calc(var(--vh, 1vh) * 100) - 80px);
+        }
+
+        .slide {
+          height: 100%;
+        }
+
+        .nav-arrow {
+          width: 40px;
+          height: 40px;
+        }
+
+        .nav-arrow svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        .thumbnail {
+          width: 40px;
+          height: 40px;
+        }
+
+        .nav-thumbnails {
+          gap: 0.5rem;
+        }
+
+        .slide-title h1 {
+          font-size: 2rem;
+        }
+
+        .slide-description p {
+          font-size: 1rem;
+        }
+
+        .slide-title {
+          top: 3rem;
+          max-width: 90%;
+          /* Ensure slide content is visible above mobile UI */
+          z-index: 1001;
+        }
+
+        .slide-tags {
+          bottom: 3rem;
+          max-width: 90%;
+          /* Ensure slide content is visible above mobile UI */
+          z-index: 1001;
+        }
+
+        .back-button {
+          top: 80px;
+          left: 1rem;
+          padding: 0.6rem 1rem;
+          font-size: 0.8rem;
+          /* Ensure back button is always accessible */
+          z-index: 1003;
+        }
+
+        .back-button svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+      /* Fallback for browsers that don't support dvh */
+      @supports not (height: 100dvh) {
+        .slider {
+          height: 100vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navigation-bar">
+      <div class="nav-arrow nav-arrow-left">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </div>
+      <div class="nav-thumbnails" id="thumbnailContainer">
+        <!-- Thumbnails will be dynamically generated -->
+      </div>
+      <div class="nav-arrow nav-arrow-right">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <a href="#" id="backToCommercial" class="back-button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15,18 9,12 15,6"></polyline>
+      </svg>
+      <span>Back to Commercial</span>
+    </a>
+
+    <div class="slider">
+      <div class="slide">
+        <div class="slide-img">
+          <img src="/gallery/slide-img-3.jpg" alt="" loading="lazy" decoding="async" />
+        </div>
+
+        <div class="slide-title">
+          <h1>Technology Innovation Hub</h1>
+        </div>
+        
+        <div class="slide-tags">
+          <p>100,000 sq. ft.</p>
+          <p>5-Stories</p>
+          <p>2024</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const slides = [
+        {
+          slideTitle: "Technology Innovation Hub",
+          slideDescription: "A cutting-edge technology facility designed to foster innovation and collaboration with advanced networking infrastructure, flexible workspace design, and sustainable energy systems.",
+          slideImg: "/gallery/slide-img-3.jpg",
+        },
+        {
+          slideTitle: "Collaborative Workspaces",
+          slideDescription: "Open and flexible workspace designs with modular furniture, writable surfaces, and technology integration to support dynamic team collaboration and innovation.",
+          slideImg: "/gallery/img7.jpg",
+        },
+        {
+          slideTitle: "Advanced Data Center",
+          slideDescription: "State-of-the-art data center facilities with redundant power systems, climate control, and security measures to support critical technology infrastructure.",
+          slideImg: "/gallery/spotlight-banner.jpg",
+        },
+        {
+          slideTitle: "Innovation Labs",
+          slideDescription: "Specialized innovation laboratories equipped with prototyping tools, testing equipment, and collaborative spaces for research and development activities.",
+          slideImg: "/gallery/img0.jpg",
+        },
+        {
+          slideTitle: "Conference & Meeting Rooms",
+          slideDescription: "High-tech conference rooms with advanced audio-visual systems, video conferencing capabilities, and flexible layouts for presentations and meetings.",
+          slideImg: "/gallery/img1.jpg",
+        },
+        {
+          slideTitle: "Networking Infrastructure",
+          slideDescription: "Fiber-optic networking infrastructure with high-speed connectivity, wireless access points, and scalable systems to support growing technology demands.",
+          slideImg: "/gallery/img2.jpg",
+        },
+        {
+          slideTitle: "Sustainable Energy Systems",
+          slideDescription: "Renewable energy systems including solar panels, energy storage, and smart grid integration for sustainable and efficient power management.",
+          slideImg: "/gallery/img3.jpg",
+        },
+        {
+          slideTitle: "Security & Access Control",
+          slideDescription: "Advanced security systems with biometric access control, surveillance cameras, and secure areas to protect sensitive technology and intellectual property.",
+          slideImg: "/gallery/img4.jpg",
+        },
+        {
+          slideTitle: "Breakout & Relaxation Areas",
+          slideDescription: "Comfortable breakout areas, game rooms, and relaxation spaces designed to promote creativity, reduce stress, and enhance employee well-being.",
+          slideImg: "/gallery/img5.jpg",
+        },
+        {
+          slideTitle: "Cafeteria & Dining",
+          slideDescription: "Modern cafeteria and dining facilities with healthy food options, flexible seating, and technology-enabled ordering systems for employee convenience.",
+          slideImg: "/gallery/img6.jpg",
+        }
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Set back button link based on device type
+        const backButton = document.getElementById('backToCommercial');
+        const isMobile = window.innerWidth <= 1000 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (backButton) {
+          backButton.href = isMobile ? 'commercial-mobile.html' : 'commercial.html';
+        }
+        
+        // Better mobile viewport handling for address bar
+        if (window.innerHeight < 800) { // Mobile device
+          // Use a more reliable method to handle mobile viewport
+          const setViewportHeight = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+          };
+          
+          setViewportHeight();
+          window.addEventListener('resize', setViewportHeight);
+          window.addEventListener('orientationchange', () => {
+            setTimeout(setViewportHeight, 100);
+          });
+        }
+
+        const totalSlides = slides.length;
+        let currentSlide = 1;
+        let currentPage = 0;
+        const slidesPerPage = 5;
+
+        let isAnimating = false;
+        let scrollAllowed = true;
+        let lastScrollTime = 0;
+
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        const leftArrow = document.querySelector('.nav-arrow-left');
+        const rightArrow = document.querySelector('.nav-arrow-right');
+
+        function generateThumbnails() {
+          thumbnailContainer.innerHTML = '';
+          const startIndex = currentPage * slidesPerPage;
+          const endIndex = Math.min(startIndex + slidesPerPage, totalSlides);
+
+          for (let i = startIndex; i < endIndex; i++) {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            thumbnail.setAttribute('data-slide', i + 1);
+
+            const img = document.createElement('img');
+            img.src = slides[i].slideImg;
+            img.alt = slides[i].slideTitle;
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            thumbnail.appendChild(img);
+
+            thumbnailContainer.appendChild(thumbnail);
+          }
+        }
+
+        function updateNavigation() {
+          const thumbnails = document.querySelectorAll('.thumbnail');
+          thumbnails.forEach((thumb) => {
+            const slideIndex = parseInt(thumb.getAttribute('data-slide'));
+            thumb.classList.toggle('active', slideIndex === currentSlide);
+          });
+        }
+
+        function updateCurrentPage() {
+          currentPage = Math.floor((currentSlide - 1) / slidesPerPage);
+        }
+
+        function createSlide(slideNumber) {
+          const slide = document.createElement("div");
+          slide.className = "slide";
+
+          const slideData = slides[slideNumber - 1];
+
+          slide.innerHTML = `
+            <div class="slide-img">
+              <img src="${slideData.slideImg}" alt="" loading="lazy" decoding="async" />
+            </div>
+
+            <div class="slide-title">
+              <h1>${slideData.slideTitle}</h1>
+            </div>
+            
+            <div class="slide-tags">
+              <p>100,000 sq. ft.</p>
+              <p>5-Stories</p>
+              <p>2024</p>
+            </div>
+          `;
+
+          return slide;
+        }
+
+        function splitText(slide) {
+          const title = slide.querySelector("h1");
+          const description = slide.querySelector("p");
+
+          if (title) {
+            const titleText = title.textContent;
+            title.innerHTML = titleText
+              .split(" ")
+              .map((word) => `<span class="word">${word}</span>`)
+              .join(" ");
+          }
+
+          if (description) {
+            const descText = description.textContent;
+            description.innerHTML = descText
+              .split(" ")
+              .map((word) => `<span class="word">${word}</span>`)
+              .join(" ");
+          }
+        }
+
+        function animateSlide(direction) {
+          if (isAnimating || !scrollAllowed) return;
+          if (Date.now() - lastScrollTime < 150) return;
+
+          isAnimating = true;
+          scrollAllowed = false;
+
+          const slider = document.querySelector(".slider");
+          const currentSlideElement = slider.querySelector(".slide");
+
+          const exitY = direction === "down" ? "-200vh" : "200vh";
+          const entryY = direction === "down" ? "100vh" : "-100vh";
+          const entryClipPath =
+            direction === "down"
+              ? "polygon(20% 20%, 80% 20%, 80% 100%, 20% 100%)"
+              : "polygon(20% 0%, 80% 0%, 80% 80%, 20% 80%)";
+
+          currentSlideElement.style.transform = `scale(0.25) translateY(${exitY}) rotate(30deg)`;
+          currentSlideElement.style.transition = "all 0.5s ease-in-out";
+          currentSlideElement.style.opacity = "0";
+
+          setTimeout(() => {
+            currentSlideElement.remove();
+
+            if (direction === "down") {
+              currentSlide = currentSlide === totalSlides ? 1 : currentSlide + 1;
+            } else {
+              currentSlide = currentSlide === 1 ? totalSlides : currentSlide - 1;
+            }
+
+            const newSlide = createSlide(currentSlide);
+
+            newSlide.style.transform = `translateY(${entryY})`;
+            newSlide.style.clipPath = entryClipPath;
+            newSlide.style.transition = "all 0.4s ease-out";
+
+            slider.appendChild(newSlide);
+
+            splitText(newSlide);
+
+            const words = newSlide.querySelectorAll(".word");
+
+            words.forEach((word) => {
+              word.style.transform = "translateY(100%)";
+              word.style.transition = "transform 0.3s ease-out";
+            });
+
+            setTimeout(() => {
+              newSlide.style.transform = "translateY(0)";
+              newSlide.style.clipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+
+              setTimeout(() => {
+                words.forEach((word, index) => {
+                  setTimeout(() => {
+                    word.style.transform = "translateY(0)";
+                  }, index * 30);
+                });
+                
+                // Re-trigger slide-tags animations
+                const slideTags = newSlide.querySelectorAll(".slide-tags p");
+                slideTags.forEach((tag) => {
+                  tag.style.animation = "none";
+                  setTimeout(() => {
+                    tag.style.animation = "";
+                  }, 10);
+                });
+              }, 200);
+            }, 50);
+
+            setTimeout(() => {
+              isAnimating = false;
+              updateCurrentPage();
+              generateThumbnails();
+              updateNavigation();
+              setTimeout(() => {
+                scrollAllowed = true;
+                lastScrollTime = Date.now();
+              }, 10);
+            }, 400);
+          }, 500);
+        }
+
+        function jumpToSlide(targetSlide) {
+          if (isAnimating || !scrollAllowed) return;
+          if (targetSlide === currentSlide) return;
+
+          isAnimating = true;
+          scrollAllowed = false;
+
+          const slider = document.querySelector(".slider");
+          const currentSlideElement = slider.querySelector(".slide");
+
+          const direction = targetSlide > currentSlide ? "down" : "up";
+          const exitY = direction === "down" ? "-200vh" : "200vh";
+          const entryY = direction === "down" ? "100vh" : "-100vh";
+          const entryClipPath =
+            direction === "down"
+              ? "polygon(20% 20%, 80% 20%, 80% 100%, 20% 100%)"
+              : "polygon(20% 0%, 80% 0%, 80% 80%, 20% 80%)";
+
+          currentSlideElement.style.transform = `scale(0.25) translateY(${exitY}) rotate(30deg)`;
+          currentSlideElement.style.transition = "all 0.5s ease-in-out";
+          currentSlideElement.style.opacity = "0";
+
+          setTimeout(() => {
+            currentSlideElement.remove();
+            currentSlide = targetSlide;
+            const newSlide = createSlide(currentSlide);
+
+            newSlide.style.transform = `translateY(${entryY})`;
+            newSlide.style.clipPath = entryClipPath;
+            newSlide.style.transition = "all 0.4s ease-out";
+
+            slider.appendChild(newSlide);
+
+            splitText(newSlide);
+
+            const words = newSlide.querySelectorAll(".word");
+
+            words.forEach((word) => {
+              word.style.transform = "translateY(100%)";
+              word.style.transition = "transform 0.3s ease-out";
+            });
+
+            setTimeout(() => {
+              newSlide.style.transform = "translateY(0)";
+              newSlide.style.clipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+
+              setTimeout(() => {
+                words.forEach((word, index) => {
+                  setTimeout(() => {
+                    word.style.transform = "translateY(0)";
+                  }, index * 30);
+                });
+                
+                // Re-trigger slide-tags animations
+                const slideTags = newSlide.querySelectorAll(".slide-tags p");
+                slideTags.forEach((tag) => {
+                  tag.style.animation = "none";
+                  setTimeout(() => {
+                    tag.style.animation = "";
+                  }, 10);
+                });
+              }, 200);
+            }, 50);
+
+            setTimeout(() => {
+              isAnimating = false;
+              updateCurrentPage();
+              generateThumbnails();
+              updateNavigation();
+              setTimeout(() => {
+                scrollAllowed = true;
+                lastScrollTime = Date.now();
+              }, 10);
+            }, 400);
+          }, 500);
+        }
+
+        thumbnailContainer.addEventListener('click', (e) => {
+          const thumbnail = e.target.closest('.thumbnail');
+          if (thumbnail) {
+            const targetSlide = parseInt(thumbnail.getAttribute('data-slide'));
+            jumpToSlide(targetSlide);
+          }
+        });
+
+        leftArrow.addEventListener('click', () => {
+          if (isAnimating || !scrollAllowed) return;
+
+          let newSlide = currentSlide - slidesPerPage;
+          if (newSlide < 1) {
+            newSlide = totalSlides - (slidesPerPage - currentSlide);
+            if (newSlide < 1) newSlide = totalSlides;
+          }
+          
+          const newPage = Math.floor((newSlide - 1) / slidesPerPage);
+          if (newPage !== currentPage) {
+            currentPage = newPage;
+            generateThumbnails();
+          }
+          
+          jumpToSlide(newSlide);
+        });
+
+        rightArrow.addEventListener('click', () => {
+          if (isAnimating || !scrollAllowed) return;
+
+          let newSlide = currentSlide + slidesPerPage;
+          if (newSlide > totalSlides) {
+            newSlide = slidesPerPage - (totalSlides - currentSlide);
+            if (newSlide > totalSlides) newSlide = 1;
+          }
+          
+          const newPage = Math.floor((newSlide - 1) / slidesPerPage);
+          if (newPage !== currentPage) {
+            currentPage = newPage;
+            generateThumbnails();
+          }
+          
+          jumpToSlide(newSlide);
+        });
+
+        let wheelTimeout;
+        window.addEventListener("wheel", (e) => {
+          if (isAnimating || !scrollAllowed) return;
+          if (Date.now() - lastScrollTime < 150) return;
+
+          clearTimeout(wheelTimeout);
+          wheelTimeout = setTimeout(() => {
+            const direction = e.deltaY > 0 ? "down" : "up";
+            animateSlide(direction);
+          }, 16);
+        }, { passive: true });
+
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let touchMoved = false;
+
+        window.addEventListener("touchstart", (e) => {
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
+          touchMoved = false;
+        }, { passive: true });
+
+        window.addEventListener("touchmove", (e) => {
+          touchMoved = true;
+        }, { passive: true });
+
+        window.addEventListener("touchend", (e) => {
+          if (isAnimating || !scrollAllowed || !touchMoved) return;
+          if (Date.now() - lastScrollTime < 120) return;
+
+          const touchEndY = e.changedTouches[0].clientY;
+          const touchEndTime = Date.now();
+          const deltaY = touchStartY - touchEndY;
+          const deltaTime = touchEndTime - touchStartTime;
+
+          if (Math.abs(deltaY) > 40 && deltaTime < 400) {
+            const direction = deltaY > 0 ? "down" : "up";
+            animateSlide(direction);
+          }
+        }, { passive: true });
+
+        // Mobile viewport handling - no more problematic scroll-based address bar hiding
+
+        generateThumbnails();
+        updateNavigation();
+      });
+    </script>
+  </body>
+</html>

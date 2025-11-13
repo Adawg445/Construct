@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en" class="contact">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM - Contact Us</title>
+    <!-- Web3Forms with hCaptcha Integration -->
+    <script src="https://web3forms.com/client/script.js" async defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/Cube.svg" as="image" />
+    <script src="loader.js" defer></script>
+    <style>
+      /* Contact specific styles */
+      .contact {
+        background: linear-gradient(135deg, #1a4d80 0%, #000000 50%, #1a4d1a 100%);
+        min-height: 100vh;
+      }
+      
+      html.contact,
+      body.contact {
+        background: linear-gradient(135deg, #1a4d80 0%, #000000 50%, #1a4d1a 100%) !important;
+        min-height: 100vh;
+      }
+      
+      html.contact {
+        background-color: #000000;
+      }
+      .contact .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                    url('/contact/2.webp') no-repeat center 70%/cover;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+      }
+      
+      .contact .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: white;
+      }
+      
+      .contact .contact-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+        margin: 3rem 0;
+        background: transparent;
+        padding: 3rem;
+      }
+      
+      .contact .contact-info {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      
+      .contact .contact-info h3 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+      
+      .contact .contact-details {
+        text-align: left;
+      }
+      
+      .contact .contact-hours {
+        text-align: left;
+        margin-left: 2rem;
+      }
+      
+      .contact .contact-hours p {
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin: 2rem 0;
+      }
+      
+      /* Modern form styling */
+      .contact .form-group input,
+      .contact .form-group textarea {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        color: white;
+        transition: all 0.3s ease;
+      }
+      
+      .contact .form-group input::placeholder,
+      .contact .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .contact .form-group input:focus,
+      .contact .form-group textarea:focus {
+        outline: none;
+        border-color: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      }
+      
+      .contact .btn {
+        background: linear-gradient(45deg, #1a4d80, #1a4d1a);
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+      }
+      
+      .contact .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+      
+      .contact .contact-details p {
+        margin: 2rem 0;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        text-align: left;
+        font-size: 1.3rem;
+        font-weight: 500;
+      }
+      
+      .contact .contact-details i {
+        margin-right: 1rem;
+        color: var(--highlight-contact);
+        width: 24px;
+        text-align: center;
+      }
+      
+      .contact .contact-form {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      
+      .contact .form-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      .contact label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+      }
+      
+      .contact input,
+      .contact textarea {
+        width: 100%;
+        padding: 0.8rem;
+        background: #2d2d2d;
+        border: 1px solid #444;
+        border-radius: 4px;
+        color: white;
+        font-size: 1rem;
+      }
+      
+      .contact textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+      
+      .contact .btn {
+        background-color: var(--highlight-contact);
+        color: #000;
+        font-weight: 600;
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .contact .btn:hover {
+        background-color: #ffc107;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+      }
+      
+      .contact .btn:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      /* Cooldown Message Styling */
+      .cooldown-message {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+        text-align: center;
+        color: #ffc107;
+      }
+      
+      .cooldown-message p {
+        margin: 0;
+        font-size: 0.9rem;
+      }
+      
+      .cooldown-message #countdown {
+        font-weight: bold;
+        color: #ffc107;
+      }
+      
+      .contact .btn.loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 2px solid transparent;
+        border-top: 2px solid #000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .contact .form-group input:focus,
+      .contact .form-group textarea:focus {
+        outline: none;
+        border-color: var(--highlight-contact);
+        box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+      }
+      
+      /* Enhanced protection styling */
+      .contact .form-group input[type="number"] {
+        width: 100%;
+        padding: 0.8rem;
+        background: #2d2d2d;
+        border: 1px solid #444;
+        border-radius: 4px;
+        color: white;
+        font-size: 1rem;
+      }
+      
+
+      
+      /* hCaptcha Styling */
+      .h-captcha {
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0;
+      }
+      
+      .h-captcha iframe {
+        border-radius: 4px;
+        border: 1px solid #444;
+      }
+      
+      .contact .captcha-info {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        font-style: italic;
+      }
+      
+      .contact .submission-limit {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+        color: #dc3545;
+        font-size: 0.9rem;
+      }
+      
+      .contact .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      
+      .contact .social-links a {
+        color: var(--text-muted);
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+      }
+      
+      .contact .social-links a:hover {
+        color: var(--highlight-contact);
+      }
+      
+      /* Blob Animation Styles */
+        .blob-container {
+          position: relative;
+          max-width: 500px;
+          width: 100%;
+          margin: 2rem auto;
+          text-align: center;
+        }
+        
+        .blob-motion {
+          width: 100%;
+          height: auto;
+          max-width: 400px;
+          margin: 0 auto;
+          display: block;
+        }
+      
+      .blob-motion path {
+        transition: all 0.3s ease;
+      }
+      
+      /* CSS animation for blob morphing */
+      @keyframes blobMorph {
+        0% {
+          d: path("M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7");
+        }
+        50% {
+          d: path("M242.3 -168.1C303.3 -116.8 334.4 -16.7 302.6 47.6C270.9 111.9 176.1 140.4 95.4 167.7C14.6 194.9 -52.1 220.9 -105.2 201.7C-158.2 182.6 -197.6 118.3 -215.1 47.4C-232.7 -23.6 -228.6 -101.3 -189.1 -147.6C-149.6 -194 -74.8 -209 7.9 -215.3C90.7 -221.7 181.4 -219.3 242.3 -168.1");
+        }
+        100% {
+          d: path("M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7");
+        }
+      }
+      
+      /* Apply animation to blob path */
+      #blob1 {
+        animation: blobMorph 3s ease-in-out infinite;
+      }
+      
+      @media (max-width: 768px) {
+        .contact .hero h1 {
+          font-size: 2.5rem;
+        }
+        
+        .contact .contact-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body class="contact">
+    <nav>
+      <div class="nav-container">
+        <a href="index.html" class="logo-link"><img src="/Cube.svg" alt="Logo" class="logo" /></a>
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html" class="home-link">Home</a></li>
+          <li><a href="commercial.html">Commercial</a></li>
+          <li><a href="residential.html">Residential</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    
+    <div class="hero">
+      <div>
+        <h1>Contact Us</h1>
+        <p>Get in touch with our company for any inquiries</p>
+      </div>
+    </div>
+    
+    <main class="content">
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>Contact Information</h3>
+          
+          <div class="contact-details">
+            <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p><i class="fas fa-envelope"></i> info@armproperty.com</p>
+          </div>
+          
+          <!-- Animated Blob with Contact Image -->
+          <div class="blob-container">
+            <svg
+              class="blob-motion"
+              id="visual"
+              viewBox="0 0 960 540"
+              width="960"
+              height="540"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+            >
+              <defs>
+                <clipPath id="blob-clip">
+                  <path
+                    id="blob1"
+                    d="M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7"
+                    fill="#BB004B"
+                  ></path>
+                </clipPath>
+              </defs>
+              <g transform="translate(450.7256843113689 283.4942824330989)">
+                <path
+                  id="blob1"
+                  d="M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7"
+                  fill="#BB004B"
+                ></path>
+                <image 
+                  href="/contact/IMG_0783_result.jpg" 
+                  x="-270" 
+                  y="-270" 
+                  width="650" 
+                  height="750"
+                  clip-path="url(#blob-clip)"
+                  preserveAspectRatio="xMidYMid slice"
+                />
+              </g>
+              <g transform="translate(509.54377535978017 281.49390864595887)" style="visibility: hidden">
+                <path
+                  id="blob2"
+                  d="M242.3 -168.1C303.3 -116.8 334.4 -16.7 302.6 47.6C270.9 111.9 176.1 140.4 95.4 167.7C14.6 194.9 -52.1 220.9 -105.2 201.7C-158.2 182.6 -197.6 118.3 -215.1 47.4C-232.7 -23.6 -228.6 -101.3 -189.1 -147.6C-149.6 -194 -74.8 -209 7.9 -215.3C90.7 -221.7 181.4 -219.3 242.3 -168.1"
+                  fill="#BB004B"
+                ></path>
+              </g>
+            </svg>
+          </div>
+          
+          <div class="contact-hours">
+            <p><i class="fas fa-clock"></i> Monday - Friday: 8:00 AM - 5:00 PM</p>
+          </div>
+          
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        
+        <div class="contact-form">
+          <h3>Send Us a Message</h3>
+          <form action="https://api.web3forms.com/submit" method="POST">
+            <!-- Web3Forms access key -->
+            <input type="hidden" name="access_key" value="239a616d-f642-4ebf-a7db-f313a2b46263">
+            
+            <!-- Honeypot to prevent spam -->
+            <input type="text" name="botcheck" style="display:none">
+            
+
+            
+            <!-- Form subject -->
+            <input type="hidden" name="subject" value="New Contact Form Submission - ARM Property">
+            
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone">
+            </div>
+            
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <input type="text" id="subject" name="subject" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Your Message *</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+            
+
+            
+            <!-- hCaptcha Integration -->
+            <div class="form-group">
+              <div class="h-captcha" data-captcha="true"></div>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn">Send Message</button>
+          </form>
+          
+          <div id="cooldownMessage" class="cooldown-message" style="display: none;">
+            <p>Please wait <span id="countdown">60</span> seconds before sending another message.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="commercial-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-license">Licenses | ROC284283</p>
+          </div>
+          
+          <div class="footer-vertical-line"></div>
+          
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+
+          <div class="footer-vertical-line"></div>
+        </div>
+        
+        <div class="footer-copyright">
+          <p>&copy; 2025 AZDEVCO. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KUTE.js for blob animation -->
+    <script src="https://cdn.jsdelivr.net/npm/kute.js@2.1.2/dist/kute.min.js"></script>
+    <!-- Alternative: Lottie for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <!-- Add Lenis for smooth scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Add common JavaScript -->
+    <script src="common.js"></script>
+    <!-- Add mobile navigation JavaScript -->
+    <script src="js/mobile-nav.js"></script>
+    
+    <script>
+      // Contact form handling for Web3Forms with cooldown
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.contact-form form');
+        const submitBtn = document.getElementById('submitBtn');
+        const cooldownMessage = document.getElementById('cooldownMessage');
+        const countdownSpan = document.getElementById('countdown');
+        
+        // Cooldown settings (60 seconds = 1 minute)
+        const COOLDOWN_TIME = 60;
+        const COOLDOWN_KEY = 'contactFormCooldown';
+        
+        // Check if user is in cooldown period
+        function checkCooldown() {
+          const lastSubmission = localStorage.getItem(COOLDOWN_KEY);
+          console.log('Checking cooldown, last submission:', lastSubmission);
+          
+          if (lastSubmission) {
+            const timeElapsed = Date.now() - parseInt(lastSubmission);
+            const timeRemaining = Math.ceil((COOLDOWN_TIME * 1000 - timeElapsed) / 1000);
+            console.log('Time elapsed:', timeElapsed, 'Time remaining:', timeRemaining);
+            
+            if (timeRemaining > 0) {
+              // Still in cooldown
+              console.log('Still in cooldown, starting countdown');
+              startCooldown(timeRemaining);
+              return true;
+            } else {
+              // Cooldown expired
+              console.log('Cooldown expired, removing from storage');
+              localStorage.removeItem(COOLDOWN_KEY);
+              return false;
+            }
+          }
+          console.log('No cooldown found');
+          return false;
+        }
+        
+        // Start cooldown countdown
+        function startCooldown(seconds) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Cooldown Active';
+          cooldownMessage.style.display = 'block';
+          
+          let timeLeft = seconds;
+          countdownSpan.textContent = timeLeft;
+          
+          const countdownTimer = setInterval(() => {
+            timeLeft--;
+            countdownSpan.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+              clearInterval(countdownTimer);
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Send Message';
+              cooldownMessage.style.display = 'none';
+            }
+          }, 1000);
+        }
+        
+        // Form submission with cooldown
+        form.addEventListener('submit', function(e) {
+          console.log('Form submitted, checking cooldown...');
+          
+          // Check if user is in cooldown
+          if (checkCooldown()) {
+            console.log('Form submission blocked - user in cooldown');
+            e.preventDefault();
+            return false;
+          }
+          
+          console.log('Form submission allowed, starting cooldown');
+          
+          // Show loading state
+          submitBtn.disabled = true;
+          submitBtn.classList.add('loading');
+          submitBtn.textContent = 'Sending...';
+          
+          // Store submission time for cooldown
+          localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+          console.log('Cooldown started, stored timestamp:', Date.now());
+          
+          // Let the form submit naturally to Web3Forms
+          // No JavaScript interference
+        });
+        
+        // Prevent page scroll on input focus
+        const inputs = form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+          input.addEventListener('focus', function(e) {
+            // Prevent default scroll behavior
+            e.preventDefault();
+            // Keep current scroll position
+            const currentScroll = window.pageYOffset;
+            setTimeout(() => {
+              window.scrollTo(0, currentScroll);
+            }, 0);
+          });
+        });
+        
+        // Check cooldown on page load
+        checkCooldown();
+      });
+    </script>
+    
+    <!-- Commercial Link Script -->
+    <script>
+      // Set commercial link based on device type
+      const commercialLink = document.getElementById('commercial-link');
+      if (window.innerWidth <= 768) {
+        commercialLink.href = 'commercial-mobile.html';
+      } else {
+        commercialLink.href = 'commercial.html';
+      }
+    </script>
+    
+    <!-- Blob Animation Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Simple CSS-based blob animation
+        const blob1 = document.getElementById('blob1');
+        if (blob1) {
+          // Add CSS animation class
+          blob1.style.animation = 'blobMorph 3s ease-in-out infinite alternate';
+          console.log('Blob animation started with CSS');
+        }
+        
+        // Alternative: Try KUTE.js if available
+        setTimeout(() => {
+          if (typeof KUTE !== 'undefined') {
+            try {
+              const tween = KUTE.fromTo(
+                '#blob1',
+                { path: '#blob1' },
+                { path: '#blob2' },
+                { 
+                  repeat: 999, 
+                  duration: 3000, 
+                  yoyo: true,
+                  easing: 'easingCubicInOut'
+                }
+              ).start();
+              console.log('KUTE.js blob animation started');
+            } catch (error) {
+              console.log('KUTE.js animation error:', error);
+            }
+          }
+        }, 1000);
+      });
+    </script>
+    
+    <style>
+      .commercial-footer {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 3rem 2rem 2rem;
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 100; /* Above background grid (z-index: 5) */
+      }
+
+      .footer-container {
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr auto auto 1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      .footer-vertical-line {
+        width: 1px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-info p {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-info i {
+        color: var(--highlight-contact, #4CAF50);
+        width: 20px;
+      }
+
+      .footer-phone,
+      .footer-email,
+      .footer-license {
+        font-weight: 500;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--highlight-contact, #4CAF50);
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-copyright p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 2rem;
+        }
+
+        .footer-vertical-line {
+          display: none; /* Hide vertical lines on mobile */
+        }
+
+        .footer-info {
+          align-items: center;
+        }
+      }
+    </style>
+  </body>
+</html>
+

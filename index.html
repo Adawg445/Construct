@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM - Home</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/Home/img0.jpg" as="image" />
+    <link rel="preload" href="/Cube.svg" as="image" />
+    <script src="loader.js" defer></script>
+    <style>
+      .img {
+        position: relative;
+        overflow: hidden;
+      }
+      .img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .view-more-btn {
+        position: absolute;
+        bottom: 20px;
+        left: 25%;
+        right: 25%;
+        background-color: rgba(40, 40, 40, 0.95);
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-radius: 5px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        height: 38px;
+        min-width: 120px;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+      }
+      .view-more-btn:hover {
+        background-color: rgba(30, 30, 30, 0.95);
+        transform: translateY(-1px);
+      }
+      .view-more-btn:active {
+        transform: translateY(0);
+      }
+      .view-more-btn::after {
+        content: '→';
+        color: #ff0000;
+        font-weight: bold;
+      }
+
+      /* Privacy/Terms Popup Styles */
+      .privacy-terms-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 1rem;
+      }
+
+      .privacy-terms-popup.active {
+        display: flex;
+      }
+
+      .privacy-terms-content {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 3rem 2.5rem;
+        border-radius: 20px;
+        max-width: 550px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        animation: popupFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .privacy-terms-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #254A89, #3a6bb8, #4d8ce8);
+      }
+
+      @keyframes popupFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.85) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      .privacy-terms-icon {
+        font-size: 3rem;
+        color: #254A89;
+        margin-bottom: 1rem;
+        display: block;
+        animation: iconPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes iconPulse {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .privacy-terms-content h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.75rem;
+        color: #1a1a1a;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .privacy-terms-content p {
+        margin: 0 0 2.5rem 0;
+        font-size: 1.05rem;
+        color: #4a4a4a;
+        line-height: 1.7;
+        font-weight: 400;
+      }
+
+      .privacy-terms-content a {
+        color: #254A89;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .privacy-terms-content a:hover {
+        color: #3a6bb8;
+        border-bottom-color: #3a6bb8;
+      }
+
+      .privacy-terms-button {
+        background: linear-gradient(135deg, #254A89 0%, #3a6bb8 100%);
+        color: white;
+        border: none;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: none;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 15px rgba(37, 74, 137, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .privacy-terms-button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .privacy-terms-button:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .privacy-terms-button:hover {
+        background: linear-gradient(135deg, #3a6bb8 0%, #4d8ce8 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(37, 74, 137, 0.4);
+      }
+
+      .privacy-terms-button:active {
+        transform: translateY(-1px);
+      }
+
+      .privacy-terms-button span {
+        position: relative;
+        z-index: 1;
+      }
+
+      @media (max-width: 768px) {
+        .privacy-terms-content {
+          padding: 2.5rem 2rem;
+          max-width: 95%;
+          border-radius: 16px;
+        }
+
+        .privacy-terms-icon {
+          font-size: 2.5rem;
+        }
+
+        .privacy-terms-content h3 {
+          font-size: 1.5rem;
+        }
+
+        .privacy-terms-content p {
+          font-size: 1rem;
+          margin-bottom: 2rem;
+        }
+
+        .privacy-terms-button {
+          padding: 0.875rem 2.5rem;
+          font-size: 1rem;
+          width: 100%;
+          max-width: 280px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Mobile Detection and Auto-Redirect -->
+    <script>
+      // Check if user is on mobile device
+      function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+               window.innerWidth <= 768;
+      }
+      
+      // If mobile device, redirect to mobile home page
+      if (isMobileDevice()) {
+        // Only redirect if we're not already on the mobile page
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+          window.location.href = '/home.html';
+        }
+      }
+    </script>
+
+    <nav>
+      <div class="nav-container">
+        <a href="index.html" class="logo-link"><img src="/Cube.svg" alt="Logo" class="logo" /></a>
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html" class="home-link active">Home</a></li>
+          <li><a href="commercial.html">Commercial</a></li>
+          <li><a href="residential.html">Residential</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <section class="intro">
+      <div class="intro-image">
+        <img src="/Home/img0.jpg" alt="ARM Property Services" loading="eager" decoding="sync" fetchpriority="high" />
+      </div>
+      <div class="header">
+        <h1>
+          <div class="line1"><span class="highlight">AZ.</span></div>
+          <div class="line2"><span class="highlight">dev</span>elopment</div>
+          <div class="line3"><span class="highlight">co</span>mpany</div>
+        </h1>
+      </div>
+    </section>
+    <section class="spotlight">
+      <div class="header">
+        <h1>building relationships one job at a time</h1>
+      </div>
+      <div class="mobile-header">
+        <h1>View Our Recent Projects</h1>
+        <div class="swipe-indicator">
+          <div class="swipe-arrow"></div>
+          <span>Swipe to explore</span>
+          <div class="swipe-arrow"></div>
+        </div>
+      </div>
+      <div class="spotlight-images">
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"><img src="/Mesa/44.webp" loading="eager" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn" id="view-more-first-image">View More</a></div>
+          <div class="img"></div>
+          <div class="img"><img src="/Turkey/84.webp" loading="lazy" decoding="async" /><a href="commercial.html#cattle" class="view-more-btn">View More</a></div>
+        </div>
+        <div class="row">
+          <div class="img"><img src="/Mesa/10-1.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
+          <div class="img"></div>
+          <div class="img"></div>
+          <div class="img"></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"><img src="/Mesa/10-3.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/5-19.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <div class="img"></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/6-2.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/5-26.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"></div>
+          <div class="img"></div> 
+          <div class="img"></div>
+        </div>
+      </div>
+      
+      <!-- Mobile horizontal gallery -->
+      <div class="mobile-gallery">
+        <div class="mobile-gallery-container">
+          <div class="mobile-gallery-item">
+            <img src="/Mesa/44.webp" alt="Gallery Image 1" loading="lazy" decoding="async" />
+            <a href="commercial.html#mesa" class="mobile-view-more-btn">View More</a>
+          </div>
+          <div class="mobile-gallery-item">
+            <img src="/Turkey/84.webp" alt="Gallery Image 2" loading="lazy" decoding="async" />
+            <a href="commercial.html#cattle" class="mobile-view-more-btn">View More</a>
+          </div>
+          <div class="mobile-gallery-item">
+            <img src="/Mesa/10-1.webp" alt="Gallery Image 3" loading="lazy" decoding="async" />
+            <a href="commercial.html#mesa" class="mobile-view-more-btn">View More</a>
+          </div>
+          <div class="mobile-gallery-item">
+            <img src="/Mesa/10-3.webp" alt="Gallery Image 4" loading="lazy" decoding="async" />
+            <a href="commercial.html#mesa" class="mobile-view-more-btn">View More</a>
+          </div>
+          <div class="mobile-gallery-item">
+            <img src="/Cooledge/5-19.webp" alt="Gallery Image 5" loading="lazy" decoding="async" />
+            <a href="commercial.html#grandview" class="mobile-view-more-btn">View More</a>
+          </div>
+          <div class="mobile-gallery-item">
+            <img src="/Cooledge/6-2.webp" alt="Gallery Image 6" loading="lazy" decoding="async" />
+            <a href="commercial.html#grandview" class="mobile-view-more-btn">View More</a>
+          </div>
+          <div class="mobile-gallery-item">
+            <img src="/Cooledge/5-26.webp" alt="Gallery Image 7" loading="lazy" decoding="async" />
+            <a href="commercial.html#grandview" class="mobile-view-more-btn">View More</a>
+          </div>
+        </div>
+      </div>
+      <div class="mask-container">
+        <div class="mask-img">
+          <img src="/Turkey/69.webp" alt="" />
+        </div>
+        <div class="header">
+          <h1>building your expectations</h1>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="commercial-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-license">Licenses | ROC284283</p>
+          </div>
+          
+          <div class="footer-vertical-line"></div>
+          
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+
+          <div class="footer-vertical-line"></div>
+        </div>
+        
+        <div class="footer-copyright">
+          <p>&copy; 2025 AZDEVCO. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/script.js"></script>
+    <!-- Mobile navigation JavaScript - DISABLED TO PREVENT CONFLICTS -->
+    <!-- <script src="js/mobile-nav.js"></script> -->
+    
+    <!-- Commercial Link Script -->
+    <script>
+      // Set commercial link based on device type
+      const commercialLink = document.getElementById('commercial-link');
+      const contactLink = document.querySelector('a[href="contact.html"]');
+      
+      if (window.innerWidth <= 768) {
+        commercialLink.href = 'commercial-mobile.html';
+        if (contactLink) {
+          contactLink.href = 'contact-mobile.html';
+        }
+      } else {
+        commercialLink.href = 'commercial.html';
+        if (contactLink) {
+          contactLink.href = 'contact.html';
+        }
+      }
+      
+      // Update on window resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+          commercialLink.href = 'commercial-mobile.html';
+          if (contactLink) {
+            contactLink.href = 'contact-mobile.html';
+          }
+        } else {
+          commercialLink.href = 'commercial.html';
+          if (contactLink) {
+            contactLink.href = 'contact.html';
+          }
+        }
+      });
+      
+      // Handle first image view-more button click for two-step navigation
+      document.addEventListener('DOMContentLoaded', function() {
+        const firstImageBtn = document.getElementById('view-more-first-image');
+        if (firstImageBtn) {
+          // Ensure clean href (no hash) and correct data-section; two-step logic will take over
+          firstImageBtn.setAttribute('href', 'commercial.html');
+          firstImageBtn.setAttribute('data-section', 'mesa');
+        }
+      });
+      
+      // Default anchor links will navigate; commercial.html intercepts hash and handles top-then-smooth scroll
+    </script>
+
+    <!-- Fixed navigation menu -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const body = document.body;
+        const nav = document.querySelector('nav');
+        
+        // Responsive navigation links
+        function updateNavigationLinks() {
+          const isMobile = window.innerWidth <= 768;
+          const homeLinks = document.querySelectorAll('.home-link');
+          const logoLinks = document.querySelectorAll('.logo-link');
+          const contactLinks = document.querySelectorAll('a[href="contact.html"]');
+          const commercialLinks = document.querySelectorAll('#commercial-link');
+          
+          if (isMobile) {
+            // Mobile: point to mobile versions
+            homeLinks.forEach(link => link.href = 'home.html');
+            logoLinks.forEach(link => link.href = 'home.html');
+            contactLinks.forEach(link => link.href = 'contact-mobile.html');
+            commercialLinks.forEach(link => link.href = 'commercial-mobile.html');
+          } else {
+            // Desktop: point to desktop versions
+            homeLinks.forEach(link => link.href = 'index.html');
+            logoLinks.forEach(link => link.href = 'index.html');
+            contactLinks.forEach(link => link.href = 'contact.html');
+            commercialLinks.forEach(link => link.href = 'commercial.html');
+          }
+        }
+        
+        // Update links on load and resize
+        updateNavigationLinks();
+        window.addEventListener('resize', updateNavigationLinks);
+        
+        // Scroll behavior variables
+        let lastScrollTop = 0;
+        let scrollThreshold = 50; // Minimum scroll distance to trigger hide/show
+        let scrollPosition = 0; // Store scroll position when menu opens
+        
+        // Toggle menu function
+        function toggleMenu() {
+          const isMenuOpen = navLinks.classList.contains('active');
+          
+          if (!isMenuOpen) {
+            // Opening menu - store current scroll position
+            scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            body.style.top = `-${scrollPosition}px`;
+            body.classList.add('menu-open');
+            navLinks.style.display = 'flex';
+            navLinks.style.opacity = '1';
+            navLinks.style.visibility = 'visible';
+            navLinks.style.transform = 'translateX(0)';
+          } else {
+            // Closing menu - restore scroll position naturally
+            body.classList.remove('menu-open');
+            body.style.top = '';
+            navLinks.style.opacity = '0';
+            navLinks.style.visibility = 'hidden';
+            navLinks.style.transform = 'translateX(100%)';
+          }
+          
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        }
+        
+        if (hamburger && navLinks) {
+          // Remove debugging styles
+          hamburger.style.border = 'none';
+          hamburger.style.backgroundColor = 'transparent';
+          hamburger.style.position = 'relative';
+          hamburger.style.zIndex = '1000';
+          
+          // Hamburger click handler
+          hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMenu();
+          });
+          
+          // Close menu when clicking on links
+          navLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Close menu when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Close menu on escape key
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Handle window resize
+          window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Scroll behavior for mobile navigation
+          window.addEventListener('scroll', function() {
+            if (window.innerWidth <= 768 && !navLinks.classList.contains('active')) { // Only on mobile and when menu is closed
+              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+              const scrollDelta = scrollTop - lastScrollTop;
+              
+              // Show navigation when scrolling up or at the top
+              if (scrollTop <= 0 || scrollDelta < -scrollThreshold) {
+                nav.classList.remove('nav-hidden');
+              }
+              // Hide navigation when scrolling down
+              else if (scrollDelta > scrollThreshold) {
+                nav.classList.add('nav-hidden');
+              }
+              
+              lastScrollTop = scrollTop;
+            }
+          });
+        }
+      });
+    </script>
+    
+    <style>
+      .commercial-footer {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 3rem 2rem 2rem;
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 100; /* Above background grid (z-index: 5) */
+      }
+
+      .footer-container {
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr auto auto 1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      .footer-vertical-line {
+        width: 1px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-info p {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-info i {
+        color: var(--highlight-commercial);
+        width: 20px;
+      }
+
+      .footer-phone,
+      .footer-email,
+      .footer-license {
+        font-weight: 500;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--highlight-commercial);
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-copyright p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 2rem;
+        }
+
+        .footer-vertical-line {
+          display: none; /* Hide vertical lines on mobile */
+        }
+
+        .footer-info {
+          align-items: center;
+        }
+      }
+    </style>
+
+    <!-- Privacy/Terms Popup -->
+    <div id="privacy-terms-popup" class="privacy-terms-popup">
+      <div class="privacy-terms-content">
+        <i class="fas fa-shield-alt privacy-terms-icon"></i>
+        <h3>Privacy & Terms</h3>
+        <p>By continuing to use this site, you agree to our <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> and <a href="/terms-of-service.html" target="_blank">Terms of Service</a>.</p>
+        <button class="privacy-terms-button" id="accept-privacy-terms">
+          <span>I Agree</span>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Privacy/Terms Popup Functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const popup = document.getElementById('privacy-terms-popup');
+        const acceptButton = document.getElementById('accept-privacy-terms');
+
+        // Check if user has already accepted
+        const hasAccepted = localStorage.getItem('privacy-terms-accepted');
+        
+        if (!hasAccepted) {
+          // Show popup after a short delay
+          setTimeout(function() {
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }, 500);
+        }
+
+        // Handle accept button click
+        acceptButton.addEventListener('click', function() {
+          localStorage.setItem('privacy-terms-accepted', 'true');
+          popup.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        });
+
+        // Prevent closing by clicking outside (user must click I Agree)
+        popup.addEventListener('click', function(e) {
+          if (e.target === popup) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+
+
+

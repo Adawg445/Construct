@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" class="residential">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM - Residential Services</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/Cube.svg" as="image" />
+    <script src="loader.js" defer></script>
+    <style>
+      /* Mobile Navigation Styles */
+      #mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1008;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+      }
+      
+      #mobile-nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+      
+      .mobile-nav-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        margin: 0 auto;
+        position: relative;
+      }
+      
+      .mobile-logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        z-index: 1009;
+        position: relative;
+      }
+      
+      .mobile-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1009;
+        position: absolute;
+        right: 0;
+      }
+      
+      .mobile-hamburger span {
+        width: 100%;
+        height: 3px;
+        background: #ffffff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+        display: block;
+      }
+      
+      .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+      }
+      
+      .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+      
+      .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+      
+      .mobile-nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1007;
+        transform: translateX(100%);
+      }
+      
+      .mobile-nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+      }
+      
+      .mobile-nav-links li {
+        list-style: none;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .mobile-nav-links li a {
+        display: block;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        min-width: 200px;
+        width: 90%;
+        max-width: 300px;
+        margin: 0.5rem auto;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+      
+      .mobile-nav-links li a:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+      
+      body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
+      
+      /* Residential specific styles */
+      .residential .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
+                    url('/Residential/1.webp') no-repeat center 30%/cover;
+        height: 100vh;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 0;
+      }
+      
+      .residential .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: white;
+      }
+      
+      .residential .hero p {
+        font-size: 1.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .hero-content {
+        text-align: center;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      
+      .hero-description {
+        font-size: 0.6rem;
+        line-height: 1.3;
+        margin: 0.5rem 0 0.8rem 0;
+        color: rgba(255, 255, 255, 0.7);
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 300;
+        letter-spacing: 0.1px;
+      }
+      
+      .stats-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+      }
+      
+      .stat-box {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        min-width: 150px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .stat-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      
+      .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #fbbf24;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+      }
+      
+      .stat-label {
+        font-size: 1.1rem;
+        color: white;
+        font-weight: 500;
+      }
+      
+      .contact-button-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .contact-btn {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #1a1a1a;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        border: none;
+        cursor: pointer;
+      }
+      
+      .contact-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5);
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+      
+      @media (max-width: 768px) {
+        .stats-container {
+          flex-direction: column;
+          gap: 2rem;
+        }
+        
+        .hero-description {
+          font-size: 0.55rem;
+          margin: 0.4rem 0 0.6rem 0;
+          max-width: 90%;
+        }
+        
+        .stat-box {
+          min-width: 120px;
+          padding: 1.5rem;
+        }
+        
+        .stat-number {
+          font-size: 2.5rem;
+        }
+      }
+      
+      .residential .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+      
+      .residential .service-card {
+        background: var(--secondary-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        border-left: 4px solid var(--highlight-residential);
+      }
+      
+      .residential .service-card:hover {
+        transform: translateY(-5px);
+      }
+      
+      .residential .service-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+      
+      .residential .service-card-content {
+        padding: 1.5rem;
+      }
+      
+      .residential .service-card h3 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+      
+      .residential .service-card p {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+      }
+      
+      .residential .btn {
+        background-color: var(--highlight-residential);
+        color: white;
+      }
+      
+      .residential .btn:hover {
+        background-color: #1565c0;
+        transform: translateY(-2px);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .residential .hero {
+          height: 100vh;
+          min-height: 100vh;
+        }
+        
+        .residential .hero h1 {
+          font-size: 2.5rem;
+        }
+        
+        .residential .hero p {
+          font-size: 1.1rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .residential .hero h1 {
+          font-size: 2rem;
+        }
+        
+        .residential .hero p {
+          font-size: 1rem;
+        }
+      }
+      
+      /* Desktop: hide the mobile overlay nav */
+      @media (min-width: 769px) {
+        #mobile-nav { display: none !important; }
+      }
+      
+      /* Mobile: hide desktop nav elements but keep mobile nav */
+      @media (max-width: 768px) {
+        nav:not(#mobile-nav) { display: none !important; }
+      }
+    </style>
+  </head>
+  <body class="residential">
+    <nav>
+      <div class="nav-container">
+        <a href="index.html" class="logo-link"><img src="/Cube.svg" alt="Logo" class="logo" /></a>
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html" class="home-link">Home</a></li>
+          <li><a href="commercial.html">Commercial</a></li>
+          <li><a href="residential.html" class="active">Residential</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <nav id="mobile-nav">
+      <div class="mobile-nav-container">
+        <a href="home.html" class="mobile-logo-link">
+          <img src="/Cube.svg" alt="Logo" class="mobile-logo" />
+        </a>
+        <button class="mobile-hamburger" id="mobile-hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <ul class="mobile-nav-links" id="mobile-nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="commercial-mobile.html">Commercial</a></li>
+        <li><a href="residential.html" class="active">Residential</a></li>
+        <li><a href="contact-mobile.html">Contact</a></li>
+      </ul>
+    </nav>
+    
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Residential</h1>
+        <p class="hero-description">Various construction projects completed with hedge fund real estate holdings. Included hazardous site cleanup (ADEQ coordination inspections), tenant improvements, property acquisitions, flood remediations, repairs, and representing potential buyers. Locations were urban, rural, and off grid.</p>
+        
+        <div class="stats-container">
+          <div class="stat-box">
+            <div class="stat-number">1500+</div>
+            <div class="stat-label">Billings</div>
+          </div>
+          
+          <div class="contact-button-container">
+            <a href="contact.html" class="contact-btn">Contact Us</a>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-number">100+</div>
+            <div class="stat-label">Sites</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="commercial-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-license">Licenses | ROC284283</p>
+          </div>
+          
+          <div class="footer-vertical-line"></div>
+          
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+
+          <div class="footer-vertical-line"></div>
+        </div>
+        
+        <div class="footer-copyright">
+          <p>&copy; 2025 AZDEVCO. All rights reserved.</p>
+        </div>
+        
+        <div class="footer-notice">
+          <p>Use of this site constitutes acceptance of our <a href="/terms-of-service.html">Terms of Service</a> and <a href="/privacy-policy.html">Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- Add Lenis for smooth scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Add common JavaScript -->
+    <script src="common.js"></script>
+    <!-- Mobile Navigation -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileHamburger = document.getElementById('mobile-hamburger');
+        const mobileNavLinks = document.getElementById('mobile-nav-links');
+        const body = document.body;
+        
+        let lastScrollTop = 0;
+        let scrollPosition = 0; // Store scroll position when menu opens
+        const scrollThreshold = 10; // Reduced threshold for more responsive hiding
+        
+        // Mobile hamburger menu
+        if (mobileHamburger && mobileNavLinks) {
+          mobileHamburger.addEventListener('click', function() {
+            const isMenuOpen = mobileNavLinks.classList.contains('active');
+            
+            if (!isMenuOpen) {
+              // Opening menu - store current scroll position
+              scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+              body.style.top = `-${scrollPosition}px`;
+              body.classList.add('menu-open');
+            } else {
+              // Closing menu - restore scroll position
+              body.classList.remove('menu-open');
+              body.style.top = '';
+              window.scrollTo(0, scrollPosition);
+            }
+            
+            mobileHamburger.classList.toggle('active');
+            mobileNavLinks.classList.toggle('active');
+          });
+          
+          // Close menu when clicking links
+          mobileNavLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              mobileHamburger.classList.remove('active');
+              mobileNavLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+              window.scrollTo(0, scrollPosition);
+            }
+          });
+        }
+        
+        // Hide/show nav on scroll and change background
+        window.addEventListener('scroll', function() {
+          // Don't hide nav when menu is open
+          if (mobileNavLinks.classList.contains('active')) {
+            return;
+          }
+          
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollDelta = scrollTop - lastScrollTop;
+          
+          // Always show nav when at the top of the page
+          if (scrollTop <= 0) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'transparent';
+            mobileNav.style.backdropFilter = 'none';
+            mobileNav.style.webkitBackdropFilter = 'none';
+            mobileNav.style.boxShadow = 'none';
+          } 
+          // Scrolling up - show nav with background
+          else if (scrollDelta < -scrollThreshold) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'rgba(60, 60, 60, 0.95)';
+            mobileNav.style.backdropFilter = 'blur(10px)';
+            mobileNav.style.webkitBackdropFilter = 'blur(10px)';
+            mobileNav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          }
+          // Scrolling down - hide nav (more aggressive hiding)
+          else if (scrollDelta > scrollThreshold && scrollTop > 100) {
+            mobileNav.classList.add('nav-hidden');
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+      });
+    </script>
+    
+    <style>
+      .commercial-footer {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 3rem 2rem 2rem;
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 100; /* Above background grid (z-index: 5) */
+      }
+
+      .footer-container {
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr auto auto 1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      .footer-vertical-line {
+        width: 1px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-info p {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-info i {
+        color: var(--highlight-residential);
+        width: 20px;
+      }
+
+      .footer-phone,
+      .footer-email,
+      .footer-license {
+        font-weight: 500;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--highlight-residential);
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-copyright p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .footer-notice {
+        text-align: center;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-notice p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.5;
+      }
+
+      .footer-notice a {
+        color: #254A89;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .footer-notice a:hover {
+        color: #3a6bb8;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 2rem;
+        }
+
+        .footer-vertical-line {
+          display: none; /* Hide vertical lines on mobile */
+        }
+
+        .footer-info {
+          align-items: center;
+        }
+
+        .footer-links {
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    </style>
+  </body>
+</html>
+

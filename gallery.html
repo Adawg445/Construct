@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM Gallery | Mecom</title>
+    <script src="loader.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background-color: #000;
+        overflow-x: hidden;
+        /* Force address bar to hide on mobile */
+        min-height: 101vh;
+        /* Performance optimizations */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        /* Hardware acceleration */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+      }
+
+      .navigation-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 80px;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        z-index: 1000;
+        padding: 0 2rem;
+      }
+
+      .nav-arrow {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #fff;
+      }
+
+      .nav-arrow:hover {
+        background-color: #fff;
+        color: #000;
+        transform: scale(1.1);
+      }
+
+      .nav-thumbnails {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .thumbnail {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        opacity: 0.6;
+      }
+
+      .thumbnail:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+
+      .thumbnail.active {
+        border-color: #fff;
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      h1,
+      p,
+      a {
+        text-transform: uppercase;
+        color: #fff;
+      }
+
+      h1 {
+        font-size: 5rem;
+        font-weight: 600;
+        letter-spacing: -0.1rem;
+      }
+
+      p,
+      a {
+        text-decoration: none;
+        font-family: "DM Mono";
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: -0.01rem;
+      }
+
+      .slider {
+        position: relative;
+        width: 100vw;
+        height: 100svh;
+        background-color: #000;
+        overflow: hidden;
+      }
+
+      .slide,
+      .slide-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100svh;
+      }
+
+      .slide {
+        will-change: transform, opacity;
+        /* Hardware acceleration for smoother animations */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        /* Optimize for animations */
+        contain: layout style paint;
+      }
+
+      .slide-header {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        width: 75%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        z-index: 1;
+      }
+
+      .slide-description {
+        width: 60%;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .slide-info {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        width: 100vw;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      .slide-tags {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .slide-index-wrapper {
+        display: flex;
+      }
+
+      .slide-index-wrapper p {
+        text-align: center;
+        width: 2rem;
+      }
+
+      .slide-tags p:first-child {
+        margin-bottom: 1rem;
+      }
+
+      .line,
+      .word {
+        position: relative;
+        display: inline-block;
+        will-change: transform;
+        /* Optimize text animations */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
+
+      /* Back to Commercial Button */
+      .back-button {
+        position: fixed;
+        top: 100px;
+        left: 2rem;
+        z-index: 1001;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        border: 2px solid #fff;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        color: #fff;
+        text-decoration: none;
+        font-family: "DM Mono", monospace;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: -0.01rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-button:hover {
+        background: #fff;
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+      }
+
+      .back-button svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s ease;
+      }
+
+      .back-button:hover svg {
+        transform: translateX(-3px);
+      }
+
+      @media (max-width: 1000px) {
+        .navigation-bar {
+          height: 60px;
+          gap: 1rem;
+          padding: 0 1rem;
+        }
+
+        .nav-arrow {
+          width: 35px;
+          height: 35px;
+        }
+
+        .nav-arrow svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .thumbnail {
+          width: 40px;
+          height: 40px;
+        }
+
+        .nav-thumbnails {
+          gap: 0.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+          letter-spacing: 0;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+
+        .slide-header {
+          top: 50%;
+          bottom: unset;
+          transform: translate(-50%, -50%);
+          width: 90%;
+        }
+
+        .slide-description {
+          width: 100%;
+        }
+
+        /* Mobile back button */
+        .back-button {
+          top: 80px;
+          left: 1rem;
+          padding: 0.6rem 1rem;
+          font-size: 0.8rem;
+        }
+
+        .back-button svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navigation-bar">
+      <div class="nav-arrow nav-arrow-left">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </div>
+      <div class="nav-thumbnails" id="thumbnailContainer">
+        <!-- Thumbnails will be dynamically generated -->
+      </div>
+      <div class="nav-arrow nav-arrow-right">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Back to Commercial Button -->
+    <a href="commercial.html" class="back-button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15,18 9,12 15,6"></polyline>
+      </svg>
+      <span>Back to Commercial</span>
+    </a>
+
+    <div class="slider">
+      <div class="slide">
+        <div class="slide-img">
+          <img src="/gallery/slide-img-1.jpg" alt="" />
+        </div>
+
+        <div class="slide-header">
+          <div class="slide-title">
+            <h1>Monochrome Signal</h1>
+          </div>
+          <div class="slide-description">
+            <p>
+              A stripped-back visual experience blending luxury fashion with
+              streetwear edge. Designed for bold statements and minimal
+              distractions.
+            </p>
+          </div>
+          <div class="slide-link">
+            <a href="/projects/monochrome-signal">View Project</a>
+          </div>
+        </div>
+
+        <div class="slide-info">
+          <div class="slide-tags">
+            <p>Tags</p>
+            <p>Monochrome</p>
+            <p>Editorial</p>
+            <p>Fashion</p>
+            <p>Visual Identity</p>
+          </div>
+          <div class="slide-index-wrapper">
+            <p id="slide-index">01</p>
+            <p>/</p>
+            <p id="total-slide-count">25</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Slides data with 25 entries
+      const slides = [
+        {
+          slideTitle: "Monochrome Signal",
+          slideDescription: "A stripped-back visual experience blending luxury fashion with streetwear edge. Designed for bold statements and minimal distractions.",
+          slideLink: "/projects/monochrome-signal",
+          slideTags: ["Monochrome", "Editorial", "Fashion", "Visual Identity"],
+          slideImg: "/gallery/slide-img-1.jpg",
+        },
+        {
+          slideTitle: "Mecha Muse",
+          slideDescription: "Futuristic design meets organic forms in this cutting-edge visual narrative. A perfect blend of technology and artistry.",
+          slideLink: "/projects/mecha-muse",
+          slideTags: ["Futuristic", "Technology", "Art", "Innovation"],
+          slideImg: "/gallery/slide-img-2.jpg",
+        },
+        {
+          slideTitle: "Neon Bloom",
+          slideDescription: "Vibrant colors and dynamic compositions create an electrifying visual experience that captures the essence of modern creativity.",
+          slideLink: "/projects/neon-bloom",
+          slideTags: ["Neon", "Color", "Dynamic", "Modern"],
+          slideImg: "/gallery/slide-img-3.jpg",
+        },
+        {
+          slideTitle: "Chromawave",
+          slideDescription: "A mesmerizing journey through color and form, where every element tells a story of innovation and artistic expression.",
+          slideLink: "/projects/chromawave",
+          slideTags: ["Color", "Wave", "Artistic", "Expression"],
+          slideImg: "/gallery/slide-img-4.jpg",
+        },
+        {
+          slideTitle: "Urban Landscape",
+          slideDescription: "Capturing the essence of city life through architectural photography and urban design elements.",
+          slideLink: "/projects/urban-landscape",
+          slideTags: ["Urban", "Architecture", "City", "Design"],
+          slideImg: "/gallery/img0.jpg",
+        },
+        {
+          slideTitle: "Modern Living",
+          slideDescription: "Contemporary residential spaces that blend functionality with aesthetic appeal for modern lifestyles.",
+          slideLink: "/projects/modern-living",
+          slideTags: ["Modern", "Residential", "Contemporary", "Lifestyle"],
+          slideImg: "/gallery/img1.jpg",
+        },
+        {
+          slideTitle: "Commercial Excellence",
+          slideDescription: "Professional commercial spaces designed to inspire productivity and reflect corporate identity.",
+          slideLink: "/projects/commercial-excellence",
+          slideTags: ["Commercial", "Professional", "Corporate", "Productivity"],
+          slideImg: "/gallery/img2.jpg",
+        },
+        {
+          slideTitle: "Innovation Hub",
+          slideDescription: "Cutting-edge workspaces that foster creativity and collaboration in the modern business environment.",
+          slideLink: "/projects/innovation-hub",
+          slideTags: ["Innovation", "Workspace", "Collaboration", "Business"],
+          slideImg: "/gallery/img3.jpg",
+        },
+        {
+          slideTitle: "Luxury Design",
+          slideDescription: "High-end residential and commercial projects that exemplify luxury and sophistication.",
+          slideLink: "/projects/luxury-design",
+          slideTags: ["Luxury", "High-end", "Sophistication", "Premium"],
+          slideImg: "/gallery/img4.jpg",
+        },
+        {
+          slideTitle: "Sustainable Spaces",
+          slideDescription: "Environmentally conscious design solutions that prioritize sustainability without compromising on aesthetics.",
+          slideLink: "/projects/sustainable-spaces",
+          slideTags: ["Sustainable", "Eco-friendly", "Green", "Environment"],
+          slideImg: "/gallery/img5.jpg",
+        },
+        {
+          slideTitle: "Creative Studio",
+          slideDescription: "Inspiring creative environments designed to nurture artistic expression and professional growth.",
+          slideLink: "/projects/creative-studio",
+          slideTags: ["Creative", "Studio", "Artistic", "Expression"],
+          slideImg: "/gallery/img6.jpg",
+        },
+        {
+          slideTitle: "Tech Innovation",
+          slideDescription: "State-of-the-art technology spaces that represent the future of digital transformation.",
+          slideLink: "/projects/tech-innovation",
+          slideTags: ["Technology", "Digital", "Innovation", "Future"],
+          slideImg: "/gallery/img7.jpg",
+        },
+        {
+          slideTitle: "Spotlight Project",
+          slideDescription: "A featured project that showcases our commitment to excellence and innovative design solutions.",
+          slideLink: "/projects/spotlight",
+          slideTags: ["Featured", "Excellence", "Innovation", "Showcase"],
+          slideImg: "/gallery/spotlight-banner.jpg",
+        },
+        {
+          slideTitle: "Architectural Vision",
+          slideDescription: "Bold architectural concepts that push the boundaries of design and construction possibilities.",
+          slideLink: "/projects/architectural-vision",
+          slideTags: ["Architecture", "Vision", "Bold", "Construction"],
+          slideImg: "/gallery/slide-img-1.jpg",
+        },
+        {
+          slideTitle: "Design Excellence",
+          slideDescription: "Award-winning design solutions that combine functionality with exceptional aesthetic appeal.",
+          slideLink: "/projects/design-excellence",
+          slideTags: ["Award-winning", "Design", "Functionality", "Aesthetic"],
+          slideImg: "/gallery/slide-img-2.jpg",
+        },
+        {
+          slideTitle: "Urban Renewal",
+          slideDescription: "Transforming urban spaces through thoughtful design and community-focused development.",
+          slideLink: "/projects/urban-renewal",
+          slideTags: ["Urban", "Renewal", "Community", "Development"],
+          slideImg: "/gallery/slide-img-3.jpg",
+        },
+        {
+          slideTitle: "Modern Minimalism",
+          slideDescription: "Clean, minimalist design principles that create serene and functional living spaces.",
+          slideLink: "/projects/modern-minimalism",
+          slideTags: ["Minimalism", "Clean", "Serene", "Functional"],
+          slideImg: "/gallery/slide-img-4.jpg",
+        },
+        {
+          slideTitle: "Industrial Heritage",
+          slideDescription: "Preserving industrial heritage while creating modern, functional spaces for contemporary use.",
+          slideLink: "/projects/industrial-heritage",
+          slideTags: ["Industrial", "Heritage", "Preservation", "Modern"],
+          slideImg: "/gallery/img0.jpg",
+        },
+        {
+          slideTitle: "Residential Masterpiece",
+          slideDescription: "Exceptional residential projects that set new standards for luxury and comfort.",
+          slideLink: "/projects/residential-masterpiece",
+          slideTags: ["Residential", "Masterpiece", "Luxury", "Comfort"],
+          slideImg: "/gallery/img1.jpg",
+        },
+        {
+          slideTitle: "Commercial Innovation",
+          slideDescription: "Revolutionary commercial spaces that redefine the workplace experience.",
+          slideLink: "/projects/commercial-innovation",
+          slideTags: ["Commercial", "Revolutionary", "Workplace", "Experience"],
+          slideImg: "/gallery/img2.jpg",
+        },
+        {
+          slideTitle: "Design Philosophy",
+          slideDescription: "Our core design philosophy brought to life through thoughtful space planning and execution.",
+          slideLink: "/projects/design-philosophy",
+          slideTags: ["Philosophy", "Core", "Planning", "Execution"],
+          slideImg: "/gallery/img3.jpg",
+        },
+        {
+          slideTitle: "Future Forward",
+          slideDescription: "Forward-thinking design solutions that anticipate the needs of tomorrow's built environment.",
+          slideLink: "/projects/future-forward",
+          slideTags: ["Future", "Forward-thinking", "Tomorrow", "Environment"],
+          slideImg: "/gallery/img4.jpg",
+        },
+        {
+          slideTitle: "Artistic Expression",
+          slideDescription: "Spaces that serve as canvases for artistic expression and creative collaboration.",
+          slideLink: "/projects/artistic-expression",
+          slideTags: ["Artistic", "Expression", "Canvas", "Collaboration"],
+          slideImg: "/gallery/img5.jpg",
+        },
+        {
+          slideTitle: "Innovation Lab",
+          slideDescription: "Cutting-edge research and development spaces that foster breakthrough innovations.",
+          slideLink: "/projects/innovation-lab",
+          slideTags: ["Innovation", "Research", "Development", "Breakthrough"],
+          slideImg: "/gallery/img6.jpg",
+        },
+        {
+          slideTitle: "Digital Transformation",
+          slideDescription: "Embracing digital transformation through smart design and technology integration.",
+          slideLink: "/projects/digital-transformation",
+          slideTags: ["Digital", "Transformation", "Smart", "Technology"],
+          slideImg: "/gallery/img7.jpg",
+        }
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Force mobile address bar to hide with optimized timing
+        if (window.innerHeight < 800) { // Mobile device
+          requestAnimationFrame(() => {
+            window.scrollTo(0, 1);
+            requestAnimationFrame(() => {
+              window.scrollTo(0, 0);
+            });
+          });
+        }
+
+        const totalSlides = slides.length;
+        let currentSlide = 1;
+        let currentPage = 0; // Current page of thumbnails (0-4)
+        const slidesPerPage = 5;
+
+        let isAnimating = false;
+        let scrollAllowed = true;
+        let lastScrollTime = 0;
+
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        const leftArrow = document.querySelector('.nav-arrow-left');
+        const rightArrow = document.querySelector('.nav-arrow-right');
+
+        function generateThumbnails() {
+          thumbnailContainer.innerHTML = '';
+          const startIndex = currentPage * slidesPerPage;
+          const endIndex = Math.min(startIndex + slidesPerPage, totalSlides);
+
+          for (let i = startIndex; i < endIndex; i++) {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            thumbnail.setAttribute('data-slide', i + 1);
+
+            const img = document.createElement('img');
+            img.src = slides[i].slideImg;
+            img.alt = slides[i].slideTitle;
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            thumbnail.appendChild(img);
+
+            thumbnailContainer.appendChild(thumbnail);
+          }
+        }
+
+        function updateNavigation() {
+          const thumbnails = document.querySelectorAll('.thumbnail');
+          thumbnails.forEach((thumb) => {
+            const slideIndex = parseInt(thumb.getAttribute('data-slide'));
+            thumb.classList.toggle('active', slideIndex === currentSlide);
+          });
+        }
+
+        function updateCurrentPage() {
+          currentPage = Math.floor((currentSlide - 1) / slidesPerPage);
+        }
+
+        function createSlide(slideNumber) {
+          const slide = document.createElement("div");
+          slide.className = "slide";
+
+          const slideData = slides[slideNumber - 1];
+
+          slide.innerHTML = `
+            <div class="slide-img">
+              <img src="${slideData.slideImg}" alt="" loading="lazy" decoding="async" />
+            </div>
+
+            <div class="slide-header">
+              <div class="slide-title">
+                <h1>${slideData.slideTitle}</h1>
+              </div>
+              <div class="slide-description">
+                <p>${slideData.slideDescription}</p>
+              </div>
+              <div class="slide-link">
+                <a href="${slideData.slideLink}">View Project</a>
+              </div>
+            </div>
+
+            <div class="slide-info">
+              <div class="slide-tags">
+                <p>Tags</p>
+                ${slideData.slideTags.map(tag => `<p>${tag}</p>`).join('')}
+              </div>
+              <div class="slide-index-wrapper">
+                <p id="slide-index">${String(slideNumber).padStart(2, '0')}</p>
+                <p>/</p>
+                <p id="total-slide-count">${String(totalSlides).padStart(2, '0')}</p>
+              </div>
+            </div>
+          `;
+
+          return slide;
+        }
+
+        function splitText(element) {
+          const title = element.querySelector("h1");
+          if (title) {
+            const words = title.textContent.split(" ");
+            title.innerHTML = words
+              .map((word) => `<span class="word">${word}</span>`)
+              .join(" ");
+          }
+        }
+
+        function animateSlide(direction) {
+          if (isAnimating || !scrollAllowed) return;
+
+          isAnimating = true;
+          scrollAllowed = false;
+
+          const slider = document.querySelector(".slider");
+          const currentSlideElement = slider.querySelector(".slide");
+
+          if (direction === "down") {
+            currentSlide = currentSlide === totalSlides ? 1 : currentSlide + 1;
+          } else {
+            currentSlide = currentSlide === 1 ? totalSlides : currentSlide - 1;
+          }
+
+          const exitY = direction === "down" ? "-200vh" : "200vh";
+          const entryY = direction === "down" ? "100vh" : "-100vh";
+          const entryClipPath =
+            direction === "down"
+              ? "polygon(20% 20%, 80% 20%, 80% 100%, 20% 100%)"
+              : "polygon(20% 0%, 80% 0%, 80% 80%, 20% 80%)";
+
+          currentSlideElement.style.transform = `scale(0.25) translateY(${exitY}) rotate(30deg)`;
+          currentSlideElement.style.transition = "all 0.5s ease-in-out";
+          currentSlideElement.style.opacity = "0";
+
+          setTimeout(() => {
+            currentSlideElement.remove();
+            const newSlide = createSlide(currentSlide);
+
+            newSlide.style.transform = `translateY(${entryY})`;
+            newSlide.style.clipPath = entryClipPath;
+            newSlide.style.transition = "all 0.4s ease-out";
+
+            slider.appendChild(newSlide);
+
+            splitText(newSlide);
+
+            const words = newSlide.querySelectorAll(".word");
+            const lines = newSlide.querySelectorAll(".line");
+
+            words.forEach(word => {
+              word.style.transform = "translateY(100%)";
+              word.style.transition = "transform 0.3s ease-out";
+            });
+
+            lines.forEach(line => {
+              line.style.transform = "translateY(100%)";
+              line.style.transition = "transform 0.3s ease-out";
+            });
+
+            setTimeout(() => {
+              newSlide.style.transform = "translateY(0)";
+              newSlide.style.clipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+
+              setTimeout(() => {
+                words.forEach((word, index) => {
+                  setTimeout(() => {
+                    word.style.transform = "translateY(0)";
+                  }, index * 30);
+                });
+
+                lines.forEach((line, index) => {
+                  setTimeout(() => {
+                    line.style.transform = "translateY(0)";
+                  }, index * 30);
+                });
+              }, 200);
+            }, 50);
+
+            setTimeout(() => {
+              isAnimating = false;
+              updateCurrentPage();
+              generateThumbnails();
+              updateNavigation();
+              setTimeout(() => {
+                scrollAllowed = true;
+                lastScrollTime = Date.now();
+              }, 10);
+            }, 400);
+          }, 500);
+        }
+
+        // Function to jump directly to a specific slide with same animation as original
+        function jumpToSlide(targetSlide) {
+          if (isAnimating || !scrollAllowed) return;
+          if (targetSlide === currentSlide) return;
+
+          isAnimating = true;
+          scrollAllowed = false;
+
+          const slider = document.querySelector(".slider");
+          const currentSlideElement = slider.querySelector(".slide");
+
+          const direction = targetSlide > currentSlide ? "down" : "up";
+          const exitY = direction === "down" ? "-200vh" : "200vh";
+          const entryY = direction === "down" ? "100vh" : "-100vh";
+          const entryClipPath =
+            direction === "down"
+              ? "polygon(20% 20%, 80% 20%, 80% 100%, 20% 100%)"
+              : "polygon(20% 0%, 80% 0%, 80% 80%, 20% 80%)";
+
+          currentSlideElement.style.transform = `scale(0.25) translateY(${exitY}) rotate(30deg)`;
+          currentSlideElement.style.transition = "all 0.5s ease-in-out";
+          currentSlideElement.style.opacity = "0";
+
+          setTimeout(() => {
+            currentSlideElement.remove();
+            currentSlide = targetSlide;
+            const newSlide = createSlide(currentSlide);
+
+            newSlide.style.transform = `translateY(${entryY})`;
+            newSlide.style.clipPath = entryClipPath;
+            newSlide.style.transition = "all 0.4s ease-out";
+
+            slider.appendChild(newSlide);
+
+            splitText(newSlide);
+
+            const words = newSlide.querySelectorAll(".word");
+            const lines = newSlide.querySelectorAll(".line");
+
+            words.forEach(word => {
+              word.style.transform = "translateY(100%)";
+              word.style.transition = "transform 0.3s ease-out";
+            });
+
+            lines.forEach(line => {
+              line.style.transform = "translateY(100%)";
+              line.style.transition = "transform 0.3s ease-out";
+            });
+
+            setTimeout(() => {
+              newSlide.style.transform = "translateY(0)";
+              newSlide.style.clipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+
+              setTimeout(() => {
+                words.forEach((word, index) => {
+                  setTimeout(() => {
+                    word.style.transform = "translateY(0)";
+                  }, index * 30);
+                });
+
+                lines.forEach((line, index) => {
+                  setTimeout(() => {
+                    line.style.transform = "translateY(0)";
+                  }, index * 30);
+                });
+              }, 200);
+            }, 50);
+
+            setTimeout(() => {
+              isAnimating = false;
+              updateCurrentPage();
+              generateThumbnails();
+              updateNavigation();
+              setTimeout(() => {
+                scrollAllowed = true;
+                lastScrollTime = Date.now();
+              }, 10);
+            }, 400);
+          }, 500);
+        }
+
+        // Thumbnail click handler
+        thumbnailContainer.addEventListener('click', (e) => {
+          const thumbnail = e.target.closest('.thumbnail');
+          if (thumbnail) {
+            const targetSlide = parseInt(thumbnail.getAttribute('data-slide'));
+            jumpToSlide(targetSlide);
+          }
+        });
+
+        // Arrow navigation with 5-slide jumping
+        leftArrow.addEventListener('click', () => {
+          if (isAnimating || !scrollAllowed) return;
+          
+          // Jump 5 slides back
+          let newSlide = currentSlide - slidesPerPage;
+          if (newSlide < 1) {
+            // If we go below 1, wrap to the end
+            newSlide = totalSlides - (slidesPerPage - currentSlide);
+            if (newSlide < 1) newSlide = totalSlides;
+          }
+          
+          const newPage = Math.floor((newSlide - 1) / slidesPerPage);
+          if (newPage !== currentPage) {
+            currentPage = newPage;
+            generateThumbnails();
+          }
+          
+          jumpToSlide(newSlide);
+        });
+
+        rightArrow.addEventListener('click', () => {
+          if (isAnimating || !scrollAllowed) return;
+          
+          // Jump 5 slides forward
+          let newSlide = currentSlide + slidesPerPage;
+          if (newSlide > totalSlides) {
+            // If we go above total, wrap to the beginning
+            newSlide = slidesPerPage - (totalSlides - currentSlide);
+            if (newSlide > totalSlides) newSlide = 1;
+          }
+          
+          const newPage = Math.floor((newSlide - 1) / slidesPerPage);
+          if (newPage !== currentPage) {
+            currentPage = newPage;
+            generateThumbnails();
+          }
+          
+          jumpToSlide(newSlide);
+        });
+
+        // Mouse wheel navigation with throttling
+        let wheelTimeout;
+        window.addEventListener("wheel", (e) => {
+          if (isAnimating || !scrollAllowed) return;
+          if (Date.now() - lastScrollTime < 150) return;
+
+          // Throttle wheel events for smoother performance
+          clearTimeout(wheelTimeout);
+          wheelTimeout = setTimeout(() => {
+            const direction = e.deltaY > 0 ? "down" : "up";
+            animateSlide(direction);
+          }, 16); // ~60fps throttling
+        }, { passive: true });
+
+        // Touch navigation with improved sensitivity
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let touchMoved = false;
+
+        window.addEventListener("touchstart", (e) => {
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
+          touchMoved = false;
+        }, { passive: true });
+
+        window.addEventListener("touchmove", (e) => {
+          touchMoved = true;
+        }, { passive: true });
+
+        window.addEventListener("touchend", (e) => {
+          if (isAnimating || !scrollAllowed || !touchMoved) return;
+          if (Date.now() - lastScrollTime < 120) return;
+
+          const touchEndY = e.changedTouches[0].clientY;
+          const touchEndTime = Date.now();
+          const deltaY = touchStartY - touchEndY;
+          const deltaTime = touchEndTime - touchStartTime;
+
+          // Improved touch sensitivity
+          if (Math.abs(deltaY) > 40 && deltaTime < 400) {
+            const direction = deltaY > 0 ? "down" : "up";
+            animateSlide(direction);
+          }
+        }, { passive: true });
+
+        // Hide address bar on scroll for mobile with optimized performance
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+          if (window.innerHeight < 800) { // Mobile device
+            // Clear existing timeout
+            clearTimeout(scrollTimeout);
+            
+            // Hide address bar by scrolling
+            requestAnimationFrame(() => {
+              window.scrollTo(0, 1);
+            });
+            
+            // Set timeout to scroll back to top after a short delay
+            scrollTimeout = setTimeout(() => {
+              requestAnimationFrame(() => {
+                window.scrollTo(0, 0);
+              });
+            }, 120);
+          }
+        }, { passive: true });
+
+        // Also hide address bar on touch events (swipe gestures) - optimized
+        let touchStartY2 = 0;
+        let touchMoveTimeout;
+        
+        document.addEventListener('touchstart', function(e) {
+          if (window.innerHeight < 800) { // Mobile device
+            touchStartY2 = e.touches[0].clientY;
+          }
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+          if (window.innerHeight < 800) { // Mobile device
+            const touchY = e.touches[0].clientY;
+            const deltaY = touchStartY2 - touchY;
+            
+            // If user is swiping up or down (scrolling through photos)
+            if (Math.abs(deltaY) > 10) {
+              clearTimeout(touchMoveTimeout);
+              requestAnimationFrame(() => {
+                window.scrollTo(0, 1);
+              });
+              touchMoveTimeout = setTimeout(() => {
+                requestAnimationFrame(() => {
+                  window.scrollTo(0, 0);
+                });
+              }, 80);
+            }
+          }
+        }, { passive: true });
+
+        // Initialize the gallery
+        generateThumbnails();
+        updateNavigation();
+      });
+    </script>
+  </body>
+</html>

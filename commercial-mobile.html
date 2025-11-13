@@ -1,0 +1,3861 @@
+<!DOCTYPE html>
+<html lang="en" class="commercial">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM - Commercial Services</title>
+    
+    <!-- Android Chrome - Theme color for status bar/address bar (transparent) -->
+    <meta name="theme-color" content="transparent">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="transparent">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="transparent">
+    
+    <!-- iOS Safari - Status bar style (translucent) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <script src="loader.js"></script>
+    <link rel="stylesheet" href="background-styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      /* CSS Variables */
+      :root {
+        --primary-bg: #121212;
+        --secondary-bg: #1e1e1e;
+        --text-color: #e0e0e0;
+        --text-muted: #9e9e9e;
+        --highlight-commercial: #800020;
+        --highlight-residential: #1e88e5;
+        --highlight-contact: #ffd600;
+        --highlight-about: #9c27b0;
+      }
+      
+      /* Mobile Navigation Styles */
+      #mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1008;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+      }
+      
+      #mobile-nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+      
+      .mobile-nav-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        margin: 0 auto;
+        position: relative;
+      }
+      
+      .mobile-logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        z-index: 1009;
+        position: relative;
+      }
+      
+      .mobile-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1009;
+        position: absolute;
+        right: 0;
+      }
+      
+      .mobile-hamburger span {
+        width: 100%;
+        height: 3px;
+        background: #ffffff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+        display: block;
+      }
+      
+      .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+      }
+      
+      .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+      
+      .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+      
+      .mobile-nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1007;
+        transform: translateX(100%);
+      }
+      
+      .mobile-nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+      }
+      
+      .mobile-nav-links li {
+        list-style: none;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .mobile-nav-links li a {
+        display: block;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        min-width: 200px;
+        width: 90%;
+        max-width: 300px;
+        margin: 0.5rem auto;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+      
+      .mobile-nav-links li a:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+      
+      body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
+      
+      /* Ensure proper scrolling */
+      html, body {
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        height: auto;
+        min-height: 100vh;
+        background-color: #1e3a8a !important;
+        position: relative;
+      }
+      
+      /* Ensure main content allows scrolling */
+      .commercial {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+      }
+      
+      /* Background Grid Integration - Mobile Optimized */
+      .boxes-container {
+        position: fixed !important;
+        left: 0%;
+        top: 0%;
+        transform: translate(-20%, -20%) skewX(-45deg) skewY(12deg) scale(0.6) rotate(0deg) translateZ(0);
+        padding: 0;
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+      }
+      
+      .boxes-container .box-cell {
+        pointer-events: none !important;
+        transition: none !important;
+        transform: none !important;
+      }
+      
+      /* Gradient Overlay for Darker Corners - Made transparent */
+      .gradient-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        pointer-events: none;
+        z-index: 2;
+      }
+      
+      /* Navigation positioning like home page - transparent background */
+      .commercial nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none;
+        z-index: 100;
+        padding: 0.6rem 0;
+        transition: all 0.3s ease;
+      }
+      
+      .commercial nav.scrolled {
+        background-color: rgba(64, 64, 64, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 1rem 0;
+        z-index: 100;
+      }
+      
+      /* Ensure main content allows scrolling */
+      .commercial {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        background-color: transparent;
+      }
+      
+      /* Ensure content area allows scrolling */
+      .content {
+        height: auto;
+        min-height: auto;
+        overflow: visible;
+        max-width: 1920px;
+        margin: 0 auto;
+        width: 100%;
+        padding: 0;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 10;
+      }
+      
+      /* Commercial specific styles */
+      .commercial .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), 
+                    url('/Cooledge/25.webp') no-repeat center center/cover;
+        height: 100vh;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 0;
+        position: relative; /* Ensure proper positioning */
+        z-index: 50; /* Higher than background, lower than navigation */
+      }
+      
+      .commercial .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        color: white;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+      
+      .commercial .hero p {
+        font-size: 1.3rem;
+        max-width: 100%;
+        margin: 0 auto;
+        line-height: 1.6;
+        color: #f0f0f0;
+      }
+      
+      .commercial .hero-tagline {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        color: #000000;
+        text-transform: uppercase;
+      }
+      
+      /* Section Styles */
+      .commercial section:not(.news-insights) {
+        padding: 5rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        position: relative; /* Ensure proper positioning */
+        z-index: 5; /* Higher than hero, lower than news-insights */
+      }
+      
+      .commercial section:last-child {
+        border-bottom: none;
+      }
+      
+      .section-container {
+        max-width: 1760px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        align-items: center;
+      }
+      
+      .section-content h2 {
+        font-size: 2.8rem;
+        margin-bottom: 2rem;
+        color: white;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* Button Container Styles */
+      .button-container {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        max-width: 600px;
+      }
+
+      /* Gallery Button Styles */
+      .gallery-btn {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-family: "PP Neue Montreal", "Barlow Condensed", sans-serif;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .gallery-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+        background: linear-gradient(135deg, #34495e, #2c3e50);
+      }
+
+      .gallery-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(44, 62, 80, 0.3);
+      }
+
+      .gallery-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      /* Project Specs Button Styles */
+      .project-specs-btn {
+        background: linear-gradient(135deg, var(--highlight-commercial), #600018);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-family: "PP Neue Montreal", "Barlow Condensed", sans-serif;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(128, 0, 32, 0.3);
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .project-specs-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(128, 0, 32, 0.4);
+        background: linear-gradient(135deg, #600018, var(--highlight-commercial));
+      }
+
+      .project-specs-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(128, 0, 32, 0.3);
+      }
+
+      .project-specs-btn .arrow {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+      }
+
+      .project-specs-btn:hover .arrow {
+        transform: translateX(3px);
+      }
+
+      /* Google Maps Button Styles */
+      .google-maps-btn {
+        background: linear-gradient(135deg, #4285f4, #1a73e8);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-family: "PP Neue Montreal", "Barlow Condensed", sans-serif;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .google-maps-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        background: linear-gradient(135deg, #1a73e8, #4285f4);
+      }
+
+      .google-maps-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(66, 133, 244, 0.3);
+      }
+
+      .maps-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      /* Popup Overlay Styles */
+      .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .popup-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Popup Content Styles */
+      .popup-content {
+        background: #505050;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--highlight-commercial);
+      }
+
+      .popup-overlay.active .popup-content {
+        transform: scale(1);
+      }
+
+      /* Popup Header */
+      .popup-header {
+        background: var(--highlight-commercial);
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .popup-header h2 {
+        color: white;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      .popup-close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+      }
+
+      .popup-close-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Popup Body */
+      .popup-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .popup-section {
+        margin-bottom: 2rem;
+      }
+
+      .popup-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .popup-section h3 {
+        color: var(--highlight-commercial);
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .popup-section p {
+        color: #e0e0e0;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .popup-section ul {
+        color: #e0e0e0;
+        padding-left: 1.5rem;
+      }
+
+      .popup-section li {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+      }
+
+      /* Project Details Layout */
+      .project-details {
+        margin-top: 1rem;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .detail-label {
+        color: var(--highlight-commercial);
+        font-weight: 600;
+        font-size: 0.9rem;
+        min-width: 120px;
+        flex-shrink: 0;
+      }
+
+      .detail-value {
+        color: #e0e0e0;
+        font-weight: 400;
+        text-align: right;
+        flex: 1;
+        margin-left: 1rem;
+      }
+
+      /* Mobile responsive adjustments for project details */
+      @media (max-width: 768px) {
+        .detail-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+
+        .detail-label {
+          min-width: auto;
+          font-size: 0.85rem;
+        }
+
+        .detail-value {
+          text-align: left;
+          margin-left: 0;
+          font-size: 0.9rem;
+        }
+      }
+      
+      .section-content h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        color: var(--highlight-commercial);
+        text-transform: uppercase;
+      }
+      
+      .section-content p {
+        margin-bottom: 1.5rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+        font-size: 1.1rem;
+      }
+      
+      .section-image img {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      
+      .legacy-quote {
+        font-style: italic;
+        color: var(--highlight-commercial);
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-left: 3px solid var(--highlight-commercial);
+        background: rgba(128, 0, 32, 0.1);
+      }
+      
+      .learn-more-link {
+        color: var(--highlight-commercial);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+      }
+      
+      .learn-more-link:hover {
+        color: #600018;
+      }
+      
+      .esg-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .esg-item {
+        color: var(--highlight-commercial);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(128, 0, 32, 0.3);
+      }
+      
+      .stats-container {
+        max-width: 1760px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+      }
+      
+      .stat-item {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(128, 0, 32, 0.1);
+        border-radius: 12px;
+        border: 1px solid rgba(128, 0, 32, 0.3);
+      }
+      
+      .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--highlight-commercial);
+        margin-bottom: 0.5rem;
+      }
+      
+      .stat-label {
+        font-size: 1rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .commercial .btn {
+        background-color: var(--highlight-commercial);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+      
+      .commercial .btn:hover {
+        background-color: #600018;
+        transform: translateY(-2px);
+      }
+      
+      /* Commercial page navigation - uses main styles.css */
+      
+      /* Logo styles */
+      .commercial .logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+        transition: all 0.3s ease;
+      }
+      
+      .logo-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      
+      .logo-link:hover {
+        transform: scale(1.05);
+      }
+      
+      @media (max-width: 768px) {
+        .commercial .logo {
+          height: 30px !important;
+          max-width: 30px !important;
+        }
+        
+        .commercial .hero {
+          height: 100vh;
+          min-height: 100vh;
+          padding: 2rem 1rem;
+        }
+        
+        .commercial .hero h1 {
+          font-size: 2.5rem;
+        }
+        
+        .commercial .hero p {
+          font-size: 1.1rem;
+        }
+        
+        .section-container {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 0 1rem;
+        }
+        
+        .commercial section {
+          padding: 3rem 1rem;
+        }
+        
+        .section-content h2 {
+          font-size: 2.2rem;
+        }
+        
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+        }
+        
+        .stat-number {
+          font-size: 2.5rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .commercial .logo {
+          height: 25px !important;
+          max-width: 25px !important;
+        }
+        
+        .commercial .hero h1 {
+          font-size: 2rem;
+        }
+        
+        .commercial .hero p {
+          font-size: 1rem;
+        }
+        
+        .stats-container {
+          grid-template-columns: 1fr;
+        }
+        
+        .stat-number {
+          font-size: 2rem;
+        }
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .commercial .hero {
+          height: 70vh;
+          padding: 3rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+        }
+        
+        .commercial .hero h1 {
+          font-size: 2.5rem;
+        }
+        
+        .commercial .hero p {
+          font-size: 1.1rem;
+        }
+        
+        .section-container {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 0 1rem;
+        }
+        
+        .commercial section {
+          padding: 3rem 1rem;
+        }
+        
+        .section-content h2 {
+          font-size: 2.2rem;
+        }
+        
+        .section-header h2 {
+          font-size: 2.5rem;
+        }
+        
+        .commercial .services-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+      }
+      
+      /* Navigation scroll behavior */
+      .commercial nav {
+        transition: transform 0.3s ease, background-color 0.3s ease, padding 0.3s ease;
+      }
+      
+      .commercial nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+      
+      .commercial nav.nav-hidden.scrolled {
+        transform: translateY(-100%);
+      }
+      
+      /* News & Insights Section Styles */
+      .news-insights {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%); /* Gradient background */
+        padding: 4rem 2rem 6rem 2rem; /* More generous padding */
+        border-bottom: 3px solid var(--highlight-commercial); /* Thick commercial color border */
+        border-top: 3px solid var(--highlight-commercial); /* Top border for separation */
+        min-height: auto; /* Allow natural height for proper scrolling */
+        height: auto; /* Ensure natural height */
+        overflow: visible; /* Ensure content is not cut off */
+        position: relative; /* Proper positioning */
+        z-index: 10; /* Ensure it's above other elements */
+        margin: 0; /* Remove margins */
+        width: 100vw; /* Full viewport width */
+        left: 0;
+        right: 0;
+        box-sizing: border-box; /* Include padding in width calculation */
+        display: block; /* Ensure block display */
+        box-shadow: 0 0 30px rgba(128, 0, 32, 0.2); /* Subtle glow effect */
+      }
+      
+      .news-insights .section-header h2 {
+        color: var(--highlight-commercial); /* Commercial color for distinction */
+        font-size: 3rem; /* Larger font size */
+        text-align: center;
+        margin-bottom: 2rem; /* More spacing */
+        margin-top: 0; /* Reset top margin */
+        font-weight: 700;
+        font-family: "Barlow Condensed", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 3px; /* More letter spacing */
+        position: relative; /* Ensure proper positioning */
+        z-index: 20; /* Higher than section z-index */
+        text-shadow: 0 0 20px rgba(128, 0, 32, 0.5); /* Glow effect */
+        border-bottom: 2px solid var(--highlight-commercial); /* Underline */
+        padding-bottom: 1rem; /* Space for underline */
+        display: inline-block; /* Allow border to fit text */
+        width: 100%; /* Full width for centering */
+      }
+      
+      .news-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Equal halves: left and right */
+        gap: 5rem; /* Maximum spacing between left and right */
+        max-width: 100%; /* Full width for proper halves */
+        margin: 0; /* No auto margins */
+        position: relative; /* Ensure proper positioning */
+        z-index: 20; /* Higher than section z-index */
+        height: auto; /* Ensure natural height */
+        min-height: auto; /* Allow natural height */
+        align-items: start; /* Align items to the top */
+        overflow: visible; /* Allow sticky positioning to work */
+      }
+      
+      /* Desktop-specific spacing - adjust for new header styling */
+      @media (min-width: 769px) {
+        .news-grid {
+          margin-top: 3rem; /* Reduced spacing since header is now properly positioned */
+        }
+      }
+      
+      /* Featured Article Styles */
+      .featured-article {
+        background: #1e1e1e; /* Dark background */
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, position 0.3s ease; /* Smooth transitions */
+        position: sticky; /* Sticky positioning */
+        top: 6rem; /* Stick 6rem from top of viewport */
+        z-index: 25; /* Higher than grid z-index */
+        width: 100%; /* Full width of left half */
+        height: fit-content; /* Fit content height */
+        align-self: start; /* Align to start of grid container */
+      }
+      
+      .featured-article:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+      
+      .featured-article .article-image {
+        height: 300px; /* Smaller image for featured article */
+        overflow: hidden;
+        width: 100%; /* Full width */
+      }
+      
+      .featured-article .article-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      
+      .featured-article:hover .article-image img {
+        transform: scale(1.05);
+      }
+      
+      .featured-article .article-content {
+        padding: 1.8rem; /* Reduced padding for smaller featured article */
+      }
+      
+      .featured-article h3 {
+        font-size: 1.3rem; /* Slightly smaller title */
+        color: white; /* White text for dark background */
+        margin-bottom: 1.2rem; /* Reduced margin */
+        line-height: 1.4;
+        font-weight: 600;
+      }
+      
+      /* Small Articles Grid - 2 columns × 3 rows */
+      .small-articles {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 equal columns */
+        gap: 3.5rem; /* Even more spacing between the 2 pictures side by side */
+        row-gap: 1.5rem; /* Reduced spacing between rows */
+        grid-template-rows: repeat(3, 1fr); /* 3 equal height rows */
+        width: 100%; /* Full width of right half */
+        height: 100%; /* Full height of container */
+        align-items: stretch; /* Stretch items to fill grid cell height */
+      }
+      
+      /* Ensure each article card takes equal width and height */
+      .small-articles .article-card {
+        width: 100%; /* Full width of grid cell */
+        height: 100%; /* Full height of grid cell */
+        min-width: 0; /* Prevent overflow */
+        display: flex; /* Use flexbox for internal layout */
+        flex-direction: column; /* Stack image and content vertically */
+      }
+      
+      .article-card {
+        background: #1e1e1e; /* Dark background */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative; /* Ensure proper positioning */
+        z-index: 25; /* Higher than grid z-index */
+      }
+      
+      .article-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      }
+      
+      .article-card .article-image {
+        height: 240px; /* Slightly smaller but still tall images for right half */
+        overflow: hidden;
+        width: 100%; /* Full width */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .article-card .article-image img {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+      
+      .article-card .article-content {
+        padding: 1.5rem;
+        flex: 1; /* Take up remaining space in flex container */
+        display: flex; /* Use flexbox for content layout */
+        flex-direction: column; /* Stack title and link vertically */
+        justify-content: space-between; /* Space between title and link */
+      }
+      
+      .article-card h4 {
+        font-size: 1rem;
+        color: white; /* White text for dark background */
+        margin-bottom: 0; /* Remove margin since flexbox handles spacing */
+        line-height: 1.4;
+        font-weight: 600;
+        flex: 1; /* Allow title to take available space */
+      }
+      
+      /* Read More Links */
+      .read-more {
+        color: #ff6b35;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative; /* Ensure proper positioning */
+        z-index: 30; /* Higher than article z-index */
+      }
+      
+      .read-more:hover {
+        color: #e55a2b;
+      }
+      
+      .read-more::after {
+        content: '→';
+        font-weight: bold;
+        transition: transform 0.3s ease;
+      }
+      
+      .read-more:hover::after {
+        transform: translateX(3px);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 1920px) {
+        .news-insights {
+          width: 100%;
+          max-width: 1920px;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .news-insights {
+          width: 100vw;
+          margin: 0;
+          padding: 2rem 1rem;
+          min-height: auto;
+        }
+        
+        .news-grid {
+          grid-template-columns: 1fr; /* Single column on mobile */
+          gap: 2rem;
+          margin-top: 1rem;
+        }
+        
+        .featured-article {
+          position: relative; /* Remove sticky on mobile */
+          top: auto;
+          margin-top: 0;
+          width: 100%;
+        }
+        
+        .featured-article .article-image {
+          height: 250px; /* Smaller image on mobile */
+        }
+        
+        .featured-article .article-content {
+          padding: 1.5rem;
+        }
+        
+        .small-articles {
+          display: flex !important; /* Restore horizontal flex layout */
+          overflow-x: auto !important; /* Enable horizontal scrolling */
+          overflow-y: hidden !important; /* Prevent vertical scrollbar */
+          gap: 1rem !important;
+          padding: 1rem 0 !important;
+          scroll-snap-type: x mandatory !important; /* Snap scrolling */
+          -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
+        }
+        
+        .small-articles .article-card {
+          flex: 0 0 280px !important; /* Fixed width, no shrinking */
+          scroll-snap-align: start !important; /* Snap to start of each card */
+        }
+        
+        .article-card .article-image {
+          height: 180px; /* Smaller images for horizontal layout */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .article-card .article-image img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+        
+        .article-card .article-content {
+          padding: 1rem;
+        }
+        
+        .news-insights .section-header h2 {
+          font-size: 2rem;
+          letter-spacing: 1px;
+          margin-bottom: 1.5rem;
+        }
+        
+        .featured-article h3 {
+          font-size: 1.2rem;
+          line-height: 1.3;
+        }
+        
+        .article-card h4 {
+          font-size: 0.9rem;
+          line-height: 1.3;
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .small-articles::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .small-articles::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 2px;
+        }
+        
+        .small-articles::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 2px;
+        }
+        
+        .small-articles::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .news-insights {
+          padding: 1.5rem 1rem;
+          min-height: auto;
+        }
+        
+        .news-insights .section-header h2 {
+          font-size: 1.6rem;
+          letter-spacing: 1px;
+          margin-bottom: 1rem;
+        }
+        
+        .featured-article .article-content {
+          padding: 1rem;
+        }
+        
+        .featured-article .article-image {
+          height: 200px;
+        }
+        
+        .small-articles .article-card {
+          flex: 0 0 260px; /* Slightly smaller cards on very small screens */
+        }
+        
+        .article-card .article-content {
+          padding: 0.8rem;
+        }
+        
+        .article-card .article-image {
+          height: 160px; /* Smaller images on very small screens */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .article-card .article-image img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+        
+        .featured-article h3 {
+          font-size: 1.1rem;
+        }
+        
+        .article-card h4 {
+          font-size: 0.8rem;
+        }
+      }
+      
+      /* CSS Variables for About Us Sections */
+      :root {
+        --primary-bg: #1a1a1a;
+        --secondary-bg: #2a2a2a;
+        --text-muted: #cccccc;
+      }
+      
+      /* About Us Sections CSS */
+      .about-section, .who-we-are, .legacy-section, .services-section {
+        padding: 6rem 0;
+        background: #404040;
+        min-height: auto;
+        height: auto;
+        display: block;
+        width: 100%;
+        margin: 0;
+        position: relative;
+        z-index: 5;
+        overflow: visible;
+      }
+      
+      .who-we-are {
+        background: #505050; /* Consistent dark grey background for all Who We Are sections */
+      }
+      
+      .legacy-section {
+        background: #1a1a1a;
+      }
+      
+      .services-section {
+        background: #2a2a2a;
+      }
+      
+      .section-container {
+        max-width: 1760px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        min-height: 300px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      /* Desktop layout: All Who We Are sections have the same layout (image on left, text on right) */
+      @media (min-width: 769px) {
+        .who-we-are .section-container {
+          grid-template-columns: 1fr 1fr;
+        }
+        
+        .who-we-are .section-image {
+          order: 1;
+        }
+        
+        .who-we-are .section-content {
+          order: 2;
+        }
+      }
+      
+      .section-content h2 {
+        font-size: 2.5rem;
+        color: white !important;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        font-family: "Barlow Condensed", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: block;
+        visibility: visible;
+      }
+      
+      .section-content h3 {
+        font-size: 1rem;
+        color: #ffc107;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .section-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #cccccc !important;
+        margin-bottom: 1.5rem;
+        display: block;
+        visibility: visible;
+      }
+      
+      .legacy-quote {
+        font-size: 1.2rem;
+        font-style: italic;
+        color: #ffc107;
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-left: 4px solid #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+        border-radius: 8px;
+      }
+      
+      
+      
+      
+      /* Gradient Transition Section */
+      .gradient-transition {
+        width: 100vw;
+        height: 20vh;
+        background: linear-gradient(180deg, #22171A 0%, #931C1C 100%);
+        position: relative;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Airplane SVG Animation Styles */
+      #airplane-svg {
+        width: 100%;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        pointer-events: none;
+      }
+
+      #airplane-svg path {
+        stroke-width: .4;
+        stroke: #ffffff;
+        fill: none;
+        /* Initial values will be set by JavaScript */
+      }
+      
+      /* Mobile SVG adjustments */
+      @media (max-width: 768px) {
+        #airplane-svg {
+          height: 80vh;
+        }
+        
+        #airplane-svg path {
+          stroke-width: .6;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        #airplane-svg {
+          height: 60vh;
+        }
+        
+        #airplane-svg path {
+          stroke-width: .8;
+        }
+      }
+      
+      /* Layered Peaks SVG Section Styles */
+      .layered-peaks-section {
+        width: 100vw;
+        padding: 0;
+        margin: -6vh 0 0 0;
+        background: url('/commercial/layered-peaks-haikei.svg') no-repeat top center;
+        background-size: 100% 100%;
+        position: relative;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+        z-index: 20;
+        display: block;
+        height: 150vh;
+        min-height: 150vh;
+        box-sizing: border-box;
+      }
+      
+      /* Cooledge Image Overlay Styles */
+      .cooledge-image-overlay {
+        position: absolute;
+        left: 8%;
+        top: 5%;
+        width: 40%;
+        max-width: 600px;
+        z-index: 25;
+        opacity: 0.9;
+        transition: all 0.3s ease;
+      }
+      
+      .cooledge-103-image {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        object-fit: cover;
+      }
+      
+      /* Responsive Design for Cooledge Image */
+      @media (max-width: 1200px) {
+        .cooledge-image-overlay {
+          left: 5%;
+          width: 45%;
+          top: 4%;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .cooledge-image-overlay {
+          left: 3%;
+          width: 50%;
+          top: 3%;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .cooledge-image-overlay {
+          left: 2%;
+          width: 60%;
+          top: 2%;
+        }
+      }
+      
+      /* Responsive Design for Layered Peaks */
+      @media (max-width: 1920px) {
+        .layered-peaks-section {
+          width: 100%;
+          max-width: 1920px;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .layered-peaks-section {
+          width: 100vw;
+          margin: -1vh 0 0 0;
+          height: 100vh;
+          min-height: 100vh;
+          background-size: cover;
+          overflow: hidden;
+        }
+        
+        .gradient-transition {
+          height: 15vh;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .layered-peaks-section {
+          
+          height: 80vh;
+          min-height: 80vh;
+        }
+        
+        .gradient-transition {
+          height: 10vh;
+        }
+      }
+
+      /* Responsive Design for About Us Sections */
+      @media (max-width: 1920px) {
+        .about-section, .who-we-are, .legacy-section, .services-section {
+          width: 100%;
+          max-width: 1920px;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .about-section, .who-we-are, .legacy-section, .services-section {
+          width: 100%;
+          margin: 0;
+          padding: 4rem 0;
+          min-height: auto;
+          height: auto;
+          display: block;
+          position: relative;
+          clear: both;
+          overflow: visible;
+        }
+        
+        .section-container {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+          padding: 0 1rem;
+          max-width: 100%;
+          overflow: visible;
+          margin: 0 auto;
+          display: grid;
+          height: auto;
+          min-height: auto;
+        }
+        
+        /* Mobile layout: image on top, text below */
+        .who-we-are .section-container {
+          grid-template-columns: 1fr !important;
+        }
+        
+        .who-we-are .section-image {
+          order: 1 !important;
+        }
+        
+        .who-we-are .section-content {
+          order: 2 !important;
+        }
+        
+        .section-content h2 {
+          font-size: 2.2rem;
+          margin-bottom: 1rem;
+          text-align: center;
+        }
+        
+        .section-content p {
+          margin-bottom: 1rem;
+          text-align: center;
+          line-height: 1.6;
+        }
+        
+        .section-image {
+          text-align: center;
+        }
+
+        /* Mobile Button Styles */
+        .gallery-btn, .project-specs-btn, .google-maps-btn {
+          padding: 0.8rem 1.5rem;
+          font-size: 0.9rem;
+          min-width: 140px;
+          justify-content: center;
+        }
+
+        .gallery-icon, .maps-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        .project-specs-btn .arrow {
+          font-size: 1rem;
+        }
+
+        .button-container {
+          margin-top: 1.2rem;
+          gap: 0.8rem;
+          justify-content: center;
+          flex-direction: column;
+        }
+
+        .button-container button {
+          width: 100%;
+          max-width: 300px;
+        }
+        
+        .section-image img {
+          width: 100%;
+          max-width: 400px;
+          height: auto;
+          border-radius: 12px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+      }
+      
+      /* Desktop Section Styles - Copy from desktop version */
+      .grandview-section, .mesa-section, .cattle-section, .central-section, .college-section, .lakehavasu-section, .mohave-section {
+        padding: 0;
+        background: transparent !important;
+        background-color: transparent !important;
+        height: auto;
+        display: block;
+        width: 100vw;
+        margin: 0;
+        position: relative;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        overflow: visible;
+      }
+      
+      .grandview-section h1, .grandview-section h2, .grandview-section p,
+      .mesa-section h1, .mesa-section h2, .mesa-section p,
+      .cattle-section h1, .cattle-section h2, .cattle-section p,
+      .central-section h1, .central-section h2, .central-section p,
+      .college-section h1, .college-section h2, .college-section p,
+      .lakehavasu-section h1, .lakehavasu-section h2, .lakehavasu-section p,
+      .mohave-section h1, .mohave-section h2, .mohave-section p {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Section 1: Grandview Casa Blanca South - Large Hero Style */
+      .grandview-section {
+        background: linear-gradient(135deg, #505050 0%, #404040 100%);
+      }
+      
+      .grandview-section .section-title {
+        text-align: center;
+        padding: 3rem 0 1rem 0;
+        width: 100%;
+        background: transparent;
+        border: none;
+        grid-area: title;
+      }
+      
+      .grandview-section .section-title h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        font-family: "Barlow Condensed", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      
+      /* Remove underline pseudo-element for Grandview H1 */
+      .grandview-section .section-title h1::after {
+        content: none;
+      }
+      
+      .grandview-section .section-container {
+        min-height: 600px;
+        padding: 4rem 3rem;
+      }
+      
+      /* Section 2: Mesa Main Street Stations - Compact Style */
+      .mesa-section {
+        background: #606060;
+      }
+      
+      .mesa-section .section-container {
+        min-height: 400px;
+        padding: 3rem 2rem;
+      }
+      
+      /* Section 3: Cattle Homestead - Wide Style */
+      .cattle-section {
+        background: linear-gradient(45deg, #454545 0%, #555555 100%);
+      }
+      
+      .cattle-section .section-container {
+        min-height: 350px;
+        padding: 5rem 4rem;
+        gap: 6rem;
+      }
+      
+      /* Section 4: Central Commercial Building - Tall Style */
+      .central-section {
+        background: #4a4a4a;
+      }
+      
+      .central-section .section-container {
+        min-height: 500px;
+        padding: 2rem 2rem;
+      }
+      
+      /* Section 5: College Condos - Medium Style */
+      .college-section {
+        background: linear-gradient(90deg, #505050 0%, #585858 100%);
+      }
+      
+      .college-section .section-container {
+        min-height: 450px;
+        padding: 3.5rem 3rem;
+        gap: 5rem;
+      }
+      
+      /* Section 6: Lake Havasu City - Minimal Style */
+      .lakehavasu-section {
+        background: #525252;
+      }
+      
+      .lakehavasu-section .section-container {
+        min-height: 320px;
+        padding: 2.5rem 2rem;
+        gap: 3rem;
+      }
+      
+      /* Section 7: Mohave Mental Health - Full Style */
+      .mohave-section {
+        background: linear-gradient(180deg, #484848 0%, #505050 50%, #585858 100%);
+      }
+      
+      .mohave-section .section-container {
+        min-height: 550px;
+        padding: 4.5rem 3rem;
+        gap: 4.5rem;
+      }
+      
+      /* Make the section itself the grid container since we removed .section-container */
+      .grandview-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+        padding: 4rem 3rem;
+        grid-template-areas:
+          "title title"
+          "image text"
+          "buttons text";
+      }
+      
+      .grandview-section .button-container {
+        grid-area: buttons;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 0rem; /* Add some space below the image */
+        margin-left: 12rem; /* Move buttons to the right a little */
+      }
+      
+      /* Place Grandview text content after the buttons in column 2 */
+      .grandview-section .section-content {
+        grid-area: text; /* ensure content stays on the right */
+      }
+      
+      /* Add rounded corners to all images in project sections */
+      .grandview-section .section-image, .mesa-section .section-image, .cattle-section .section-image, 
+      .central-section .section-image, .college-section .section-image, .lakehavasu-section .section-image, 
+      .mohave-section .section-image {
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      
+      .grandview-section .section-image img, .mesa-section .section-image img, .cattle-section .section-image img,
+      .central-section .section-image img, .college-section .section-image img, .lakehavasu-section .section-image img,
+      .mohave-section .section-image img {
+        border-radius: 12px;
+      }
+      
+      /* Sections with image on left (1st, 3rd, 5th, 7th) */
+      .grandview-section .section-container,
+      .cattle-section .section-container,
+      .college-section .section-container,
+      .mohave-section .section-container {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .grandview-section .section-image,
+      .cattle-section .section-image,
+      .college-section .section-image,
+      .mohave-section .section-image {
+        order: 1;
+      }
+      
+      .grandview-section .section-content,
+      .cattle-section .section-content,
+      .college-section .section-content,
+      .mohave-section .section-content {
+        order: 2;
+      }
+      
+      /* Sections with image on right (2nd, 4th, 6th) */
+      .mesa-section .section-container,
+      .central-section .section-container,
+      .lakehavasu-section .section-container {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .mesa-section .section-image,
+      .central-section .section-image,
+      .lakehavasu-section .section-image {
+        order: 2;
+      }
+      
+      .mesa-section .section-content,
+      .central-section .section-content,
+      .lakehavasu-section .section-content {
+        order: 1;
+      }
+      
+      .section-content h2 {
+        font-size: 2.5rem;
+        color: white !important;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        font-family: "Barlow Condensed", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .section-content p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #e0e0e0 !important;
+        margin-bottom: 1.5rem;
+      }
+      
+      .section-content strong {
+        color: #fbbf24 !important;
+        font-weight: 600;
+      }
+      
+      .section-content ul {
+        color: #e5e7eb !important;
+        padding-left: 1.5rem;
+      }
+      
+      .section-content li {
+        margin-bottom: 0.5rem;
+        color: #e5e7eb !important;
+      }
+      
+      /* Button styles */
+      .button-container {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 2rem 0;
+      }
+      
+      .project-specs-btn, .google-maps-btn, .gallery-btn {
+        background: linear-gradient(135deg, #800020 0%, #a00030 100%);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+      
+      .project-specs-btn:hover, .google-maps-btn:hover, .gallery-btn:hover {
+        background: linear-gradient(135deg, #a00030 0%, #c00040 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
+      }
+      
+      .google-maps-btn {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+      }
+      
+      .google-maps-btn:hover {
+        background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%);
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+      }
+      
+      .gallery-btn {
+        background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+      }
+      
+      .gallery-btn:hover {
+        background: linear-gradient(135deg, #ba68c8 0%, #ce93d8 100%);
+        box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+      }
+      
+      .maps-icon {
+        width: 16px;
+        height: 16px;
+        margin-left: 0.5rem;
+      }
+      
+      .gallery-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 0.5rem;
+      }
+      
+      .arrow {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+      }
+      
+      .project-specs-btn:hover .arrow {
+        transform: translateX(4px);
+      }
+      
+      /* Section containers */
+      .section-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        max-width: 1920px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      
+      .section-image {
+        width: 100%;
+        height: auto;
+      }
+      
+      .section-image img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+      
+      /* Mobile responsive adjustments */
+      @media (max-width: 768px) {
+        .grandview-section, .mesa-section, .cattle-section, .central-section, .college-section, .lakehavasu-section, .mohave-section {
+          width: 100vw;
+          margin: 0;
+        }
+        
+        /* Enhanced mobile typography */
+        .commercial .hero h1 {
+          font-size: 2.8rem !important;
+          line-height: 1.2;
+          margin-bottom: 1rem;
+        }
+        
+        .commercial .hero p {
+          font-size: 1.1rem !important;
+          line-height: 1.6;
+          max-width: 90%;
+          margin: 0 auto;
+        }
+        
+        /* Better mobile button sizing */
+        .project-specs-btn, .google-maps-btn, .gallery-btn {
+          min-height: 48px;
+          padding: 12px 20px;
+          font-size: 1rem;
+          touch-action: manipulation;
+        }
+        
+        /* Improved mobile spacing */
+        .section-container {
+          padding: 2rem 1.5rem !important;
+          gap: 2.5rem;
+        }
+        
+        /* Better mobile navigation */
+        .commercial nav {
+          padding: 0.5rem 0;
+          z-index: 1000;
+        }
+        
+        .commercial .logo {
+          height: 35px !important;
+          max-width: 35px !important;
+          object-fit: contain;
+          display: block;
+        }
+        
+        .logo-link {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          height: 100%;
+          padding: 0.5rem 0;
+        }
+        
+        /* Enhanced mobile touch targets */
+        .nav-links a {
+          padding: 12px 16px;
+          font-size: 1.1rem;
+          touch-action: manipulation;
+        }
+        
+        /* Mobile navigation improvements */
+        .nav-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          padding: 0 1rem;
+          height: 100%;
+          min-height: 50px;
+          position: relative;
+        }
+        
+        /* Center the logo */
+        .nav-container .logo-link {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1001;
+        }
+        
+        /* Ensure entire navigation (including logo) is hidden on mobile scroll */
+        .commercial nav.nav-hidden {
+          transform: translateY(-100%);
+          transition: transform 0.3s ease;
+        }
+        
+        /* Hamburger menu button */
+        .hamburger {
+          display: block;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+          z-index: 1002;
+          position: relative;
+          width: 40px;
+          height: 40px;
+          flex-shrink: 0;
+          margin-left: auto;
+        }
+        
+        .hamburger span {
+          display: block;
+          width: 25px;
+          height: 3px;
+          background: white;
+          margin: 5px 0;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 2px;
+          transform-origin: center;
+        }
+        
+        /* Hamburger animation - smoother transitions */
+        .hamburger.active span:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+          opacity: 0;
+          transform: scaleX(0);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hamburger.active span:nth-child(3) {
+          transform: rotate(-45deg) translate(7px, -6px);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-links {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.98);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1000;
+          opacity: 0;
+          visibility: hidden;
+          overflow: hidden;
+          transform: translateX(100%);
+        }
+        
+        .nav-links.active {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(0);
+        }
+        
+        /* Add solid overlay behind nav-links */
+        .nav-links::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.9);
+          z-index: -1;
+        }
+        
+        .nav-links li {
+          margin: 1rem 0;
+          opacity: 0;
+          transform: translateY(20px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-links.active li {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .nav-links.active li:nth-child(1) { transition-delay: 0.1s; }
+        .nav-links.active li:nth-child(2) { transition-delay: 0.2s; }
+        .nav-links.active li:nth-child(3) { transition-delay: 0.3s; }
+        .nav-links.active li:nth-child(4) { transition-delay: 0.4s; }
+        .nav-links.active li:nth-child(5) { transition-delay: 0.5s; }
+        
+        .nav-links a {
+          font-size: 1.5rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+        }
+        
+        .nav-links a:hover {
+          transform: scale(1.05);
+          color: #fbbf24;
+        }
+        
+        /* Prevent body scroll when menu is open */
+        body.menu-open {
+          overflow: hidden;
+          position: fixed;
+          width: 100%;
+        }
+        
+        /* Ensure hamburger is visible on mobile */
+        @media (max-width: 768px) {
+          .hamburger {
+            display: block !important;
+          }
+        }
+        
+        /* Hide hamburger on desktop */
+        @media (min-width: 769px) {
+          .hamburger {
+            display: none;
+          }
+        }
+        
+        /* Make news section more transparent on mobile to show background grid */
+        .news-insights {
+          background: linear-gradient(135deg, rgba(15, 15, 15, 0.4) 0%, rgba(26, 26, 26, 0.4) 50%, rgba(15, 15, 15, 0.4) 100%) !important;
+          backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
+        }
+        
+        /* Mobile-optimized background grid */
+        .boxes-container {
+          left: -29% !important;
+          top: 0% !important;
+          transform: translate(-25%, -40%) skewX(-40deg) skewY(10deg) scale(0.5) rotate(0deg) translateZ(0) !important;
+          width: 100vw !important;
+          height: 100vh !important;
+        }
+        
+        .box-cell {
+          width: 5rem !important;
+          height: 2.5rem !important;
+        }
+        
+        .box-row {
+          width: 5rem !important;
+          height: 2.5rem !important;
+        }
+        
+        /* Better mobile article cards - Glass morphism styling */
+        .featured-article {
+          background: rgba(255, 255, 255, 0.1) !important;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .featured-article h3 {
+          color: white !important;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .featured-article p {
+          color: rgba(255, 255, 255, 0.9) !important;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .article-card {
+          background: rgba(255, 255, 255, 0.08) !important;
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          margin-bottom: 1.5rem;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .article-card h4 {
+          color: white !important;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .article-card .read-more {
+          color: rgba(255, 255, 255, 0.9) !important;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .article-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+          background: rgba(255, 255, 255, 0.12) !important;
+        }
+        
+        /* Improved mobile section spacing */
+        .section-container {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 2rem 1.5rem;
+        }
+        
+        /* Mobile-optimized project sections - Header → Image → Info → Buttons */
+        .grandview-section, .mesa-section, .cattle-section, .central-section, .college-section, .lakehavasu-section, .mohave-section {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 1.5rem !important;
+          padding: 2rem 1rem !important;
+          width: 100% !important;
+          align-items: center !important; /* Center all content */
+          text-align: center !important; /* Center text alignment */
+        }
+        
+        /* Handle sections with different structures */
+        .mesa-section .section-container, .lakehavasu-section .section-container,
+        .cattle-section .section-container, .central-section .section-container,
+        .college-section .section-container, .mohave-section .section-container {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 1.5rem !important;
+          width: 100% !important;
+          align-items: center !important; /* Center content */
+          text-align: center !important; /* Center text */
+          margin: 0 auto !important; /* Center the container */
+          order: 3 !important; /* Container comes after image */
+        }
+        
+        /* Section title styling for all sections */
+        .grandview-section .section-title, .mesa-section .section-title, .cattle-section .section-title, 
+        .central-section .section-title, .college-section .section-title, .lakehavasu-section .section-title, 
+        .mohave-section .section-title {
+          text-align: center !important;
+          margin-bottom: 1.5rem !important;
+        }
+        
+        .grandview-section .section-title h1, .grandview-section .section-title h2, .mesa-section .section-title h2, 
+        .cattle-section .section-title h2, .central-section .section-title h2, .college-section .section-title h2, 
+        .lakehavasu-section .section-title h2, .mohave-section .section-title h2 {
+          font-size: 2.2rem !important;
+          color: white !important;
+          font-weight: 700 !important;
+          margin: 0 !important;
+        }
+        
+        /* 1. HEADER - Section titles - ALWAYS FIRST */
+        .grandview-section h1, .grandview-section h2, .mesa-section h2, .cattle-section h2, .central-section h2, 
+        .college-section h2, .lakehavasu-section h2, .mohave-section h2 {
+          font-size: 2.2rem !important;
+          text-align: center !important;
+          margin-bottom: 1.5rem !important;
+          color: white !important;
+          font-weight: 700 !important;
+          order: 1 !important; /* Header ALWAYS comes first */
+        }
+        
+        /* 2. IMAGE - Project images - ALWAYS SECOND (immediately after title) */
+        .grandview-section .section-image, .mesa-section .section-image, .cattle-section .section-image, .central-section .section-image,
+        .college-section .section-image, .lakehavasu-section .section-image, .mohave-section .section-image {
+          width: 100% !important;
+          margin: 0 auto 1.5rem auto !important;
+          text-align: center !important;
+          order: 2 !important; /* Image ALWAYS comes second (immediately after title) */
+          display: block !important;
+          float: none !important;
+          position: relative !important; /* Ensure proper positioning */
+        }
+        
+        /* Lake Havasu section with image - container comes after image */
+        .lakehavasu-section .section-container {
+          order: 3 !important; /* Container comes after image */
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          text-align: center !important;
+        }
+        
+        /* Mesa section with image - container comes after image */
+        .mesa-section .section-container {
+          order: 3 !important; /* Container comes after image */
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          text-align: center !important;
+        }
+        
+        .grandview-section .section-image img, .mesa-section .section-image img, .cattle-section .section-image img, .central-section .section-image img,
+        .college-section .section-image img, .lakehavasu-section .section-image img, .mohave-section .section-image img {
+          width: 100% !important;
+          max-width: 100% !important;
+          height: auto !important;
+          border-radius: 12px !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+          display: block !important;
+          margin: 0 auto !important;
+          float: none !important;
+          position: relative !important; /* Ensure proper positioning */
+        }
+        
+        /* 3. TEXT - Project content/paragraphs - ALWAYS THIRD (after image) */
+        .grandview-section .section-content, .mesa-section .section-content, .cattle-section .section-content, .central-section .section-content,
+        .college-section .section-content, .lakehavasu-section .section-content, .mohave-section .section-content {
+          width: 100% !important;
+          margin: 0 auto 1.5rem auto !important; /* Center the container */
+          padding: 0 1rem !important; /* Add horizontal padding for better mobile spacing */
+          order: 3 !important; /* Text ALWAYS comes third (after image) */
+          text-align: left !important; /* Left align for better readability */
+          max-width: 100% !important; /* Ensure full width */
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important; /* Left align content for better readability */
+          box-sizing: border-box !important; /* Include padding in width calculation */
+        }
+        
+        /* Handle nested content in section-container - ALWAYS THIRD (after image) */
+        .cattle-section .section-container .section-content, .central-section .section-container .section-content,
+        .college-section .section-container .section-content, .mohave-section .section-container .section-content {
+          width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          text-align: center !important; /* Center text for mobile */
+          max-width: 100% !important; /* Ensure full width */
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important; /* Center content within container */
+          order: 3 !important; /* Text ALWAYS comes third (after image) */
+        }
+        
+        /* Remove this section since both Mesa and Lake Havasu now have images */
+        
+        .grandview-section .section-content h1, .grandview-section .section-content h2, .mesa-section .section-content h2, .cattle-section .section-content h2, .central-section .section-content h2,
+        .college-section .section-content h2, .lakehavasu-section .section-content h2, .mohave-section .section-content h2 {
+          display: none !important; /* Hide duplicate titles */
+        }
+        
+        .grandview-section .section-content p, .mesa-section .section-content p, .cattle-section .section-content p, .central-section .section-content p,
+        .college-section .section-content p, .lakehavasu-section .section-content p, .mohave-section .section-content p {
+          font-size: 1rem !important;
+          line-height: 1.7 !important;
+          margin-bottom: 1.2rem !important;
+          color: rgba(255, 255, 255, 0.9) !important;
+          text-align: left !important; /* Left align for better readability on mobile */
+          max-width: 100% !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+          hyphens: auto !important;
+          padding: 0 0.5rem !important;
+        }
+        
+        .grandview-section .section-content ul, .mesa-section .section-content ul, .cattle-section .section-content ul, .central-section .section-content ul,
+        .college-section .section-content ul, .lakehavasu-section .section-content ul, .mohave-section .section-content ul {
+          font-size: 0.95rem !important;
+          line-height: 1.6 !important;
+          color: rgba(255, 255, 255, 0.9) !important;
+          margin-bottom: 1.2rem !important;
+          text-align: left !important; /* Left align lists for better readability */
+          max-width: 100% !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+          padding: 0 0.5rem !important;
+        }
+        
+        .grandview-section .section-content li, .mesa-section .section-content li, .cattle-section .section-content li, .central-section .section-content li,
+        .college-section .section-content li, .lakehavasu-section .section-content li, .mohave-section .section-content li {
+          margin-bottom: 0.6rem !important;
+        }
+        
+        /* 4. BUTTONS - Action buttons - ALWAYS LAST */
+        .grandview-section .button-container, .mesa-section .button-container, .cattle-section .button-container, .central-section .button-container,
+        .college-section .button-container, .lakehavasu-section .button-container, .mohave-section .button-container {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 0.8rem !important;
+          align-items: center !important;
+          margin: 0 auto !important; /* Center the button container */
+          width: 100% !important;
+          max-width: 100% !important; /* Ensure full width */
+          order: 4 !important; /* Buttons ALWAYS come last */
+          padding: 0 1rem !important; /* Add horizontal padding for better mobile spacing */
+          box-sizing: border-box !important; /* Include padding in width calculation */
+        }
+        
+        /* Handle nested buttons in section-container - ALWAYS LAST */
+        .cattle-section .section-container .button-container, .central-section .section-container .button-container,
+        .college-section .section-container .button-container, .mohave-section .section-container .button-container {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 0.8rem !important;
+          align-items: center !important;
+          margin: 0 auto !important; /* Center the button container */
+          width: 100% !important;
+          max-width: 100% !important; /* Ensure full width */
+          order: 4 !important; /* Buttons ALWAYS come last */
+        }
+        
+        /* Remove this section since both Mesa and Lake Havasu now have images */
+        
+        .project-specs-btn, .google-maps-btn, .gallery-btn {
+          font-size: 0.95rem !important;
+          padding: 16px 24px !important;
+          min-height: 52px !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          justify-content: center !important;
+          margin-bottom: 0.8rem !important;
+          border-radius: 8px !important;
+          box-sizing: border-box !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+        }
+
+        /* Mobile styles for Project Specs Popup */
+        .popup-content {
+          width: 95% !important;
+          max-width: 95% !important;
+          margin: 1rem !important;
+          max-height: 90vh !important;
+        }
+
+        .popup-header {
+          padding: 1rem 1.5rem !important;
+        }
+
+        .popup-header h2 {
+          font-size: 1.3rem !important;
+        }
+
+        .popup-body {
+          padding: 1.5rem !important;
+        }
+
+        .popup-section h3 {
+          font-size: 1.1rem !important;
+          margin-bottom: 0.8rem !important;
+        }
+
+        .popup-section p {
+          font-size: 0.95rem !important;
+          line-height: 1.6 !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+        }
+
+        .detail-row {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          gap: 0.3rem !important;
+          margin-bottom: 1rem !important;
+        }
+
+        .detail-label {
+          min-width: auto !important;
+          font-size: 0.9rem !important;
+          font-weight: 600 !important;
+        }
+
+        .detail-value {
+          text-align: left !important;
+          margin-left: 0 !important;
+          font-size: 0.95rem !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="commercial">
+    <!-- Background Grid -->
+    <div class="boxes-container">
+      <!-- Background boxes will be generated here by JavaScript -->
+    </div>
+    
+    <!-- Gradient Overlay -->
+    <div class="gradient-overlay"></div>
+    
+    <!-- Mobile Detection and Auto-Redirect -->
+    <script>
+      // Check if user is on mobile device
+      function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+               window.innerWidth <= 768;
+      }
+      
+      // Add mobile-specific class for responsive behavior
+      document.body.classList.add('mobile-view');
+    </script>
+
+    <nav id="mobile-nav">
+      <div class="mobile-nav-container">
+        <a href="home.html" class="mobile-logo-link">
+          <img src="/Cube.svg" alt="Logo" class="mobile-logo" />
+        </a>
+        <button class="mobile-hamburger" id="mobile-hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <ul class="mobile-nav-links" id="mobile-nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="commercial-mobile.html" class="active">Commercial</a></li>
+        <li><a href="residential.html">Residential</a></li>
+        <li><a href="contact-mobile.html">Contact</a></li>
+      </ul>
+    </nav>
+    
+        <div class="hero">
+      <div class="hero-content">
+        <div class="hero-tagline">BONDED | LICENSED | INSURED</div>
+        <h1>Commercial Services</h1>
+        <p>Comprehensive cleaning and maintenance solutions tailored to meet the unique needs of your business. Our professional team ensures your commercial space remains clean, safe, and welcoming for both employees and customers.</p>
+      </div>
+    </div>
+    
+    <!-- News & Insights Section -->
+    <section class="news-insights">
+        <div class="container">
+          <div class="section-header">
+            <h2>Our Projects</h2>
+          </div>
+          
+          <div class="news-grid">
+            <!-- Featured Article (Large) -->
+            <div class="featured-article">
+              <div class="article-image">
+                <img src="/Cooledge/7.webp" alt="Commercial Development Project">
+              </div>
+              <div class="article-content">
+                <h3>Grandview Casa Blanca South</h3>
+                <p>The Grandview Casa Blanca South project is a large-scale multifamily residential development located in the rapidly growing community of Coolidge, Arizona. This project encompassed the full development of combining both new construction and the thoughtful renovation of existing structures to create a modern, amenity-rich living environment.</p>
+                <a href="#grandview" class="read-more">Read more</a>
+              </div>
+            </div>
+            
+            <!-- Smaller Articles Grid - 2 columns × 3 rows -->
+            <div class="small-articles">
+              <div class="article-card">
+                <div class="article-image">
+                  <img src="/Mesa/70-1.webp" alt="Office Building Construction">
+                </div>
+                <div class="article-content">
+                  <h4>Mesa Main Street Stations</h4>
+                  <a href="#mesa" class="read-more">Read more</a>
+                </div>
+              </div>
+              
+              <div class="article-card">
+                <div class="article-image">
+                  <img src="/Turkey/74.webp" alt="Cattle Homestead">
+                </div>
+                <div class="article-content">
+                  <h4>Cattle Homestead</h4>
+                  <a href="#cattle" class="read-more">Read more</a>
+                </div>
+              </div>
+              
+              <div class="article-card">
+                <div class="article-image">
+                  <img src="/Central Commercial Building Renovation/3.webp" alt="Central Commercial Building Renovation">
+                </div>
+                <div class="article-content">
+                  <h4>Central Commercial Building Renovation</h4>
+                  <a href="#central" class="read-more">Read more</a>
+                </div>
+              </div>
+              
+              <div class="article-card">
+                <div class="article-image">
+                  <img src="/College Condos and Stadium Condos/College Condos.webp" alt="College Condos and Stadium Condos">
+                </div>
+                <div class="article-content">
+                  <h4>College Condos and Stadium Condos</h4>
+                  <a href="#college" class="read-more">Read more</a>
+                </div>
+              </div>
+              
+              <div class="article-card">
+                <div class="article-image">
+                  <img src="/Bureau of Land Management/Bureau of Land Management.webp" alt="Bureau of Land Management">
+                </div>
+                <div class="article-content">
+                  <h4>Bureau of Land Management</h4>
+                  <a href="#lakehavasu" class="read-more">Read more</a>
+                </div>
+              </div>
+              
+              <div class="article-card">
+                <div class="article-image">
+                  <img src="/Mohave Mental Health/Mohave Mental Health Clinic.webp" alt="Mohave Mental Health">
+                </div>
+                <div class="article-content">
+                  <h4>Mohave Mental Health</h4>
+                  <a href="#mohave" class="read-more">Read more</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Gradient Transition Section -->
+    <section class="gradient-transition">
+    </section>
+
+    <!-- Airplane SVG Animation -->
+    <svg id="airplane-svg" viewBox="1379 420 300 50">
+        <path class="cls-1" d="M 1599,0.91821964
+V 434.21875"/>
+
+<path class="cls-1" d="m 1669.0621,515.25598
+c 0,0 0.3807,2.50216 0.7289,2.69798 0.442,0.24863 0.1196,-1.00086 0.1196,-1.00086 0,0 1.4836,0.63354 2.2846,0.0653 0.2903,-0.20596 -0.1958,0.66362 -0.1958,0.66362 0,0 -0.8812,1.35987 -1.3708,1.27284 -0.4895,-0.087 -1.2619,-0.15231 -1.4142,-1.0879 -0.1523,-0.93559 -0.1523,-2.61095 -0.1523,-2.61095
+z"/>
+<path class="cls-1" d="m 1662.4803,516.70288
+c 0.022,0.0762 0.727,3.30955 1.0553,2.96996 0.3155,-0.32637 0,-1.5013 0,-1.5013 0,0 1.7564,1.49651 2.4477,-0.0217 0.1918,-0.42122 -0.1305,1.00086 -0.1305,1.00086 0,0 -0.544,1.5557 -1.3816,1.49042 -0.8377,-0.0653 -1.534,-1.08789 -1.534,-1.08789 0,0 -1.0226,-2.24107 -0.4569,-2.85029
+z"/>
+<path class="cls-1" d="m 1656.218,518.28506
+c 0,0 0.6567,2.8262 1.1862,2.65662 0.3644,-0.1167 -0.08,-1.24105 -0.08,-1.24105 0,0 2.0366,1.44763 2.7948,-0.29573 0.3776,-0.86821 0.062,0.69233 0.062,0.69233 0,0 -0.4129,1.9257 -1.5385,1.92315 -0.1506,-3.3e-4 -2.3014,0.97255 -2.4245,-3.73532
+z"/>
+
+<path class="cls-1" d="m 1654.2423,520.71264
+c 0,0 -0.6578,1.33924 -3.0568,0.46529 -0.099,-0.0361 -0.068,0.21922 -0.068,0.21922 0,0 -0.011,1.19669 0.223,1.39251 0.2339,0.19582 -1.1479,-1.62219 -1.213,-2.921 -0.01,-0.10879 -0.3753,-0.26653 -0.3753,-0.26653 0,0 -0.4896,3.20385 2.0126,4.04153 2.5022,0.83768 2.4778,-2.93102 2.4778,-2.93102
+z"/>
+
+<path class="cls-1" d="m 1642.5188,521.15881 -0.6154,0.0308
+c 1.5852,6.33061 5.5494,3.6324 4.9771,-0.90003
+l -3.4078,0.60771
+c 0,0 0.5004,3.02115 1.1308,3.30782 0.085,0.0385 -0.5231,0.22308 -0.5231,0.22308 0,0 -1.9462,-2.19239 -1.5616,-3.26935
+z"/>
+<path class="cls-1" d="m 1635.4352,521.64193
+c 0,0 2.8961,0.93441 3.9164,0.087 0.7701,-0.63953 0.095,2.92167 -0.3758,3.44213 -0.44,0.48659 -2.2585,2.68731 -3.3665,0.38727 -0.4466,-0.92695 0.5912,-0.53011 0.5912,-0.53011 0,0 -1.0699,-2.16787 -0.7653,-3.38632
+z"/>
+<path class="cls-1" d="m 1615.8095,507.36873
+c 0.7833,-3.30721 3.2202,-11.92335 3.2202,-11.92335 0,0 5.57,-8.61614 7.8329,-9.57349 2.2628,-0.95734 8.6161,-2.26282 9.5735,-3.39423 0.9573,-1.13141 16.7971,-11.31413 16.7971,-11.31413 0,0 2.2628,-2.87204 4.6997,-0.95735 2.4369,1.9147 4.0035,3.65534 4.0905,3.04611 0.087,-0.60922 0.174,-3.82939 0.174,-3.82939 0,0 -3.4812,-2.00173 -3.7423,-2.95908 -0.2611,-0.95735 -2.4369,-0.34813 -2.4369,-0.34813
+l -22.2801,14.36024
+c 0,0 -4.2646,1.82766 -5.2219,1.47953 -0.9574,-0.34812 -4.2646,2.1758 -4.5257,2.78502 -0.2611,0.60922 -5.483,7.48473 -5.483,7.48473 0,0 -3.564,4.53786 -4.5256,14.79539 -0.065,0.69626 1.0661,0.43516 1.0661,0.43516
+z"/>
+<path class="cls-1" d="m 1619.5026,499.2657 1.9693,-0.0615 0.3077,-5.90791 1.3539,-1.78468 2.1539,3.75398
+c 0,0 0.4923,2.15393 3.2617,-0.0615 2.7693,-2.21547 11.2619,-7.63105 11.2619,-7.63105 0,0 15.139,-9.47727 15.2006,-9.72343 0.062,-0.24616 2.0924,-2.46163 2.4001,-4.73864 0.3077,-2.277 0.2461,-2.277 0.2461,-2.277 0,0 2.8531,3.21321 4.0002,2.83087 0.2769,-0.0923 0.1231,1.29235 0.1231,1.29235 0,0 0.5538,8.92341 0.9846,8.92341 0.4308,0 -3.2616,-0.18463 -6.031,1.53852 -2.7693,1.72314 -13.2928,8.9234 -13.2928,8.9234 0,0 -15.0159,7.93875 -16.4313,8.92341 -1.4155,0.98465 -4.8002,4.36939 -4.5541,4.98479 0.2462,0.61541 -2.8924,-0.0615 -2.8924,-0.0615
+z"/>
+<path class="cls-1" d="m 1641.9034,511.75846
+c 0,0 11.2004,-4.86171 16.8006,-5.10788 5.6002,-0.24616 17.9699,-0.55386 17.9699,-0.55386
+l 0.6888,0.0101 -0.631,0.67449 -2.154,-0.13055
+c 0,0 -37.9307,2.39589 -39.1361,14.21578 -0.082,0.80321 2.3386,0.6154 2.3386,0.6154
+l 12.3851,-2.66849
+c 0,0 3.5287,5.77855 4.2211,-0.87032 0.036,-0.34363 2.4804,-0.52219 2.4804,-0.52219 0,0 2.7034,5.61841 3.6553,-0.71801 0.067,-0.44431 2.698,-0.78329 2.698,-0.78329 0,0 2.3834,5.44565 3.0896,-0.76153 0.036,-0.32013 3.3072,-0.73976 3.3072,-0.73976 0,0 1.5767,5.57177 2.6327,-0.58747 0.143,-0.83422 3.5683,-0.60922 3.5683,-0.60922
+l 2.4587,-2.04525 -0.1741,-6.35331 -18.1984,0.68903
+c 0,0 -16.1545,2.8001 -18.0007,6.24638
+z"/>
+<path class="cls-1" d="m 1602.8558,540.34413 21.5085,-24.7086
+c 0,0 4.0617,4.30785 4.0617,5.2925 0,0.98466 -1.3241,-10.49143 -2.1291,-11.16593 -0.8051,-0.67449 -4.5692,-0.71801 -4.5692,-0.71801
+l -66.6663,-8.3768 -1.7842,2.34985 69.843,9.61701 -15.6657,18.01556 -50.3914,-9.74755 -18.5812,2.34986
+z"/>
+<path class="cls-1" d="m 1593.4709,544.25196 2.2462,0.89234 5.5079,-3.90783 -2.9847,-0.5231
+z"/>
+<path class="cls-1" d="m 1585.4706,541.91342 1.8462,1.04619 6.2464,-3.87706 -3.2001,-0.67695
+z"/>
+<path class="cls-1" d="m 1577.3164,539.72872 1.8155,0.92311 6.5233,-3.72321 -3.2001,-0.5231
+z"/>
+<path class="cls-1" d="m 1569.2854,537.51326 1.8154,0.76926 6.4618,-3.35398 -2.954,-0.70771
+z"/>
+<path class="cls-1" d="m 1561.2235,535.26702
+c 0.1846,0 1.7232,0.86157 1.877,0.80003 0.1539,-0.0615 6.2772,-3.44628 6.2772,-3.44628
+l -2.9232,-0.5231
+z"/>
+<path class="cls-1" d="m 1553.1309,532.95924 1.9078,0.92311 6.431,-3.35397 -2.8617,-0.58463
+z"/>
+<path class="cls-1" d="m 1550.6077,527.78982 -5.4771,2.95396 1.6001,0.80003 6.5848,-3.13858
+z"/>
+<path class="cls-1" d="m 1542.5151,525.69744 2.8925,0.36924 -6.4003,3.07704 -2.0308,-0.55387
+z"/>
+<path class="cls-1" d="m 1534.4225,523.57428 2.9848,0.40002 -6.4618,2.95395 -1.9078,-0.55386
+z"/>
+<path class="cls-1" d="m 1636.9186,528.49754 36.767,-9.55359
+c 0,0 11.9267,-1.30777 4.6127,-21.84496 -4.4825,-12.58677 -4.134,-11.2271 -4.134,-11.2271 0,0 0.4097,-0.68654 2.0888,-0.10878 2.6039,0.89596 14.4725,29.85727 3.6209,33.56486 -11.2983,3.86023 -37.4475,10.33884 -37.4475,10.33884 0,0 -5.2002,0.92312 -5.5079,-1.16927
+z"/>
+<path class="cls-1" d="m 1670.8891,499.97342
+c 0,0 -3.8294,8.40668 -7.3541,0.21539 -1.6466,-3.82651 1.9693,-7.10795 1.9693,-7.10795 0,0 -1.2308,6.9541 2.4924,6.89256 3.7232,-0.0615 2.8924,0 2.8924,0
+z"/>
+<path class="cls-1" d="m 1665.6889,494.46552 3.477,0.0615
+c 0,0 0,4.6771 1.2309,4.70787 1.2308,0.0308 -2.8309,0.18462 -2.8309,0.18462 0,0 -2.0924,-0.40001 -1.877,-4.95403
+z"/>
+<path class="cls-1" d="m 1673.5969,495.48094
+a 1.8923772,3.8155245 0 0 1 -1.8924,3.81553 1.8923772,3.8155245 0 0 1 -1.8924,-3.81553 1.8923772,3.8155245 0 0 1 1.8924,-3.81552 1.8923772,3.8155245 0 0 1 1.8924,3.81552
+z"/>
+<path class="cls-1" d="m 1681.0833,483.04336 0.544,10.7049
+c 0,0 -0.564,-9.68226 -9.3124,-9.31239 -0.1739,0.007 3.0896,-0.56571 3.0896,-0.56571
+z"/>
+<path class="cls-1" d="m 1672.8584,485.20364 -1.477,1.6616 -4.554,-1.63082 -2.4001,1.47697 6.2772,0.73849 -4.3694,3.84629 -5.6002,-1.69237 -2.6155,1.63084 7.2618,0.67694 -5.1079,3.93861 -6.5541,-1.87699 -2.4308,1.63083 7.6618,0.95388 -5.4464,3.6309 -6.7079,-1.84622 -2.7386,1.78468 8.0926,0.80003 -5.6002,3.47705 -6.2156,-1.72314 -3.0462,1.93853 7.4771,0.8308 -4.677,3.56936 -6.6772,-1.9693 -3.2001,1.9693 8.4618,0.89234
+c 0,0 -2.5232,3.23089 -2.5539,3.93861 -0.031,0.70772 -5.5079,-1.20005 -5.5079,-1.20005
+l -2.5847,1.44621 -0.6154,-2.61548
+c 0,0 3.2309,0.43079 3.2001,0.30771 -0.031,-0.12309 -2.8001,-2.64626 -2.8001,-2.64626 0,0 -4.0309,-0.92311 -4.4925,-0.64617 -0.4615,0.27693 2.0924,-2.67702 2.0924,-2.67702
+l 10.1234,0.76926 -3.2308,-2.4924 -5.4772,0.33847
+c 0,0 5.0156,-3.47705 5.9079,-3.44628 0.8924,0.0308 9.6927,0.70772 9.6927,0.70772
+l -2.7078,-2.21547 -4.4309,0.24616
+c 0,0 6.2464,-2.86164 6.4618,-3.29243 0.2153,-0.43078 7.631,0.46156 7.631,0.46156
+l -2.0616,-2.15392 -3.0463,0.0923 5.1694,-3.50782 7.2003,0.58463
+c 0,0 -1.5385,-1.87699 -1.7539,-1.90776 -0.2154,-0.0308 -3.8155,0.33848 -3.5078,0.0615 0.3077,-0.27693 5.5079,-3.56936 5.5079,-3.56936
+l 7.0772,0.70772 -1.7232,-1.72314 -3.5693,0.18462
+c 0,0 -0.7385,-0.86157 3.6001,-0.92311 4.3386,-0.0615 10.585,0.46155 10.585,0.46155
+z"/>
+<path class="cls-1" d="m 1585.5225,503.66988 24.0208,3.00259
+c 0,0 -0.043,-3.52478 -3.0462,-3.91642 -3.0025,-0.39165 -18.0155,-1.9147 -18.0155,-1.9147 0,0 -2.785,-0.26109 -2.9591,2.82853
+z"/>
+<path class="cls-1" d="m 1596.5755,470.33673 -0.043,2.34986
+c 0,0 -2.4319,1.13673 -3.1996,1.85513 -0.7494,0.70125 -2.1232,2.35393 -2.1232,2.35393
+l -10.5605,13.2408
+c 0,0 -1.3014,2.23669 -1.3014,4.45215
+v 8.18492
+l -2.3386,-0.0308 0.092,-9.29265
+c 0,0 -0.4923,-2.00007 2.3693,-5.75406 2.8617,-3.75398 10.7697,-13.41587 10.7697,-13.41587 0,0 2.1476,-2.53283 6.3355,-3.94344
+z"/>
+<path class="cls-1" d="m 1590.7879,486.61166 5.2872,0.15231 -0.043,-7.35418
+z"/>
+<path class="cls-1" d="m 1666.2444,451.97304 -0.4351,1.30547 -41.7317,23.71615
+c 0,0 -11.0096,12.92421 -11.4447,16.53603 -0.4352,3.61181 -0.4352,13.44639 -0.4352,13.44639
+l -1.9582,-0.13054
+c 0,0 0.5657,-4.74323 -3.9599,-5.04784 -4.5257,-0.30461 -22.8459,-2.30634 -22.8459,-2.30634
+l -0.087,-3.91643 5.1349,-8.44208 20.8441,1.56658 10.4438,-11.40116
+z"/>
+<path class="cls-1" d="m 1675.1217,453.45258
+c 0,0 -3.4378,0.8268 -4.1776,13.27234 -0.7397,12.44553 -0.9138,17.49337 -0.9138,17.49337
+l -5.1784,-0.30461
+c 0,0 -1.523,-12.53257 -0.043,-18.79885 1.4796,-6.26629 2.9156,-10.53084 2.9156,-10.53084 0,0 1.3925,-3.48127 3.1331,-3.26369 1.7407,0.21758 2.698,0.91383 2.698,0.91383
+z"/>
+<path class="cls-1" d="m 1657.7501,455.63333
+c 0,0 6.031,-10.46192 9.0158,-9.75421 2.9847,0.70772 5.2925,4.18477 5.2925,4.18477 0,0 -2.0001,-0.67694 -2.7694,-0.3077 -0.7692,0.36924 -11.5389,5.87714 -11.5389,5.87714
+z"/>
+<path class="cls-1" d="m 1623.2943,470.33673 1.7406,-1.13141 2.0452,-30.93978 19.1035,1.69712
+c 0,0 5.3719,1.319 5.7876,3.22017 0.079,0.3608 0.071,-0.82691 0.071,-0.82691 0,0 -0.9413,-3.56819 -5.9456,-4.09038 -5.0044,-0.52219 -20.409,-2.00173 -20.409,-2.00173
+z"/>
+<path class="cls-1" d="m 1600.7327,438.04807
+a 1.4308218,1.9846882 0 0 1 -1.4309,1.98469 1.4308218,1.9846882 0 0 1 -1.4308,-1.98469 1.4308218,1.9846882 0 0 1 1.4308,-1.98469 1.4308218,1.9846882 0 0 1 1.4309,1.98469
+z"/>
+<path class="cls-1" d="m 1622.4258,437.8019
+a 1.4462069,1.8308365 0 0 1 -1.4462,1.83084 1.4462069,1.8308365 0 0 1 -1.4462,-1.83084 1.4462069,1.8308365 0 0 1 1.4462,-1.83083 1.4462069,1.8308365 0 0 1 1.4462,1.83083
+z"/>
+<path class="cls-1" d="m 1598.5172,448.89462
+c 0,0 -1.2,0.46155 -1.2924,1.29235 -0.092,0.8308 -0.8308,10.21576 -0.8308,10.21576 0,0 0.038,1.4795 1.0462,1.81545 0.4616,0.15386 0.4231,-3.56936 0.4231,-3.56936
+z"/>
+<path class="cls-1" d="m 1601.8712,468.12609 19.4649,-8.75536 0.5666,-11.30691 -2.5232,-5.47712 -12.462,-0.15386 -3.2617,4.12323
+z"/>
+<path class="cls-1" d="m 1632.9548,458.23932 17.798,-8.52911 0.2279,-2.30795 -0.1693,-0.98465 -20.2776,9.90805 0.2615,-3.29243 18.7392,-8.87725 -1.2462,-1.20004 -0.9232,-0.60002 -0.2615,-0.15385 -16.1237,7.58489 0.3077,-3.13858 10.462,-4.92325 -5.5387,-0.43079 -4.6771,1.90776 -1.1029,15.73347
+z"/>
+<path class="cls-1" d="m 1632.9983,458.28284 -2.3063,-4.30807 0.5657,-7.22363 4.9608,10.53083 3.7859,-1.00086 -7.7023,-15.3611 4.4821,0.39164 6.6144,13.92508 3.4378,-1.17493 -6.0488,-12.40202 4.2211,0.39164 4.4821,9.92162 -1.0444,1.52305 -3.6988,1.30548
+z"/>
+<path class="cls-1" d="m 1631.6058,440.78946 15.4916,1.39251
+c 0,0 7.8438,3.81021 1.262,11.31412 -0.6319,0.72047 -9.9651,3.22018 -9.9651,3.22018
+l -8.0505,2.26282
+z"/>
+<path class="cls-1" d="m 1599.0559,434.21857 25.2827,-0.30461 22.1931,2.39337
+c 0,0 7.0496,1.69712 8.0505,7.44121 1.0008,5.74409 2.0452,11.35764 2.0452,11.35764 0,0 4.7369,-10.20227 10.1392,-10.44381 0.1974,-0.009 0.1346,10e-4 0.1346,10e-4 0,0 4.525,-0.19519 7.0352,6.5 0.074,0.19686 0.097,0.1132 0.097,0.1132
+l 4.221,3.35072
+c 0,0 1.0009,27.9807 1.6536,27.9807 0.6528,0 1.6536,-0.21758 1.6536,-0.21758
+l 0.7398,13.53344
+c 0,0 6.7014,21.06167 -1.2184,23.71614 -7.9199,2.65447 -9.3559,3.13314 -9.3559,3.13314
+l -31.8101,8.26801
+c 0,0 -4.4094,0.99681 -8.4759,-0.82067 -0.2599,-0.11617 -0.2461,0.0923 -0.2461,0.0923
+l 1.0154,4.58478 -31.2319,7.75413 -4.0925,2.58471
+c 0,0 -1.0154,0.76926 -2.3385,0.30771 -1.3232,-0.46156 -3.2002,-0.76926 -2.154,-1.60006 1.0462,-0.8308 1.1078,-0.89234 1.1078,-0.89234
+l -3.3232,-0.98466 -2.5847,1.50775 -2.8925,-0.86157
+c 0,0 -0.8923,-0.43078 -0.1538,-1.07696 0.7385,-0.64618 0.8308,-0.80003 0.8308,-0.80003
+l -3.3232,-1.04619 -2.554,1.63083 -2.677,-0.95388
+c 0,0 -0.9846,-0.80003 -0.092,-1.38467 0.8924,-0.58464 0.7693,-0.64618 0.7693,-0.64618
+l -3.6309,-0.89234 -2.5232,1.53852 -3.077,-1.07696
+c 0,0 -0.4,-0.64618 0.3077,-1.0462 0.7077,-0.40001 0.9846,-0.6154 0.9846,-0.6154
+l -3.5386,-1.04619 -2.8308,1.63083 -2.7078,-0.95388
+c 0,0 -0.7077,-0.73849 0,-1.23082 0.7077,-0.49233 0.8,-0.58464 0.8,-0.58464
+l -3.4463,-1.04619 -2.6462,1.41544 -2.5847,-0.76926
+c 0,0 -0.9231,-0.80003 -0.031,-1.3539 0.8923,-0.55386 0.8615,-0.6154 0.8615,-0.6154
+l -3.5078,-0.89234 -2.8616,1.29235 -2.8001,-0.86157
+c 0,0 -0.677,-0.58464 0.1538,-1.07696 0.8308,-0.49233 0.8924,-0.61541 0.8924,-0.61541
+l -3.4156,-1.01542 -3.1693,1.32312 -2.4616,-0.76925
+c 0,0 -0.8001,-0.86158 0.1231,-1.23082 0.9231,-0.36924 1.0461,-0.49232 1.0461,-0.49232
+l -3.6309,-1.10774 -3.0462,1.44621 -2.7078,-0.92311
+c 0,0 -0.7113,-0.91671 0.4201,-1.4389 1.1314,-0.52219 4.2211,-1.78415 4.2211,-1.78415
+l 22.106,-23.80318 21.4968,2.87205 0.1306,-10.26974
+c 0,0 -0.3916,-1.74064 2.3934,-5.483 2.785,-3.74237 11.2271,-13.83805 11.2271,-13.83805 0,0 1.2619,-1.26196 3.3072,-2.17579 2.0452,-0.91383 3.5683,-1.47954 3.5683,-1.47954
+l 0.3916,-6.35332
+c 0,0 -1.8494,-0.47867 -1.8494,-2.067 0,-1.58833 1.0444,-11.42291 1.0444,-11.42291 0,0 0.6309,-1.37075 1.3272,-1.43603 0.6963,-0.0653 0.805,-0.60922 0.805,-0.60922
+l 0.5005,-6.78847
+c 0,0 -2.0453,-0.84856 -1.9582,-2.65447 0.087,-1.80591 0.1958,-3.89467 1.8711,-3.91643
+z"/>
+    </svg>
+
+    <!-- Layered Peaks SVG Section -->
+    <section class="layered-peaks-section">
+      <div class="cooledge-image-overlay">
+        <img src="/Mesa/103.webp" alt="Cooledge Building" class="cooledge-103-image">
+      </div>
+    </section>
+
+    <main class="content" style="width: 100%; max-width: 1920px; height: auto; overflow: visible; margin: 0 auto;">
+      <!-- About Us Content Below News & Insights -->
+      <!-- Grandview Casa Blanca South Section -->
+      <section class="grandview-section" id="grandview">
+        <div class="section-title">
+          <h1>Grandview Casa Blanca South</h1>
+        </div>
+        <div class="section-image">
+          <img src="/Cooledge/6-21.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;">
+        </div>
+        
+        <div class="button-container">
+          <button class="project-specs-btn" data-section="1">
+            <span>Project Specs</span>
+            <span class="arrow">→</span>
+          </button>
+          <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/Fwwaqz3gu7N3VDAh6', '_blank')">
+            <span>Google Maps</span>
+            <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+          </button>
+          <button class="gallery-btn" onclick="window.location.href='gallery-1.html'">
+            <svg class="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21,15 16,10 5,21"/>
+            </svg>
+            <span>Photos & Gallery</span>
+          </button>
+        </div>
+        
+        <div class="section-content">
+          <p style="color: #fbbf24 !important; font-weight: 500 !important; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);">The Grandview Casa Blanca South project is a large-scale multifamily residential development located in the rapidly growing community of Coolidge, Arizona. This project encompassed the full development of combining both new construction and the thoughtful renovation of existing structures to create a modern, amenity-rich living environment.</p>
+          <p><strong>New Residential Construction:</strong> The core of the project included the ground-up construction of two identical three-story residential buildings. Each building houses 42 units, totaling 84 newly constructed apartments across the development. The structures were built using conventional wood-frame construction with engineered shear walls and floor systems to ensure long-term structural integrity and code compliance. Exteriors were finished in high-quality stucco with complementary architectural details to enhance curb appeal and integrate seamlessly with the surrounding structures.</p>
+          <p><strong>Renovation of Existing Structure:</strong> The site also included a pre-existing 16-unit, two-story condominium complex. These structure underwent a full renovation, both interior and exterior, to bring it up to current building codes and design standards. Interior work included complete upgrades to kitchens, bathrooms, flooring, lighting, and HVAC systems. Exterior improvements included roof replacement, new stucco and paint, updated balconies and railings.</p>
+          <div style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); color: #e5e7eb;">
+            <p><strong>Clubhouse and Amenity Construction:</strong> The constructed community clubhouse serves as the social and recreational hub of the development. The clubhouse was designed to offer a wide range of amenities, including:</p>
+            <ul style="margin: 0; padding-left: 1.5rem; color: #e5e7eb;">
+              <li>A private theater room with tiered seating and surround sound</li>
+              <li>A fully equipped fitness center with cardio machines, weights, and yoga space</li>
+              <li>Game room with billiards, ping-pong, and lounge seating</li>
+              <li>Management offices and conference room</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mesa Main Street Stations Section -->
+      <section class="mesa-section" id="mesa">
+        <div class="section-title">
+          <h2>Mesa Main Street Stations</h2>
+        </div>
+        <div class="section-image">
+          <img src="/Mesa/17-5.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div class="section-container">
+          <div class="section-content">
+            <p style="color: #fbbf24 !important; font-weight: 500 !important; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);">The development of a 42-unit townhome community in Mesa, Arizona involved full oversight from pre-construction through final delivery. The project included coordination and management of all underground infrastructure, including wet and dry utilities such as water, sewer, storm drainage, electric, gas, and telecommunications. Sitework encompassed grading, drainage, paving, and retaining systems, all completed in accordance with city standards and ADA requirements. The vertical construction phase included the full build-out of 42 multi-story townhome units, with a focus on quality control, schedule adherence, and subcontractor coordination.</p>
+            <p>In addition to residential construction, the project involved significant public interface improvements along Main Street. These included new sidewalks, upgraded pedestrian access, custom street lighting, and integrated landscaping throughout both private and public areas, using drought-tolerant plants and efficient irrigation systems. A full pool facility was also constructed, complete with hardscaping, safety features, and utility tie-ins.</p>
+            <p>The project required close coordination with the City of Mesa, the Main Street lighting authority, and Valley Metro Rail to meet all permitting, inspection, and compliance requirements associated with right-of-way improvements and the adjacent transit corridor. The completed development contributed to the broader revitalization of downtown Mesa and supported the city's goals for transit-oriented residential growth.</p>
+            
+            
+            <div class="button-container">
+              <button class="project-specs-btn" data-section="2">
+                <span>Project Specs</span>
+                <span class="arrow">→</span>
+              </button>
+              <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/mhWMMjYRQAZz99cE6', '_blank')">
+                <span>Google Maps</span>
+                <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+              </button>
+              <button class="gallery-btn" onclick="window.location.href='gallery-2.html'">
+                <svg class="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21,15 16,10 5,21"/>
+                </svg>
+                <span>Photos & Gallery</span>
+            </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cattle Homestead Section -->
+      <section class="cattle-section" id="cattle">
+        <div class="section-title">
+          <h2>Cattle Homestead</h2>
+        </div>
+        <div class="section-image">
+          <img src="/Turkey/70.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div class="section-container">
+          <div class="section-content">
+            <p>The Cattle Homestead project represents a unique rural development that combines traditional ranch aesthetics with modern construction techniques. Located on expansive acreage, this project focused on creating sustainable living spaces that honor the land's agricultural heritage while providing contemporary amenities.</p>
+            <p><strong>Rural Development:</strong> The project included the construction of multiple residential structures designed to blend seamlessly with the natural landscape. Each home features rustic exteriors with modern interiors, incorporating energy-efficient systems and sustainable building materials.</p>
+            <p><strong>Infrastructure & Utilities:</strong> Coordination of well water systems, septic installations, and off-grid power solutions to maintain the rural character while ensuring reliable utilities for all residents.</p>
+            
+            
+            <div class="button-container">
+              <button class="project-specs-btn" data-section="3">
+                <span>Project Specs</span>
+                <span class="arrow">→</span>
+              </button>
+              <button class="gallery-btn" onclick="window.location.href='gallery-3.html'">
+                <svg class="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21,15 16,10 5,21"/>
+                </svg>
+                <span>Photos & Gallery</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Central Commercial Building Section -->
+      <section class="central-section" id="central">
+        <div class="section-title">
+          <h2>Central Commercial Building Renovation</h2>
+        </div>
+        <div class="section-image">
+          <img src="/Central Commercial Building Renovation/3.webp" alt="Central Commercial Building Renovation" style="width: 60%; border-radius: 8px;">
+        </div>
+        <div class="section-container">
+          <div class="section-content">
+            <p>The Central Commercial Building Renovation transformed a historic downtown structure into a modern mixed-use facility while preserving its architectural character. This comprehensive renovation project breathed new life into the aging commercial space, creating contemporary office and retail environments.</p>
+            <p><strong>Historic Preservation:</strong> Careful restoration of original brick facades, architectural details, and structural elements while upgrading all mechanical, electrical, and plumbing systems to current standards.</p>
+            <p><strong>Modern Upgrades:</strong> Installation of energy-efficient windows, HVAC systems, LED lighting, and smart building technologies to enhance tenant comfort and reduce operational costs.</p>
+            
+            
+            <div class="button-container">
+              <button class="project-specs-btn" data-section="4">
+                <span>Project Specs</span>
+                <span class="arrow">→</span>
+              </button>
+              <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/AoWZLKjuxt3AC74f8', '_blank')">
+                <span>Google Maps</span>
+                <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+              </button>
+              <button class="gallery-btn" onclick="window.location.href='gallery-4.html'">
+                <svg class="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21,15 16,10 5,21"/>
+                </svg>
+                <span>Photos & Gallery</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- College Condos Section -->
+      <section class="college-section" id="college">
+        <div class="section-title">
+          <h2>College Condos and Stadium Condos</h2>
+        </div>
+        <div class="section-image">
+          <img src="/College Condos and Stadium Condos/College Condos.webp" alt="College Condos and Stadium Condos" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div class="section-container">
+          <div class="section-content">
+            <p>The College Condos and Stadium Condos project created modern student housing solutions strategically located near university campuses and sports facilities. These developments cater to the unique needs of student residents while providing premium amenities and convenient access to academic and recreational facilities.</p>
+            <p><strong>Student-Focused Design:</strong> Each unit features study spaces, high-speed internet infrastructure, soundproofing, and flexible living arrangements designed for the academic lifestyle.</p>
+            <p><strong>Premium Amenities:</strong> Community spaces include fitness centers, study lounges, game rooms, and outdoor recreational areas specifically designed for college-aged residents.</p>
+            
+            
+            <div class="button-container">
+              <button class="project-specs-btn" data-section="5">
+                <span>Project Specs</span>
+                <span class="arrow">→</span>
+              </button>
+              <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/5xI4mN1KoPrSvWyA', '_blank')">
+                <span>Google Maps</span>
+                <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lake Havasu City Section -->
+      <section class="lakehavasu-section" id="lakehavasu">
+        <div class="section-title">
+          <h2>Bureau of Land Management</h2>
+        </div>
+        <div class="section-image">
+          <img src="/Bureau of Land Management/Bureau of Land Management.webp" alt="Bureau of Land Management" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div class="section-container">
+          <div class="section-content">
+            <p>The Bureau of Land Management project involved the construction of a federal facility designed to serve the community's land management and administrative needs while reflecting the desert Southwest architectural style. This public project emphasized durability, accessibility, and energy efficiency.</p>
+            <p><strong>Federal Specifications:</strong> The building meets all federal and state requirements for public facilities, including ADA compliance, security protocols, and emergency management capabilities.</p>
+            <p><strong>Sustainable Design:</strong> Incorporated solar panels, desert landscaping, and energy-efficient systems to minimize environmental impact and operational costs for the federal agency.</p>
+            
+            
+            <div class="button-container">
+              <button class="project-specs-btn" data-section="6">
+                <span>Project Specs</span>
+                <span class="arrow">→</span>
+              </button>
+              <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/nq1cTcVVwV3ZkTkQ6', '_blank')">
+                <span>Google Maps</span>
+                <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mohave Mental Health Section -->
+      <section class="mohave-section" id="mohave">
+        <div class="section-title">
+          <h2>Mohave Mental Health</h2>
+        </div>
+        <div class="section-image">
+          <img src="/Mohave Mental Health/Mohave Mental Health Clinic.webp" alt="Mohave Mental Health" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div class="section-container">
+          <div class="section-content">
+            <p>The Mohave Mental Health facility project created a specialized healthcare environment designed to support mental health services and patient wellbeing. This sensitive construction project required careful attention to therapeutic design principles and regulatory compliance for healthcare facilities.</p>
+            <p><strong>Therapeutic Design:</strong> The facility incorporates natural lighting, calming colors, soundproofing, and flexible spaces designed to create a healing environment for patients and staff.</p>
+            <p><strong>Healthcare Compliance:</strong> All construction met strict healthcare building codes, including infection control measures, specialized HVAC systems, and security protocols appropriate for mental health treatment facilities.</p>
+            
+            
+            <div class="button-container">
+              <button class="project-specs-btn" data-section="7">
+                <span>Project Specs</span>
+                <span class="arrow">→</span>
+              </button>
+              <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/hPYsTQqcm1MJisMv8', '_blank')">
+                <span>Google Maps</span>
+                <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="commercial-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-license">Licenses | ROC284283</p>
+          </div>
+          
+          <div class="footer-vertical-line"></div>
+          
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+
+          <div class="footer-vertical-line"></div>
+        </div>
+        
+        <div class="footer-copyright">
+          <p>&copy; 2025 AZDEVCO. All rights reserved.</p>
+        </div>
+        
+        <div class="footer-notice">
+          <p>Use of this site constitutes acceptance of our <a href="/terms-of-service.html">Terms of Service</a> and <a href="/privacy-policy.html">Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </footer>
+
+      <div class="container">
+
+
+        <div class="projects-slider">
+          <!-- Project Navigation -->
+
+
+
+
+
+
+
+
+
+
+    <!-- Add Lenis for smooth scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Add common JavaScript -->
+    <script src="common.js"></script>
+    <!-- Mobile navigation JavaScript - DISABLED TO PREVENT CONFLICTS -->
+    <!-- <script src="js/mobile-nav.js"></script> -->
+    <!-- Background Grid Script -->
+    <script src="background-mobile-script.js"></script>
+    
+    <script>
+      // Disable background box interactions
+      document.addEventListener('DOMContentLoaded', function() {
+        // Override any interactive behavior from background-script.js
+        setTimeout(() => {
+          const boxCells = document.querySelectorAll('.box-cell');
+          boxCells.forEach(cell => {
+            cell.style.pointerEvents = 'none';
+            cell.style.transition = 'none';
+            cell.style.transform = 'none';
+            cell.style.cursor = 'default';
+            // Remove any event listeners
+            cell.onclick = null;
+            cell.onmouseover = null;
+            cell.onmouseout = null;
+            cell.onmousedown = null;
+            cell.onmouseup = null;
+            cell.ontouchstart = null;
+            cell.ontouchend = null;
+            cell.ontouchmove = null;
+          });
+        }, 100);
+      });
+      
+      // Additional navigation functionality for commercial page
+      document.addEventListener('DOMContentLoaded', function() {
+        // Ensure navigation is properly initialized
+        const nav = document.querySelector('nav');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        
+        // Scroll behavior variables
+        let lastScrollTop = 0;
+        let scrollThreshold = window.innerWidth <= 768 ? 30 : 50; // More sensitive on mobile
+        
+        // Update scroll threshold on resize
+        window.addEventListener('resize', function() {
+          scrollThreshold = window.innerWidth <= 768 ? 30 : 50;
+        });
+        
+        // Add scroll effect for desktop navigation
+        window.addEventListener('scroll', function() {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollDelta = scrollTop - lastScrollTop;
+          
+          if (window.innerWidth > 768) {
+            // Desktop scroll effects
+            if (scrollTop > 100) {
+              nav.classList.add('scrolled');
+            } else {
+              nav.classList.remove('scrolled');
+            }
+            
+            // Hide navigation when scrolling down, show when scrolling up
+            if (scrollDelta > scrollThreshold) {
+              // Scrolling down - hide navigation
+              nav.classList.add('nav-hidden');
+            } else if (scrollDelta < -scrollThreshold) {
+              // Scrolling up - show navigation
+              nav.classList.remove('nav-hidden');
+            }
+            
+            // Always show navigation at the top
+            if (scrollTop <= 0) {
+              nav.classList.remove('nav-hidden');
+            }
+          } else {
+            // Mobile scroll effects - always hide/show navigation on scroll
+            if (scrollDelta > scrollThreshold) {
+              // Scrolling down - hide navigation
+              nav.classList.add('nav-hidden');
+            } else if (scrollDelta < -scrollThreshold) {
+              // Scrolling up - show navigation
+              nav.classList.remove('nav-hidden');
+            }
+            
+            // Always show navigation at the top
+            if (scrollTop <= 0) {
+              nav.classList.remove('nav-hidden');
+            }
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+        
+        // Add active state for current page
+        navLinks.forEach(link => {
+          if (link.href === window.location.href) {
+            link.classList.add('active');
+          }
+        });
+        
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinksElement = document.querySelector('.nav-links');
+        
+        if (hamburger && navLinksElement) {
+          hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navLinksElement.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (navLinksElement.classList.contains('active')) {
+              document.body.classList.add('menu-open');
+            } else {
+              document.body.classList.remove('menu-open');
+            }
+          });
+        }
+
+        // Ensure navigation links work properly
+        navLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Close mobile menu when link is clicked
+            const navLinksElement = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            if (navLinksElement && hamburger) {
+              navLinksElement.classList.remove('active');
+              hamburger.classList.remove('active');
+              document.body.classList.remove('menu-open');
+            }
+          });
+        });
+        
+        
+        
+        
+      });
+
+      // Airplane SVG Animation
+      let airplanePaths = document.querySelectorAll('#airplane-svg path');
+
+      fillAirplanePaths()
+      updateAirplanePosition()
+
+      document.addEventListener('scroll', () => {
+        fillAirplanePaths()
+        updateAirplanePosition()
+      })
+
+      function fillAirplanePaths() {
+        // Get the current scroll position
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        
+        // Find the layered peaks section
+        const layeredPeaksSection = document.querySelector('.layered-peaks-section');
+        
+        if (!layeredPeaksSection) return;
+        
+        const sectionTop = layeredPeaksSection.offsetTop;
+        const sectionCenter = sectionTop + (windowHeight / 2);
+        const switchPoint = sectionCenter - (windowHeight / 2); // When SVG switches to absolute
+        
+        // Calculate animation percentage based on reaching the switch point
+        let scrollPercentage = 0;
+        if (scrollTop > 0) {
+          scrollPercentage = Math.min(scrollTop / switchPoint, 1);
+        }
+
+        // Check if SVG is in absolute position (when it becomes static)
+        const svg = document.querySelector('#airplane-svg');
+        const isAbsolute = svg.style.position === 'absolute';
+        
+        // Debug: Log when SVG switches to absolute
+        if (isAbsolute && scrollPercentage > 0.5) {
+          console.log('SVG is in absolute position - showing all paths');
+        }
+
+        for (var i = 0; i < airplanePaths.length; i++) {
+          let path = airplanePaths[i];
+          let pathLength = path.getTotalLength();
+          
+          // Set up the dash pattern
+          path.style.strokeDasharray = pathLength;
+          
+          let drawLength = 0;
+          
+          // If SVG is in absolute position, show ALL paths fully
+          if (isAbsolute) {
+            drawLength = pathLength; // Show every single path completely
+          } else {
+            // Progressive animation only when SVG is still fixed/animating
+            // Check if this is the 1st path (index 0)
+            if (i === 0) {
+              // This is the 1st path - animate for most of the scroll (0-80% of scroll)
+              if (scrollPercentage <= 0.8) {
+                drawLength = pathLength * (scrollPercentage / 0.8); // Scale to 0-80% range
+              } else {
+                drawLength = pathLength; // Keep it fully drawn in final 20%
+              }
+            } 
+            // Check if this is the last path
+            else if (i === airplanePaths.length - 1) {
+              // This is the last path - animate in final portion (80-100% of scroll)
+              if (scrollPercentage > 0.8) {
+                const finalProgress = (scrollPercentage - 0.8) / 0.2; // Scale 0.8-1.0 to 0-1
+                drawLength = pathLength * finalProgress;
+              } else {
+                drawLength = 0; // Keep hidden until 80% scroll
+              }
+            } 
+            // All other paths
+            else {
+              // These paths start when the last path is 1/4 away from being finished
+              // Last path finishes at 100%, so 1/4 away means 85% of scroll
+              if (scrollPercentage > 0.85) {
+                const otherPathsProgress = (scrollPercentage - 0.85) / 0.15; // Scale 0.85-1.0 to 0-1
+                drawLength = pathLength * otherPathsProgress;
+              } else {
+                drawLength = 0; // Keep hidden until 85% scroll
+              }
+            }
+          }
+
+          // Set the offset to hide the undrawn portion
+          path.style.strokeDashoffset = pathLength - drawLength;
+        }
+      }
+
+      function updateAirplanePosition() {
+        const svg = document.querySelector('#airplane-svg');
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        
+        // Find the layered peaks section
+        const layeredPeaksSection = document.querySelector('.layered-peaks-section');
+        
+        if (layeredPeaksSection) {
+          const sectionTop = layeredPeaksSection.offsetTop;
+          const sectionCenter = sectionTop + (windowHeight / 2);
+          
+          // When the section center reaches the middle of the screen, switch to absolute
+          if (scrollTop >= sectionCenter - (windowHeight / 2)) {
+            svg.style.position = 'absolute';
+            // Position SVG at the top of the section to show all content
+            svg.style.top = sectionTop + 'px';
+            svg.style.transform = 'translateY(0px)';
+          } else {
+            svg.style.position = 'fixed';
+            svg.style.top = '0px';
+            svg.style.transform = 'translateY(0px)';
+          }
+        }
+      }
+    </script>
+
+    <!-- Project Specs Popup -->
+    <div id="project-specs-popup" class="popup-overlay">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Project Specifications</h2>
+          <button id="popup-close" class="popup-close-btn">×</button>
+        </div>
+        <div class="popup-body">
+          <div class="popup-section">
+            <h3>PROJECT OVERVIEW</h3>
+            <div class="project-details">
+              <div class="detail-row">
+                <span class="detail-label">BUSINESS UNIT(S):</span>
+                <span class="detail-value">Commercial Development</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">YEAR COMPLETED:</span>
+                <span class="detail-value">2020-2023</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">CLIENT(S):</span>
+                <span class="detail-value">ARM Property Management</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">CLIENT INDUSTRY:</span>
+                <span class="detail-value">Commercial Real Estate</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">SIZE:</span>
+                <span class="detail-value">50,000 sq. ft., 3-Stories</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">OWNERSHIP:</span>
+                <span class="detail-value">Private</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">PROJECT VALUE:</span>
+                <span class="detail-value">$18.5M</span>
+              </div>
+            </div>
+          </div>
+          <div class="popup-section">
+            <h3>PROJECT DESCRIPTION</h3>
+            <p>This comprehensive commercial development project showcases our commitment to innovative design and sustainable practices. The project includes modern office spaces, retail areas, and state-of-the-art amenities designed to meet the evolving needs of today's businesses.</p>
+            <p>Our team is implementing cutting-edge technology and environmentally friendly construction methods to create a landmark development that will serve as a model for future projects in the downtown district.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileHamburger = document.getElementById('mobile-hamburger');
+        const mobileNavLinks = document.getElementById('mobile-nav-links');
+        const body = document.body;
+        
+        let lastScrollTop = 0;
+        let scrollPosition = 0; // Store scroll position when menu opens
+        const scrollThreshold = 10; // Reduced threshold for more responsive hiding
+        
+        // Mobile hamburger menu
+        if (mobileHamburger && mobileNavLinks) {
+          mobileHamburger.addEventListener('click', function() {
+            const isMenuOpen = mobileNavLinks.classList.contains('active');
+            
+            if (!isMenuOpen) {
+              // Opening menu - store current scroll position
+              scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+              body.style.top = `-${scrollPosition}px`;
+              body.classList.add('menu-open');
+            } else {
+              // Closing menu - restore scroll position
+              body.classList.remove('menu-open');
+              body.style.top = '';
+              window.scrollTo(0, scrollPosition);
+            }
+            
+            mobileHamburger.classList.toggle('active');
+            mobileNavLinks.classList.toggle('active');
+          });
+          
+          // Close menu when clicking links
+          mobileNavLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              mobileHamburger.classList.remove('active');
+              mobileNavLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+              window.scrollTo(0, scrollPosition);
+            }
+          });
+        }
+        
+        // Hide/show nav on scroll and change background
+        window.addEventListener('scroll', function() {
+          // Don't hide nav when menu is open
+          if (mobileNavLinks.classList.contains('active')) {
+            return;
+          }
+          
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollDelta = scrollTop - lastScrollTop;
+          
+          // Always show nav when at the top of the page
+          if (scrollTop <= 0) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'transparent';
+            mobileNav.style.backdropFilter = 'none';
+            mobileNav.style.webkitBackdropFilter = 'none';
+            mobileNav.style.boxShadow = 'none';
+          } 
+          // Scrolling up - show nav with background
+          else if (scrollDelta < -scrollThreshold) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'rgba(60, 60, 60, 0.95)';
+            mobileNav.style.backdropFilter = 'blur(10px)';
+            mobileNav.style.webkitBackdropFilter = 'blur(10px)';
+            mobileNav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          }
+          // Scrolling down - hide nav (more aggressive hiding)
+          else if (scrollDelta > scrollThreshold && scrollTop > 100) {
+            mobileNav.classList.add('nav-hidden');
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+      });
+    </script>
+
+    <!-- Project Specs Popup JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const popup = document.getElementById('project-specs-popup');
+        const popupClose = document.getElementById('popup-close');
+        const projectSpecsBtns = document.querySelectorAll('.project-specs-btn');
+
+        function openPopup() {
+          popup.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closePopup() {
+          popup.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        }
+
+        // Function to update popup content based on section
+        function updatePopupContent(sectionNumber) {
+          const popupTitle = document.querySelector('.popup-header h2');
+          const projectDetails = document.querySelector('.project-details');
+          const projectDescription = document.querySelector('.popup-section:last-of-type p');
+          
+          const projectData = {
+            1: {
+              title: "GRANDVIEW CASA BLANCA SOUTH",
+              specs: {
+                businessUnit: "Commercial Development",
+                yearCompleted: "2020-2023",
+                client: "ARM Property Management",
+                industry: "Commercial Real Estate",
+                size: "50,000 sq. ft., 3-Stories",
+                ownership: "Private",
+                projectValue: "$18.5M"
+              },
+              description: "Grandview Casa Blanca South represents our commitment to innovative design and sustainable practices. This comprehensive commercial development includes modern office spaces, retail areas, and state-of-the-art amenities designed to meet the evolving needs of today's businesses in the Grandview area."
+            },
+            2: {
+              title: "MESA MAIN STREET STATIONS",
+              specs: {
+                businessUnit: "Residential Development",
+                yearCompleted: "2016-2020",
+                client: "ARM Property Management",
+                industry: "Residential Real Estate",
+                size: "42 Units/2 stories, pool",
+                ownership: "Private",
+                projectValue: "$9.65M"
+              },
+              description: "The development of a 42-unit townhome community in Mesa, Arizona involved full oversight from pre-construction through final delivery. The project included coordination and management of all underground infrastructure, including wet and dry utilities such as water, sewer, storm drainage, electric, gas, and telecommunications."
+            },
+            3: {
+              title: "CATTLE HOMESTEAD",
+              specs: {
+                businessUnit: "Residential Development",
+                yearCompleted: "2024",
+                client: "ARM Property Management",
+                industry: "Residential Real Estate",
+                size: "200,000 sq. ft., 25-Stories",
+                ownership: "Private",
+                projectValue: "$45M - $55M"
+              },
+              description: "The Cattle Homestead project represents a unique rural development that combines traditional ranch aesthetics with modern construction techniques. Located on expansive acreage, this project focused on creating sustainable living spaces that honor the land's agricultural heritage while providing contemporary amenities."
+            },
+            4: {
+              title: "CENTRAL COMMERCIAL BUILDING RENOVATION",
+              specs: {
+                businessUnit: "Retail Development",
+                yearCompleted: "2023",
+                client: "ARM Property Management",
+                industry: "Retail & Shopping",
+                size: "85,000 sq. ft., 2-Stories",
+                ownership: "Private",
+                projectValue: "$500k"
+              },
+              description: "The Central Commercial Building Renovation transformed a historic downtown structure into a modern mixed-use facility while preserving its architectural character. This comprehensive renovation project breathed new life into the aging commercial space, creating contemporary office and retail environments."
+            },
+            5: {
+              title: "COLLEGE CONDOS AND STADIUM CONDOS",
+              specs: {
+                businessUnit: "Residential Development",
+                yearCompleted: "2006-2008",
+                client: "ARM Property Management",
+                industry: "Residential Real Estate",
+                size: "32 units/2 stories, pool",
+                ownership: "Private",
+                projectValue: "$3.4M"
+              },
+              description: "The College Condos and Stadium Condos project created modern student housing solutions strategically located near university campuses and sports facilities. These developments cater to the unique needs of student residents while providing premium amenities and convenient access to academic and recreational facilities."
+            },
+            6: {
+              title: "BUREAU OF LAND MANAGEMENT",
+              specs: {
+                businessUnit: "Government Development",
+                yearCompleted: "2023",
+                client: "Bureau of Land Management",
+                industry: "Government",
+                size: "150,000 sq. ft., 8-Stories",
+                ownership: "Federal",
+                projectValue: "$1M"
+              },
+              description: "The Bureau of Land Management project involved the construction of a federal facility designed to serve the community's land management and administrative needs while reflecting the desert Southwest architectural style. This public project emphasized durability, accessibility, and energy efficiency."
+            },
+            7: {
+              title: "MOHAVE MENTAL HEALTH",
+              specs: {
+                businessUnit: "Healthcare Development",
+                yearCompleted: "2024",
+                client: "Mohave Mental Health",
+                industry: "Healthcare",
+                size: "100,000 sq. ft., 5-Stories",
+                ownership: "Healthcare System",
+                projectValue: "$35M - $40M"
+              },
+              description: "The Mohave Mental Health facility project created a specialized healthcare environment designed to support mental health services and patient wellbeing. This sensitive construction project required careful attention to therapeutic design principles and regulatory compliance for healthcare facilities."
+            }
+          };
+
+          const project = projectData[sectionNumber];
+          if (project) {
+            if (popupTitle) popupTitle.textContent = project.title;
+            
+            if (projectDetails) {
+              projectDetails.innerHTML = `
+                <div class="detail-row">
+                  <span class="detail-label">BUSINESS UNIT(S):</span>
+                  <span class="detail-value">${project.specs.businessUnit}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">YEAR COMPLETED:</span>
+                  <span class="detail-value">${project.specs.yearCompleted}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">CLIENT(S):</span>
+                  <span class="detail-value">${project.specs.client}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">CLIENT INDUSTRY:</span>
+                  <span class="detail-value">${project.specs.industry}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">SIZE:</span>
+                  <span class="detail-value">${project.specs.size}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">OWNERSHIP:</span>
+                  <span class="detail-value">${project.specs.ownership}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">PROJECT VALUE:</span>
+                  <span class="detail-value">${project.specs.projectValue}</span>
+                </div>
+              `;
+            }
+            
+            if (projectDescription) {
+              projectDescription.textContent = project.description;
+            }
+          }
+        }
+
+        // Add click event listeners to all Project Specs buttons
+        projectSpecsBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const sectionNumber = parseInt(btn.getAttribute('data-section'));
+            updatePopupContent(sectionNumber);
+            openPopup();
+          });
+        });
+
+        // Close popup when close button is clicked
+        popupClose.addEventListener('click', closePopup);
+
+        // Close popup when clicking outside the content
+        popup.addEventListener('click', function(e) {
+          if (e.target === popup) {
+            closePopup();
+          }
+        });
+
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && popup.classList.contains('active')) {
+            closePopup();
+          }
+        });
+      });
+    </script>
+    
+    <style>
+      .commercial-footer {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 3rem 2rem 2rem;
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 100; /* Above background grid (z-index: 5) */
+      }
+
+      .footer-container {
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr auto auto 1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      .footer-vertical-line {
+        width: 1px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-info p {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-info i {
+        color: var(--highlight-commercial);
+        width: 20px;
+      }
+
+      .footer-phone,
+      .footer-email,
+      .footer-license {
+        font-weight: 500;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--highlight-commercial);
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-copyright p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .footer-notice {
+        text-align: center;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-notice p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.5;
+      }
+
+      .footer-notice a {
+        color: #254A89;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .footer-notice a:hover {
+        color: #3a6bb8;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 2rem;
+        }
+
+        .footer-vertical-line {
+          display: none; /* Hide vertical lines on mobile */
+        }
+
+        .footer-info {
+          align-items: center;
+        }
+
+        .footer-links {
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    </style>
+  </body>
+</html>
+

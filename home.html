@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masked Image Reveal Scroll Animation | Codegrid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="/Home/img0.jpg" as="image" />
+    <link rel="preload" href="/Cube.svg" as="image" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="loader.js"></script>
+    <style>
+      /* Mobile Navigation Styles */
+      #mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1008;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+      }
+      
+      #mobile-nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+      
+      .mobile-nav-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        margin: 0 auto;
+        position: relative;
+      }
+      
+      .mobile-logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        z-index: 1009;
+        position: relative;
+      }
+      
+      .mobile-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1009;
+        position: absolute;
+        right: 0;
+      }
+      
+      .mobile-hamburger span {
+        width: 100%;
+        height: 3px;
+        background: #ffffff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+        display: block;
+      }
+      
+      .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+      }
+      
+      .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+      
+      .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+      
+      .mobile-nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1007;
+        transform: translateX(100%);
+      }
+      
+      .mobile-nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+      }
+      
+      .mobile-nav-links li {
+        list-style: none;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .mobile-nav-links li a {
+        display: block;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        min-width: 200px;
+        width: 90%;
+        max-width: 300px;
+        margin: 0.5rem auto;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+      
+      .mobile-nav-links li a:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+      
+      body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .img {
+        position: relative;
+        overflow: hidden;
+      }
+      .img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .view-more-btn {
+        position: absolute;
+        bottom: 20px;
+        left: 25%;
+        right: 25%;
+        background-color: rgba(40, 40, 40, 0.95);
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-radius: 5px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        height: 38px;
+        min-width: 120px;
+        letter-spacing: 0.5px;
+      }
+      .view-more-btn:hover {
+        background-color: rgba(30, 30, 30, 0.95);
+        transform: translateY(-1px);
+      }
+      .view-more-btn:active {
+        transform: translateY(0);
+      }
+      .view-more-btn::after {
+        content: '→';
+        color: #ff0000;
+        font-weight: bold;
+      }
+      
+      .projects-header {
+        text-align: center;
+        margin: 0.5rem 0 0.5rem 0;
+        padding: 0 1rem;
+      }
+      
+      .projects-header h2 {
+        font-size: 2rem;
+        color: #333;
+        margin: 0;
+        font-family: "Barlow Condensed", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      /* Empty containers are completely invisible */
+      .img:empty {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+
+      
+      .view-more-btn {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        white-space: nowrap;
+      }
+      
+      .view-more-btn:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      
+      .view-more-btn::after {
+        content: '→';
+        color: #ff0000;
+        font-weight: bold;
+        margin-left: 6px;
+      }
+      
+      /* Mobile Spotlight Section - Scrollable Layout */
+      .spotlight {
+        background-color: #101010;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .spotlight-images {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 300svh; /* Balanced height for medium-sized images */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 0.rem; /* Minimal gap between rows */
+        transform: translateY(2%);
+        will-change: transform;
+        z-index: 1;
+        padding: 0.rem 0;
+      }
+      
+      .row {
+        width: 100%;
+        padding: 0.rem;
+        display: flex;
+        gap: 0.rem;
+      }
+      
+      /* Mobile-specific image styling */
+      .img {
+        flex: 1;
+        height: 250px; /* Balanced height - not too big, not too small */
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        border-radius: 8px;
+      }
+      
+      .img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.5;
+        filter: saturate(0);
+        transition: opacity 0.3s ease, filter 0.3s ease;
+        position: relative;
+        z-index: 1;
+        display: block;
+        /* Mobile optimization: hardware acceleration */
+        will-change: transform;
+        transform: translateZ(0);
+        /* Reduce image quality on mobile for faster loading */
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+      }
+      
+      .img:hover img {
+        opacity: 1;
+        filter: saturate(1);
+      }
+      
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .mobile-hidden {
+          display: none !important;
+        }
+        
+        /* Reduce image quality on mobile for faster loading */
+        .img img {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+        }
+        
+        /* Optimize animations for mobile */
+        .img img {
+          transition: none;
+        }
+        
+        .img:hover img {
+          transition: opacity 0.2s ease, filter 0.2s ease;
+        }
+      }
+      
+      /* Mask container for mobile - fixed to viewport */
+      .mask-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 100;
+        -webkit-mask: url(/Home/spotlight-mask.svg) center/contain no-repeat;
+        mask: url(/Home/spotlight-mask.svg) center/contain no-repeat;
+        overflow: hidden;
+        -webkit-mask-size: 0%;
+        mask-size: 0%;
+        pointer-events: none; /* Allow scrolling through the mask */
+        /* Smooth mask transitions */
+        -webkit-mask-size: 0%;
+        mask-size: 0%;
+        will-change: mask-size, -webkit-mask-size;
+        transform: translateZ(0); /* Hardware acceleration */
+      }
+      
+      .mask-img {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        will-change: transform;
+        transform: translateZ(0); /* Hardware acceleration */
+      }
+      
+      .mask-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        will-change: transform;
+        transform: translateZ(0); /* Hardware acceleration */
+      }
+      
+      .mask-container .header {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 101;
+        color: white;
+      }
+      
+      .mask-container .header h1 {
+        font-size: 2.5rem;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        font-family: "Barlow Condensed", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      
+      /* Mobile-specific compact spacing */
+      @media (max-width: 480px) {
+        .row {
+          padding: 0.25rem;
+          gap: 0.25rem;
+        }
+        
+        .spotlight-images {
+          height: 280svh; /* Balanced height for medium-sized images */
+          gap: 0.125rem;
+          padding: 0.25rem 0;
+        }
+        
+        .projects-header {
+          margin: 0.25rem 0;
+        }
+        
+        .projects-header h2 {
+          font-size: 1.5rem;
+        }
+        
+        .img {
+          height: 280px; /* Balanced size for small screens */
+        }
+      }
+      
+      /* Medium mobile screens */
+      @media (max-width: 768px) and (min-width: 481px) {
+        .img {
+          height: 270px; /* Balanced size for medium mobile */
+        }
+      }
+      
+      /* Mobile: Adjust AZ part position */
+      @media (max-width: 768px) {
+        .intro .header h1 .line1 {
+          transform: translate(-45px, -20px) !important;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <nav id="mobile-nav">
+      <div class="mobile-nav-container">
+        <a href="home.html" class="mobile-logo-link">
+          <img src="/Cube.svg" alt="Logo" class="mobile-logo" />
+        </a>
+        <button class="mobile-hamburger" id="mobile-hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <ul class="mobile-nav-links" id="mobile-nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="commercial-mobile.html">Commercial</a></li>
+        <li><a href="residential.html">Residential</a></li>
+        <li><a href="contact-mobile.html">Contact</a></li>
+      </ul>
+    </nav>
+    <section class="intro">
+      <div class="intro-image">
+        <img src="/Home/img0.jpg" alt="ARM Property Services" loading="eager" />
+      </div>
+      <div class="header">
+        <h1>
+          <div class="line1"><span class="highlight">AZ.</span></div>
+          <div class="line2"><span class="highlight">dev</span>elopment</div>
+          <div class="line3"><span class="highlight">co</span>mpany</div>
+        </h1>
+      </div>
+    </section>
+    <section class="spotlight">
+      <div class="spotlight-images">
+        <div class="projects-header">
+          <h2>View Our Recent Projects</h2>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"><img src="/Mesa/44.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Turkey/84.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+        </div>
+        <div class="row">
+          <div class="img"><img src="/Mesa/10-1.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"></div>
+          <div class="img"></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"><img src="/Mesa/10-3.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Cooledge/5-19.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+        </div>
+        <!-- Mobile: Hide additional rows to reduce loading -->
+        <div class="row mobile-hidden">
+          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/6-2.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Cooledge/5-26.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+        </div>
+        <div class="row mobile-hidden">
+          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/6-2.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Cooledge/5-26.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"></div>
+          <div class="img"></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"></div>
+          <div class="img"></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"></div>
+          <div class="img"></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"></div>
+          <div class="img"></div>
+        </div>
+      </div>
+      <div class="mask-container">
+        <div class="mask-img">
+          <img src="/Turkey/69.webp" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="header">
+          <h1>building your expectations</h1>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="commercial-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-license">Licenses | ROC284283</p>
+          </div>
+          
+          <div class="footer-vertical-line"></div>
+          
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+
+          <div class="footer-vertical-line"></div>
+        </div>
+        
+        <div class="footer-copyright">
+          <p>&copy; 2025 AZDEVCO. All rights reserved.</p>
+        </div>
+        
+        <div class="footer-notice">
+          <p>Use of this site constitutes acceptance of our <a href="/terms-of-service.html">Terms of Service</a> and <a href="/privacy-policy.html">Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/home-script.js"></script>
+    <!-- Add mobile navigation JavaScript - DISABLED TO PREVENT CONFLICTS -->
+    <!-- <script src="js/mobile-nav.js"></script> -->
+    
+    <!-- Mobile Navigation -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileHamburger = document.getElementById('mobile-hamburger');
+        const mobileNavLinks = document.getElementById('mobile-nav-links');
+        const body = document.body;
+        
+        let lastScrollTop = 0;
+        const scrollThreshold = 10; // Reduced threshold for more responsive hiding
+        
+        // Mobile hamburger menu
+        if (mobileHamburger && mobileNavLinks) {
+          mobileHamburger.addEventListener('click', function() {
+            mobileHamburger.classList.toggle('active');
+            mobileNavLinks.classList.toggle('active');
+            
+            if (mobileNavLinks.classList.contains('active')) {
+              body.classList.add('menu-open');
+            } else {
+              body.classList.remove('menu-open');
+            }
+          });
+          
+          // Close menu when clicking links
+          mobileNavLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              mobileHamburger.classList.remove('active');
+              mobileNavLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+            }
+          });
+        }
+        
+        // Hide/show nav on scroll and change background
+        window.addEventListener('scroll', function() {
+          // Don't hide nav when menu is open
+          if (mobileNavLinks.classList.contains('active')) {
+            return;
+          }
+          
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollDelta = scrollTop - lastScrollTop;
+          
+          // Always show nav when at the top of the page
+          if (scrollTop <= 0) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'transparent';
+            mobileNav.style.backdropFilter = 'none';
+            mobileNav.style.webkitBackdropFilter = 'none';
+            mobileNav.style.boxShadow = 'none';
+          } 
+          // Scrolling up - show nav with grey background
+          else if (scrollDelta < -scrollThreshold) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'rgba(60, 60, 60, 0.95)';
+            mobileNav.style.backdropFilter = 'blur(10px)';
+            mobileNav.style.webkitBackdropFilter = 'blur(10px)';
+            mobileNav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          }
+          // Scrolling down - hide nav (more aggressive hiding)
+          else if (scrollDelta > scrollThreshold && scrollTop > 100) {
+            mobileNav.classList.add('nav-hidden');
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+      });
+    </script>
+    
+    <!-- Mobile loading optimization -->
+    <script>
+      // Mobile-specific optimizations
+      if (window.innerWidth <= 768) {
+        // Load additional images only when user scrolls near them
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target.querySelector('img');
+              if (img && img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                observer.unobserve(entry.target);
+              }
+            }
+          });
+        }, { rootMargin: '50px' });
+        
+        // Observe mobile-hidden rows for lazy loading
+        document.querySelectorAll('.mobile-hidden').forEach(row => {
+          const img = row.querySelector('img');
+          if (img) {
+            img.dataset.src = img.src;
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB2aWV3Qm94PSIwIDAgMSAxIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmNWY1ZjUiLz48L3N2Zz4=';
+            observer.observe(row);
+          }
+        });
+      }
+    </script>
+    
+    <style>
+      .commercial-footer {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 3rem 2rem 2rem;
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 100; /* Above background grid (z-index: 5) */
+      }
+
+      .footer-container {
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr auto auto 1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      .footer-vertical-line {
+        width: 1px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-info p {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-info i {
+        color: var(--highlight-residential, #2196F3);
+        width: 20px;
+      }
+
+      .footer-phone,
+      .footer-email,
+      .footer-license {
+        font-weight: 500;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--highlight-residential, #2196F3);
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-copyright p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .footer-notice {
+        text-align: center;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-notice p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.5;
+      }
+
+      .footer-notice a {
+        color: #254A89;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .footer-notice a:hover {
+        color: #3a6bb8;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 2rem;
+        }
+
+        .footer-vertical-line {
+          display: none; /* Hide vertical lines on mobile */
+        }
+
+        .footer-info {
+          align-items: center;
+        }
+
+        .footer-links {
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    </style>
+
+  </body>
+</html>

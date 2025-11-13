@@ -1,0 +1,222 @@
+/* Page Loader Overlay (scoped, no global resets) */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  /* Mobile viewport fixes */
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.page-loader .loading-container {
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+}
+
+.page-loader .cube-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 40px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.page-loader .cube-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  filter: drop-shadow(0 0 20px rgba(64, 150, 255, 0.8))
+          drop-shadow(0 0 40px rgba(64, 150, 255, 0.6))
+          drop-shadow(0 0 60px rgba(64, 150, 255, 0.4));
+  transition: opacity 0.4s ease-in-out;
+}
+
+.page-loader .cube-svg path {
+  stroke: #40a9ff !important;
+  stroke-width: 3 !important;
+  fill: rgba(64, 169, 255, 0.1) !important;
+  stroke-dasharray: 5, 5 !important;
+  animation: dash 2s linear infinite;
+}
+
+.page-loader .cube-svg.fade-in { opacity: 1; }
+.page-loader .cube-svg.fade-out { opacity: 0; }
+
+.page-loader .loading-text {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 300;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.page-loader .loading-bar-container {
+  width: 300px;
+  max-width: 80vw;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-loader .loading-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #40a9ff, #1890ff, #40a9ff);
+  background-size: 200% 100%;
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.3s ease;
+  animation: shimmer 2s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(64, 169, 255, 0.6);
+}
+
+.page-loader .percentage {
+  font-size: 18px;
+  font-weight: 500;
+  color: #40a9ff;
+  text-shadow: 0 0 10px rgba(64, 169, 255, 0.8);
+}
+
+.page-loader .loading-dots {
+  margin-top: 20px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.page-loader .loading-dots::after {
+  content: '';
+  animation: dots 1.5s infinite;
+}
+
+.page-loader .loading-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(64, 169, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 10s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -20; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Prevent scrolling while loader is visible (matches Loading app behavior) */
+.arm-has-loader body {
+  overflow: hidden !important;
+}
+
+/* Mobile viewport fixes for loader */
+@media (max-width: 768px) {
+  .page-loader {
+    width: 100vw !important;
+    width: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    height: 100svh !important; /* Small viewport height */
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    min-height: 100svh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    max-height: 100svh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateZ(0) !important; /* Force hardware acceleration */
+    -webkit-transform: translateZ(0) !important;
+  }
+  
+  /* Force full coverage on iOS Safari */
+  @supports (-webkit-touch-callout: none) {
+    .page-loader {
+      height: -webkit-fill-available !important;
+      min-height: -webkit-fill-available !important;
+    }
+  }
+  
+  /* Ensure loader covers mobile address bar changes */
+  @supports (height: 100dvh) {
+    .page-loader {
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+    }
+  }
+  
+  @supports (height: 100svh) {
+    .page-loader {
+      height: 100svh !important;
+      min-height: 100svh !important;
+    }
+  }
+}
+
+/* Additional mobile fixes for very small screens */
+@media (max-width: 480px) {
+  .page-loader {
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    height: 100svh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    min-height: 100svh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 999999 !important;
+  }
+}
+
+

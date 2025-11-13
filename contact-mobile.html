@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en" class="contact">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM - Contact Us</title>
+    <!-- Web3Forms with hCaptcha Integration -->
+    <script src="https://web3forms.com/client/script.js" async defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="loader.js"></script>
+    <style>
+      /* Mobile Navigation Styles */
+      #mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1008;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+      }
+      
+      #mobile-nav.nav-hidden {
+        transform: translateY(-100%);
+      }
+      
+      .mobile-nav-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 100%;
+        margin: 0 auto;
+        position: relative;
+      }
+      
+      .mobile-logo {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        z-index: 1009;
+        position: relative;
+      }
+      
+      .mobile-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1009;
+        position: absolute;
+        right: 0;
+      }
+      
+      .mobile-hamburger span {
+        width: 100%;
+        height: 3px;
+        background: #ffffff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+        display: block;
+      }
+      
+      .mobile-hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+      }
+      
+      .mobile-hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+      
+      .mobile-hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+      
+      .mobile-nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1007;
+        transform: translateX(100%);
+      }
+      
+      .mobile-nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+      }
+      
+      .mobile-nav-links li {
+        list-style: none;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .mobile-nav-links li a {
+        display: block;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        min-width: 200px;
+        width: 90%;
+        max-width: 300px;
+        margin: 0.5rem auto;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+      
+      .mobile-nav-links li a:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+      
+      body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
+      
+      /* Mobile Contact specific styles */
+      html.contact {
+        background-color: #000000 !important;
+        background: #000000 !important;
+      }
+      
+      html.contact,
+      .contact {
+        background: linear-gradient(135deg, #1a4d80 0%, #000000 50%, #1a4d1a 100%);
+        background-color: #000000 !important;
+        min-height: 100vh;
+        padding: 0;
+        margin: 0;
+      }
+      
+      body.contact {
+        background: linear-gradient(135deg, #1a4d80 0%, #000000 50%, #1a4d1a 100%) !important;
+        background-color: #000000 !important;
+        min-height: 100vh;
+      }
+      
+      body.contact .content {
+        background-color: transparent !important;
+        background: transparent !important;
+      }
+      
+      /* Mobile Hero Section */
+      .contact .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                    url('/contact/2.webp') no-repeat center 70%/cover;
+        height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 2rem;
+        padding: 1rem;
+      }
+      
+      .contact .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+      
+      .contact .hero p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      
+      /* Mobile Contact Container */
+      .contact .contact-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin: 0;
+        background: transparent;
+        padding: 1rem;
+        max-width: 100%;
+      }
+      
+      /* Mobile Contact Info */
+      .contact .contact-info {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        padding: 2rem 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        order: 1;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        margin: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      
+      .contact .contact-info h3 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+        padding: 0;
+        box-sizing: border-box;
+        margin-left: 0 !important;
+      }
+      
+      .contact .contact-info p {
+        margin: 1.5rem auto;
+        color: var(--text-color);
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 500;
+        width: fit-content;
+        box-sizing: border-box;
+        padding: 0 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      
+      .contact .contact-details i {
+        color: var(--highlight-contact);
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+        margin-right: 0.5rem;
+      }
+      
+      
+      .contact .contact-hours i {
+        color: var(--highlight-contact);
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+        margin-right: 0.5rem;
+      }
+      
+      /* Mobile Social Links */
+      .contact .social-links {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .contact .social-links a {
+        color: var(--text-muted);
+        font-size: 1.8rem;
+        transition: color 0.3s ease;
+        padding: 0.5rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .contact .social-links a:hover {
+        color: var(--highlight-contact);
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+      }
+      
+      /* Mobile Contact Form */
+      .contact .contact-form {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        order: 2;
+      }
+      
+      .contact .contact-form h3 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-align: center;
+      }
+      
+      .contact .form-group {
+        margin-bottom: 1.2rem;
+      }
+      
+      .contact label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+        font-size: 1rem;
+      }
+      
+      .contact input,
+      .contact textarea {
+        width: 100%;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+      
+      .contact input::placeholder,
+      .contact textarea::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .contact input:focus,
+      .contact textarea:focus {
+        outline: none;
+        border-color: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+      }
+      
+      .contact textarea {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+      }
+      
+      /* Mobile Button Styling */
+      .contact .btn {
+        background: linear-gradient(45deg, #1a4d80, #1a4d1a);
+        border: none;
+        border-radius: 8px;
+        padding: 1rem 2rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .contact .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(45deg, #2a5d90, #2a5d2a);
+      }
+      
+      .contact .btn:disabled {
+        background: #666;
+        cursor: not-allowed;
+        transform: none;
+        opacity: 0.6;
+      }
+      
+      /* Mobile hCaptcha Styling */
+      .h-captcha {
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0;
+        transform: scale(0.9);
+      }
+      
+      .h-captcha iframe {
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      /* Mobile Cooldown Message */
+      .cooldown-message {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        text-align: center;
+        color: #ffc107;
+        font-size: 0.9rem;
+      }
+      
+      .cooldown-message p {
+        margin: 0;
+      }
+      
+      .cooldown-message #countdown {
+        font-weight: bold;
+        color: #ffc107;
+      }
+      
+      /* Mobile Loading Animation */
+      .contact .btn.loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 2px solid transparent;
+        border-top: 2px solid #000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Mobile Blob Animation */
+      .blob-container {
+        position: relative;
+        max-width: 300px;
+        width: 100%;
+        margin: 2rem auto;
+        text-align: center;
+      }
+      
+      .blob-motion {
+        width: 100%;
+        height: auto;
+        max-width: 250px;
+        margin: 0 auto;
+        display: block;
+      }
+      
+      .blob-motion path {
+        transition: all 0.3s ease;
+      }
+      
+      /* CSS animation for blob morphing - Same as desktop */
+      @keyframes blobMorph {
+        0% {
+          d: path("M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7");
+        }
+        50% {
+          d: path("M242.3 -168.1C303.3 -116.8 334.4 -16.7 302.6 47.6C270.9 111.9 176.1 140.4 95.4 167.7C14.6 194.9 -52.1 220.9 -105.2 201.7C-158.2 182.6 -197.6 118.3 -215.1 47.4C-232.7 -23.6 -228.6 -101.3 -189.1 -147.6C-149.6 -194 -74.8 -209 7.9 -215.3C90.7 -221.7 181.4 -219.3 242.3 -168.1");
+        }
+        100% {
+          d: path("M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7");
+        }
+      }
+      
+      /* Apply animation to blob path - Same as desktop */
+      #blob1 {
+        animation: blobMorph 3s ease-in-out infinite;
+      }
+      
+      /* Mobile Navigation Adjustments */
+      .nav-container {
+        padding: 0 1rem;
+      }
+      
+      .logo {
+        max-width: 35px;
+        height: auto;
+      }
+      
+      /* Mobile Content Padding */
+      .content {
+        padding: 1rem;
+        margin-top: 80px;
+      }
+      
+      /* Mobile Form Focus Improvements */
+      .contact .form-group input:focus,
+      .contact .form-group textarea:focus {
+        outline: none;
+        border-color: var(--highlight-contact);
+        box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+      }
+      
+      /* Mobile Submission Limit Styling */
+      .contact .submission-limit {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        color: #dc3545;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      
+      /* Mobile Captcha Info */
+      .contact .captcha-info {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        font-style: italic;
+        text-align: center;
+      }
+      
+      /* Mobile-specific improvements */
+      @media (max-width: 480px) {
+        .contact .hero h1 {
+          font-size: 2rem;
+        }
+        
+        .contact .hero p {
+          font-size: 1rem;
+        }
+        
+        .contact .contact-info,
+        .contact .contact-form {
+          padding: 1rem;
+        }
+        
+        .contact .contact-info h3,
+        .contact .contact-form h3 {
+          font-size: 1.5rem;
+        }
+        
+        .contact input,
+        .contact textarea {
+          padding: 0.8rem;
+          font-size: 0.9rem;
+        }
+        
+        .contact .btn {
+          padding: 0.8rem 1.5rem;
+          font-size: 0.9rem;
+        }
+        
+        .contact .social-links a {
+          width: 45px;
+          height: 45px;
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="contact">
+    <nav id="mobile-nav">
+      <div class="mobile-nav-container">
+        <a href="home.html" class="mobile-logo-link">
+          <img src="/Cube.svg" alt="Logo" class="mobile-logo" />
+        </a>
+        <button class="mobile-hamburger" id="mobile-hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <ul class="mobile-nav-links" id="mobile-nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="commercial-mobile.html">Commercial</a></li>
+        <li><a href="residential.html">Residential</a></li>
+        <li><a href="contact-mobile.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+    
+    <div class="hero">
+      <div>
+        <h1>Contact Us</h1>
+        <p>Get in touch with our company for any inquiries</p>
+      </div>
+    </div>
+    
+    <main class="content">
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>Contact Information</h3>
+          <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+          <p><i class="fas fa-envelope"></i> info@armproperty.com</p>
+          
+          <!-- Mobile Blob Animation -->
+          <div class="blob-container">
+            <svg
+              class="blob-motion"
+              id="visual"
+              viewBox="0 0 960 540"
+              width="960"
+              height="540"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+            >
+              <defs>
+                <clipPath id="blob-clip">
+                  <path
+                    id="blob1"
+                    d="M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7"
+                    fill="white"
+                  ></path>
+                </clipPath>
+              </defs>
+              <g transform="translate(450.7256843113689 283.4942824330989)">
+                <image 
+                  href="/contact/IMG_0783_result.jpg" 
+                  x="-270" 
+                  y="-270" 
+                  width="650" 
+                  height="750"
+                  clip-path="url(#blob-clip)"
+                  preserveAspectRatio="xMidYMid slice"
+                />
+              </g>
+              <g transform="translate(509.54377535978017 281.49390864595887)" style="visibility: hidden">
+                <path
+                  id="blob2"
+                  d="M242.3 -168.1C303.3 -116.8 334.4 -16.7 302.6 47.6C270.9 111.9 176.1 140.4 95.4 167.7C14.6 194.9 -52.1 220.9 -105.2 201.7C-158.2 182.6 -197.6 118.3 -215.1 47.4C-232.7 -23.6 -228.6 -101.3 -189.1 -147.6C-149.6 -194 -74.8 -209 7.9 -215.3C90.7 -221.7 181.4 -219.3 242.3 -168.1"
+                  fill="white"
+                ></path>
+              </g>
+            </svg>
+          </div>
+          
+          <p><i class="fas fa-clock"></i> Monday - Friday: 8:00 AM - 5:00 PM</p>
+        </div>
+        
+        <div class="contact-form">
+          <h3>Send Us a Message</h3>
+          <form action="https://api.web3forms.com/submit" method="POST">
+            <!-- Web3Forms access key -->
+            <input type="hidden" name="access_key" value="239a616d-f642-4ebf-a7db-f313a2b46263">
+            
+            <!-- Honeypot to prevent spam -->
+            <input type="text" name="botcheck" style="display:none">
+            
+            <!-- Form subject -->
+            <input type="hidden" name="subject" value="New Contact Form Submission - ARM Property">
+            
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required placeholder="Enter your email address">
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+            </div>
+            
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <input type="text" id="subject" name="subject" required placeholder="Enter message subject">
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Your Message *</label>
+              <textarea id="message" name="message" required placeholder="Enter your message here..."></textarea>
+            </div>
+            
+            <!-- hCaptcha Integration -->
+            <div class="form-group">
+              <div class="h-captcha" data-captcha="true"></div>
+              <div class="captcha-info">This site is protected by hCaptcha and its Privacy Policy and Terms of Service apply.</div>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn">Send Message</button>
+          </form>
+          
+          <div id="cooldownMessage" class="cooldown-message" style="display: none;">
+            <p>Please wait <span id="countdown">60</span> seconds before sending another message.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="commercial-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-license">Licenses | ROC284283</p>
+          </div>
+          
+          <div class="footer-vertical-line"></div>
+          
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+
+          <div class="footer-vertical-line"></div>
+        </div>
+        
+        <div class="footer-copyright">
+          <p>&copy; 2025 AZDEVCO. All rights reserved.</p>
+        </div>
+        
+        <div class="footer-notice">
+          <p>Use of this site constitutes acceptance of our <a href="/terms-of-service.html">Terms of Service</a> and <a href="/privacy-policy.html">Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add common JavaScript -->
+    <script src="common.js"></script>
+    <!-- Mobile navigation JavaScript - DISABLED TO PREVENT CONFLICTS -->
+    <!-- <script src="js/mobile-nav.js"></script> -->
+    
+    <script>
+      // Mobile Contact form handling for Web3Forms with cooldown
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.contact-form form');
+        const submitBtn = document.getElementById('submitBtn');
+        const cooldownMessage = document.getElementById('cooldownMessage');
+        const countdownSpan = document.getElementById('countdown');
+        
+        // Cooldown settings (60 seconds = 1 minute)
+        const COOLDOWN_TIME = 60;
+        const COOLDOWN_KEY = 'contactFormCooldown';
+        
+        // Check if user is in cooldown period
+        function checkCooldown() {
+          const lastSubmission = localStorage.getItem(COOLDOWN_KEY);
+          
+          if (lastSubmission) {
+            const timeElapsed = Date.now() - parseInt(lastSubmission);
+            const timeRemaining = Math.ceil((COOLDOWN_TIME * 1000 - timeElapsed) / 1000);
+            
+            if (timeRemaining > 0) {
+              startCooldown(timeRemaining);
+              return true;
+            } else {
+              localStorage.removeItem(COOLDOWN_KEY);
+              return false;
+            }
+          }
+          return false;
+        }
+        
+        // Start cooldown countdown
+        function startCooldown(seconds) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Cooldown Active';
+          cooldownMessage.style.display = 'block';
+          
+          let timeLeft = seconds;
+          countdownSpan.textContent = timeLeft;
+          
+          const countdownTimer = setInterval(() => {
+            timeLeft--;
+            countdownSpan.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+              clearInterval(countdownTimer);
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Send Message';
+              cooldownMessage.style.display = 'none';
+            }
+          }, 1000);
+        }
+        
+        // Form submission with cooldown
+        form.addEventListener('submit', function(e) {
+          // Check if user is in cooldown
+          if (checkCooldown()) {
+            e.preventDefault();
+            return false;
+          }
+          
+          // Show loading state
+          submitBtn.disabled = true;
+          submitBtn.classList.add('loading');
+          submitBtn.textContent = 'Sending...';
+          
+          // Store submission time for cooldown
+          localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+        });
+        
+        // Check cooldown on page load
+        checkCooldown();
+        
+        // Mobile-specific form improvements
+        const inputs = form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+          input.addEventListener('focus', function() {
+            // Prevent zoom on iOS
+            const viewport = document.querySelector('meta[name=viewport]');
+            if (viewport) {
+              viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }
+          });
+          
+          input.addEventListener('blur', function() {
+            // Restore zoom capability
+            const viewport = document.querySelector('meta[name=viewport]');
+            if (viewport) {
+              viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+            }
+          });
+        });
+      });
+    </script>
+    
+    <!-- Commercial Link Script -->
+    <script>
+      // Set commercial link based on device type
+      const commercialLink = document.getElementById('commercial-link');
+      if (window.innerWidth <= 768) {
+        commercialLink.href = 'commercial-mobile.html';
+      } else {
+        commercialLink.href = 'commercial.html';
+      }
+    </script>
+    
+    <!-- KUTE.js for blob animation -->
+    <script src="https://cdn.jsdelivr.net/npm/kute.js@2.1.2/dist/kute.min.js"></script>
+    
+    <!-- Blob Animation Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Mobile blob animation script loaded');
+        
+        // Method 1: Try KUTE.js first (most reliable)
+        setTimeout(() => {
+          if (typeof KUTE !== 'undefined') {
+            try {
+              console.log('Starting KUTE.js blob animation...');
+              const tween = KUTE.fromTo(
+                '#blob1',
+                { path: '#blob1' },
+                { path: '#blob2' },
+                { 
+                  repeat: 999, 
+                  duration: 3000, 
+                  yoyo: true,
+                  easing: 'easingCubicInOut'
+                }
+              ).start();
+              console.log('KUTE.js mobile blob animation started successfully');
+            } catch (error) {
+              console.log('KUTE.js mobile animation error:', error);
+              // Fallback to manual animation
+              startManualAnimation();
+            }
+          } else {
+            console.log('KUTE.js not available, using manual animation');
+            startManualAnimation();
+          }
+        }, 500);
+        
+        // Method 2: Manual path switching animation
+        function startManualAnimation() {
+          const blob1 = document.getElementById('blob1');
+          if (!blob1) {
+            console.log('Blob element not found');
+            return;
+          }
+          
+          console.log('Starting manual blob animation...');
+          
+          const paths = [
+            "M232.4 -172.7C293.3 -108.9 329.5 -12.7 300.2 49.6C270.9 111.9 176.1 140.4 96.4 165.4C16.8 190.4 -47.8 211.9 -113.5 195.6C-179.2 179.4 -246.1 125.4 -256.8 63C-267.5 0.6 -222.1 -70.1 -170 -131.9C-117.8 -193.6 -58.9 -246.3 13.4 -257C85.7 -267.7 171.5 -236.4 232.4 -172.7",
+            "M242.3 -168.1C303.3 -116.8 334.4 -16.7 302.6 47.6C270.9 111.9 176.1 140.4 95.4 167.7C14.6 194.9 -52.1 220.9 -105.2 201.7C-158.2 182.6 -197.6 118.3 -215.1 47.4C-232.7 -23.6 -228.6 -101.3 -189.1 -147.6C-149.6 -194 -74.8 -209 7.9 -215.3C90.7 -221.7 181.4 -219.3 242.3 -168.1"
+          ];
+          
+          let currentPath = 0;
+          let isAnimating = true;
+          
+          // Smooth path transition
+          function animatePath() {
+            if (!isAnimating) return;
+            
+            currentPath = (currentPath + 1) % paths.length;
+            blob1.setAttribute('d', paths[currentPath]);
+            console.log('Mobile blob path switched to:', currentPath);
+            
+            setTimeout(animatePath, 1500); // Switch every 1.5 seconds
+          }
+          
+          // Start animation
+          setTimeout(animatePath, 1000);
+          console.log('Manual blob animation started');
+        }
+      });
+    </script>
+
+    <!-- Fixed navigation menu -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const body = document.body;
+        const nav = document.querySelector('nav');
+        
+        // Responsive navigation links
+        function updateNavigationLinks() {
+          const isMobile = window.innerWidth <= 768;
+          const homeLinks = document.querySelectorAll('.home-link');
+          const logoLinks = document.querySelectorAll('.logo-link');
+          const contactLinks = document.querySelectorAll('a[href="contact.html"]');
+          const commercialLinks = document.querySelectorAll('#commercial-link');
+          
+          if (isMobile) {
+            // Mobile: point to mobile versions
+            homeLinks.forEach(link => link.href = 'home.html');
+            logoLinks.forEach(link => link.href = 'home.html');
+            contactLinks.forEach(link => link.href = 'contact-mobile.html');
+            commercialLinks.forEach(link => link.href = 'commercial-mobile.html');
+          } else {
+            // Desktop: point to desktop versions
+            homeLinks.forEach(link => link.href = 'index.html');
+            logoLinks.forEach(link => link.href = 'index.html');
+            contactLinks.forEach(link => link.href = 'contact.html');
+            commercialLinks.forEach(link => link.href = 'commercial.html');
+          }
+        }
+        
+        // Update links on load and resize
+        updateNavigationLinks();
+        window.addEventListener('resize', updateNavigationLinks);
+        
+        // Scroll behavior variables
+        let lastScrollTop = 0;
+        let scrollThreshold = 50; // Minimum scroll distance to trigger hide/show
+        let scrollPosition = 0; // Store scroll position when menu opens
+        
+        // Toggle menu function
+        function toggleMenu() {
+          const isMenuOpen = navLinks.classList.contains('active');
+          
+          if (!isMenuOpen) {
+            // Opening menu - store current scroll position
+            scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            body.style.top = `-${scrollPosition}px`;
+            body.classList.add('menu-open');
+            navLinks.style.display = 'flex';
+            navLinks.style.opacity = '1';
+            navLinks.style.visibility = 'visible';
+            navLinks.style.transform = 'translateX(0)';
+          } else {
+            // Closing menu - restore scroll position naturally
+            body.classList.remove('menu-open');
+            body.style.top = '';
+            navLinks.style.opacity = '0';
+            navLinks.style.visibility = 'hidden';
+            navLinks.style.transform = 'translateX(100%)';
+          }
+          
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        }
+        
+        if (hamburger && navLinks) {
+          // Remove debugging styles
+          hamburger.style.border = 'none';
+          hamburger.style.backgroundColor = 'transparent';
+          hamburger.style.position = 'relative';
+          hamburger.style.zIndex = '1000';
+          
+          // Hamburger click handler
+          hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMenu();
+          });
+          
+          // Close menu when clicking on links
+          navLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Close menu when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Close menu on escape key
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Handle window resize
+          window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+              hamburger.classList.remove('active');
+              navLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+            }
+          });
+          
+          // Scroll behavior for mobile navigation
+          window.addEventListener('scroll', function() {
+            if (window.innerWidth <= 768 && !navLinks.classList.contains('active')) { // Only on mobile and when menu is closed
+              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+              const scrollDelta = scrollTop - lastScrollTop;
+              
+              // Show navigation when scrolling up or at the top
+              if (scrollTop <= 0 || scrollDelta < -scrollThreshold) {
+                nav.classList.remove('nav-hidden');
+              }
+              // Hide navigation when scrolling down
+              else if (scrollDelta > scrollThreshold) {
+                nav.classList.add('nav-hidden');
+              }
+              
+              lastScrollTop = scrollTop;
+            }
+          });
+        }
+      });
+    </script>
+    
+    <!-- Mobile Navigation -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileNav = document.getElementById('mobile-nav');
+        const mobileHamburger = document.getElementById('mobile-hamburger');
+        const mobileNavLinks = document.getElementById('mobile-nav-links');
+        const body = document.body;
+        
+        let lastScrollTop = 0;
+        let scrollPosition = 0; // Store scroll position when menu opens
+        const scrollThreshold = 10; // Reduced threshold for more responsive hiding
+        
+        // Mobile hamburger menu
+        if (mobileHamburger && mobileNavLinks) {
+          mobileHamburger.addEventListener('click', function() {
+            const isMenuOpen = mobileNavLinks.classList.contains('active');
+            
+            if (!isMenuOpen) {
+              // Opening menu - store current scroll position
+              scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+              body.style.top = `-${scrollPosition}px`;
+              body.classList.add('menu-open');
+            } else {
+              // Closing menu - restore scroll position
+              body.classList.remove('menu-open');
+              body.style.top = '';
+              window.scrollTo(0, scrollPosition);
+            }
+            
+            mobileHamburger.classList.toggle('active');
+            mobileNavLinks.classList.toggle('active');
+          });
+          
+          // Close menu when clicking links
+          mobileNavLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              mobileHamburger.classList.remove('active');
+              mobileNavLinks.classList.remove('active');
+              body.classList.remove('menu-open');
+              body.style.top = '';
+              window.scrollTo(0, scrollPosition);
+            }
+          });
+        }
+        
+        // Hide/show nav on scroll and change background
+        window.addEventListener('scroll', function() {
+          // Don't hide nav when menu is open
+          if (mobileNavLinks.classList.contains('active')) {
+            return;
+          }
+          
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollDelta = scrollTop - lastScrollTop;
+          
+          // Always show nav when at the top of the page
+          if (scrollTop <= 0) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'transparent';
+            mobileNav.style.backdropFilter = 'none';
+            mobileNav.style.webkitBackdropFilter = 'none';
+            mobileNav.style.boxShadow = 'none';
+          } 
+          // Scrolling up - show nav with background
+          else if (scrollDelta < -scrollThreshold) {
+            mobileNav.classList.remove('nav-hidden');
+            mobileNav.style.background = 'rgba(60, 60, 60, 0.95)';
+            mobileNav.style.backdropFilter = 'blur(10px)';
+            mobileNav.style.webkitBackdropFilter = 'blur(10px)';
+            mobileNav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          }
+          // Scrolling down - hide nav (more aggressive hiding)
+          else if (scrollDelta > scrollThreshold && scrollTop > 100) {
+            mobileNav.classList.add('nav-hidden');
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+      });
+    </script>
+    
+    <style>
+      .commercial-footer {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 3rem 2rem 2rem;
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 100; /* Above background grid (z-index: 5) */
+      }
+
+      .footer-container {
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: 1fr auto auto 1fr;
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+
+      .footer-vertical-line {
+        width: 1px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-info p {
+        margin: 0;
+        font-size: 1rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-info i {
+        color: var(--highlight-contact, #4CAF50);
+        width: 20px;
+      }
+
+      .footer-phone,
+      .footer-email,
+      .footer-license {
+        font-weight: 500;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .footer-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--highlight-contact, #4CAF50);
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .footer-copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-copyright p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .footer-notice {
+        text-align: center;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-notice p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.5;
+      }
+
+      .footer-notice a {
+        color: #254A89;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .footer-notice a:hover {
+        color: #3a6bb8;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 2rem;
+        }
+
+        .footer-vertical-line {
+          display: none; /* Hide vertical lines on mobile */
+        }
+
+        .footer-info {
+          align-items: center;
+        }
+
+        .footer-links {
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    </style>
+  </body>
+</html>
