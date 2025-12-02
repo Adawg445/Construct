@@ -23,12 +23,20 @@
       "destination": "/public/Mesa mobile/:path*"
     },
     {
+      "source": "/Mesa_mobile/:path*",
+      "destination": "/public/Mesa_mobile/:path*"
+    },
+    {
       "source": "/Turkey/:path*",
       "destination": "/public/Turkey/:path*"
     },
     {
       "source": "/Turkey-mobile/:path*",
       "destination": "/public/Turkey mobile/:path*"
+    },
+    {
+      "source": "/Turkey_mobile/:path*",
+      "destination": "/public/Turkey_mobile/:path*"
     },
     {
       "source": "/Cooledge/:path*",
