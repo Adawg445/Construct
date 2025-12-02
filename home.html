@@ -97,7 +97,7 @@
         left: 0;
         width: 100%;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 0, 0, 1);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -374,7 +374,7 @@
       .mask-img img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         will-change: transform;
         transform: translateZ(0); /* Hardware acceleration */
       }
@@ -438,6 +438,65 @@
         }
       }
 
+      /* Custom positioning for home.html intro text */
+      .intro .header h1 .line1 {
+        align-self: flex-start;
+        margin-left: 22rem !important;
+        margin-bottom: 0.1em !important;
+        position: relative !important;
+        top: 3.2rem !important;
+      }
+
+      .intro .header h1 .line2 {
+        align-self: flex-end;
+        margin-right: 3rem !important;
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0.1em !important;
+      }
+
+      .intro .header h1 .line3 {
+        margin-top: 0 !important;
+      }
+
+      @media (max-width: 768px) {
+        .intro .header h1 .line1 {
+          margin-left: 8rem !important;
+          margin-bottom: 0.1em !important;
+          position: relative !important;
+          top: 1.7rem !important;
+        }
+
+        .intro .header h1 .line2 {
+          margin-right: 1rem !important;
+          margin-top: 0 !important;
+          margin-bottom: 0.1em !important;
+        }
+
+        .intro .header h1 .line3 {
+          margin-top: 0 !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .intro .header h1 .line1 {
+          margin-left: 4rem !important;
+          margin-bottom: 0.1em !important;
+          position: relative !important;
+          top: 1.3rem !important;
+        }
+
+        .intro .header h1 .line2 {
+          margin-right: 0.5rem !important;
+          margin-top: 0 !important;
+          margin-bottom: 0.1em !important;
+        }
+
+        .intro .header h1 .line3 {
+          margin-top: 0 !important;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -478,43 +537,43 @@
         </div>
         <div class="row">
           <div class="img"></div>
-          <div class="img"><img src="/Mesa/44.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
-          <div class="img"><img src="/Turkey/84.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Mesa/44.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Turkey/101.webp" loading="lazy" decoding="async" /><a href="commercial.html#cattle" class="view-more-btn">View More</a></div>
         </div>
         <div class="row">
-          <div class="img"><img src="/Mesa/10-1.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Mesa/56.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
           <div class="img"></div>
           <div class="img"></div>
         </div>
         <div class="row">
           <div class="img"></div>
-          <div class="img"><img src="/Mesa/10-3.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
-          <div class="img"><img src="/Cooledge/5-19.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Mesa/14.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/47.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
         </div>
         <!-- Mobile: Hide additional rows to reduce loading -->
         <div class="row mobile-hidden">
           <div class="img"></div>
-          <div class="img"><img src="/Cooledge/6-2.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
-          <div class="img"><img src="/Cooledge/5-26.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Cooledge/24.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/47.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
         </div>
         <div class="row mobile-hidden">
           <div class="img"></div>
-          <div class="img"><img src="/Cooledge/6-2.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
-          <div class="img"><img src="/Cooledge/5-26.webp" loading="lazy" decoding="async" /><div class="view-more-btn">View More</div></div>
+          <div class="img"><img src="/Cooledge/24.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/47.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
         </div>
         <div class="row">
-          <div class="img"></div>
-          <div class="img"></div>
-          <div class="img"></div>
-        </div>
-        <div class="row">
-          <div class="img"></div>
+          <div class="img"><img src="/Turkey/5.webp" loading="lazy" decoding="async" /><a href="commercial.html#cattle" class="view-more-btn">View More</a></div>
           <div class="img"></div>
           <div class="img"></div>
         </div>
         <div class="row">
+          <div class="img"><img src="/Turkey/64.webp" loading="lazy" decoding="async" /><a href="commercial.html#cattle" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/62.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/65.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+        </div>
+        <div class="row">
           <div class="img"></div>
-          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/24.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
           <div class="img"></div>
         </div>
         <div class="row">
@@ -525,10 +584,10 @@
       </div>
       <div class="mask-container">
         <div class="mask-img">
-          <img src="/Turkey/69.webp" alt="" loading="lazy" decoding="async" />
+          <img src="/Mesa/123.webp" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="header">
-          <h1>building your expectations</h1>
+          <h1>build your expectations</h1>
         </div>
       </div>
     </section>
@@ -538,8 +597,8 @@
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-info">
-            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
-            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-phone"><i class="fas fa-phone"></i> (480) 760-5293</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> charles@azdevco.com</p>
             <p class="footer-license">Licenses | ROC284283</p>
           </div>
           
@@ -805,6 +864,64 @@
         }
       }
     </style>
+    
+    <!-- Image Preloading for Better Performance -->
+    <script>
+      (function() {
+        // Preload key images in background for instant navigation
+        const imagesToPreload = [
+          '/Mesa/123.webp',          // Mask image
+          '/Mesa/44.webp',           // Gallery image 1
+          '/Turkey/101.webp',        // Gallery image 2
+          '/Mesa/56.webp',           // Gallery image 3
+          '/Mesa/14.webp',           // Gallery image 4
+          '/Cooledge/47.webp',       // Gallery image 5
+          '/Cooledge/24.webp',       // Gallery image 6
+          '/Turkey/5.webp',          // Gallery image 7 (new)
+          '/Turkey/64.webp',         // Gallery image 8 (new)
+          '/Cooledge/62.webp',       // Gallery image 9 (new)
+          '/Cooledge/65.webp'        // Gallery image 10 (new)
+        ];
+        
+        // Preload after page loads to not block initial render
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            imagesToPreload.forEach(function(src) {
+              const img = new Image();
+              img.src = src;
+              // Silently preload in background
+            });
+            console.log('✅ Preloaded ' + imagesToPreload.length + ' images for home.html');
+          }, 1000); // Wait 1 second after page load
+        });
+      })();
+    </script>
+    
+    <!-- Responsive Navigation Links Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Update commercial links based on device type
+        function updateCommercialLinks() {
+          const isMobile = window.innerWidth <= 768;
+          const commercialLinks = document.querySelectorAll('a[href^="commercial.html"]');
+          
+          commercialLinks.forEach(function(link) {
+            const hash = link.href.split('#')[1] || ''; // Get hash part if exists
+            if (isMobile) {
+              link.href = 'commercial-mobile.html' + (hash ? '#' + hash : '');
+            } else {
+              link.href = 'commercial.html' + (hash ? '#' + hash : '');
+            }
+          });
+        }
+        
+        // Update on load and resize
+        updateCommercialLinks();
+        window.addEventListener('resize', updateCommercialLinks);
+        
+        console.log('✅ Commercial links configured for device type');
+      });
+    </script>
 
   </body>
 </html>

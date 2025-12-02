@@ -458,60 +458,183 @@
       let slides = [];
 
       function naturalCompareTurkey(a, b) {
-        // Support names like 22.1.webp and 65-1.webp consistently
-        const norm = (s) => s.replace(/\./g, '-');
-        const ra = norm(a).match(/^(\d+)(?:-(\d+))?\.webp$/);
-        const rb = norm(b).match(/^(\d+)(?:-(\d+))?\.webp$/);
-        if (ra && rb) {
-          const aPrimary = parseInt(ra[1], 10);
-          const bPrimary = parseInt(rb[1], 10);
-          if (aPrimary !== bPrimary) return aPrimary - bPrimary;
-          const aVar = ra[2] !== undefined ? parseInt(ra[2], 10) : null;
-          const bVar = rb[2] !== undefined ? parseInt(rb[2], 10) : null;
-          if (aVar === null && bVar === null) return 0;
-          if (aVar === null) return -1;
-          if (bVar === null) return 1;
-          return aVar - bVar;
-        }
-        return a < b ? -1 : a > b ? 1 : 0;
+        // Simple numeric sort for sequential images (1.webp, 2.webp, 3.webp, etc.)
+        const numA = parseInt(a.replace(/\.webp$/i, ''), 10);
+        const numB = parseInt(b.replace(/\.webp$/i, ''), 10);
+        return numA - numB;
       }
 
-      function imageExists(url) {
+      function imageExists(url, timeout = 3500) {
         return new Promise((resolve) => {
           const img = new Image();
-          img.onload = () => resolve(true);
-          img.onerror = () => resolve(false);
+          const timer = setTimeout(() => {
+            img.src = '';
+            resolve(false);
+          }, timeout);
+          
+          img.onload = () => {
+            clearTimeout(timer);
+            resolve(true);
+          };
+          img.onerror = () => {
+            clearTimeout(timer);
+            resolve(false);
+          };
           img.src = url;
         });
       }
 
       async function buildTurkeySlides() {
-        const candidates = new Set();
-        for (let i = 1; i <= 100; i++) candidates.add(`${i}.webp`);
-        // known dot/dash variants in Turkey set
-        const dotted = [22, 26, 39, 47];
-        dotted.forEach((n) => { for (let k = 1; k <= 3; k++) candidates.add(`${n}.${k}.webp`); });
-        const dashedBases = [15, 65, 74, 76];
-        const maxDash = { 15: 8, 65: 3, 74: 2, 76: 1 };
-        dashedBases.forEach((base) => {
-          const limit = maxDash[base] || 0;
-          for (let k = 1; k <= limit; k++) candidates.add(`${base}-${k}.webp`);
-        });
+        // Check cache first (valid for 24 hours)
+        const cacheKey = 'turkey-slides-cache';
+        const cacheTimestampKey = 'turkey-slides-cache-time';
+        const cacheMaxAge = 24 * 60 * 60 * 1000; // 24 hours
+        let useCache = false;
+        
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          const cacheTime = localStorage.getItem(cacheTimestampKey);
+          
+          if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < cacheMaxAge) {
+            const parsed = JSON.parse(cached);
+            // Only use cache if it has a reasonable number of images (at least 95)
+            if (parsed && Array.isArray(parsed) && parsed.length >= 95) {
+              slides = parsed;
+              console.log(`✅ Using cached gallery with ${slides.length} images`);
+              useCache = true;
+              return; // Use cached data
+            } else {
+              // Cache seems incomplete, clear it and do fresh scan
+              console.log(`❌ Cache has only ${parsed?.length || 0} images (need at least 95) - clearing and rescanning`);
+              try {
+                localStorage.removeItem(cacheKey);
+                localStorage.removeItem(cacheTimestampKey);
+              } catch (e) {
+                // Ignore clear errors
+              }
+            }
+          } else {
+            console.log('No valid cache found - will scan for images');
+          }
+        } catch (e) {
+          console.warn('Cache read error:', e);
+          try {
+            localStorage.removeItem(cacheKey);
+            localStorage.removeItem(cacheTimestampKey);
+          } catch (clearErr) {
+            // Ignore clear errors
+          }
+        }
+        
+        console.log('Starting image scan...');
+
+        // Mobile detection for optimized scanning
+        const isMobileDevice = window.innerWidth <= 1000 || 
+                              /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                              ('ontouchstart' in window);
+        
+        // Check sequential numbers 1-101 (all images are now sequential)
+        const maxImageNumber = 101;
+        const candidates = [];
+        
+        for (let i = 1; i <= maxImageNumber; i++) {
+          candidates.push(`${i}.webp`);
+        }
+        
+        console.log(`⚡ Checking ${candidates.length} sequential patterns (${isMobileDevice ? 'MOBILE' : 'DESKTOP'})...`);
 
         const present = [];
-        const checks = [];
-        candidates.forEach((name) => {
-          const url = `/Turkey/${name}`;
-          checks.push(imageExists(url).then((ok) => { if (ok) present.push(name); }));
-        });
-        await Promise.all(checks);
+        const candidateArray = candidates;
+        
+        // Batch processing for faster scanning
+        const batchSize = isMobileDevice ? 20 : 30;
+        const timeout = isMobileDevice ? 5000 : 3500;
+        const totalBatches = Math.ceil(candidateArray.length / batchSize);
+        let currentBatch = 0;
+        
+        console.log(`Starting image scan (${isMobileDevice ? 'MOBILE' : 'DESKTOP'}): ${candidateArray.length} candidates in ${totalBatches} batches...`);
+        console.log(`Settings: batchSize=${batchSize}, timeout=${timeout}ms`);
+        
+        for (let i = 0; i < candidateArray.length; i += batchSize) {
+          currentBatch++;
+          const batch = candidateArray.slice(i, i + batchSize);
+          const batchChecks = batch.map(name => {
+            const url = `/Turkey/${name}`;
+            return imageExists(url, timeout).then(ok => {
+              if (ok) present.push(name);
+            });
+          });
+          
+          await Promise.all(batchChecks);
+          console.log(`⚡ ${currentBatch}/${totalBatches} batches → ${present.length} images found`);
+        }
 
+        console.log(`✅ Scan complete! Found ${present.length} images total.`);
+
+        // Sort naturally
         present.sort(naturalCompareTurkey);
+        
+        // Build slides array
         slides = present.map((image, index) => ({
-          slideTitle: `Cattle Homestead - Image ${index + 1}`,
+          slideTitle: `Cattle Homestead`,
           slideDescription: `Documentation of the Cattle Homestead development project, showcasing the agricultural construction and design process.`,
           slideImg: `/Turkey/${image}`,
         }));
+        
+        console.log(`✅ Final result: ${slides.length} images found and sorted`);
+        const imageNumbers = slides.map(s => parseInt(s.slideImg.match(/(\d+)\.webp/)?.[1] || '0', 10)).filter(n => n > 0);
+        if (imageNumbers.length > 0) {
+          const min = Math.min(...imageNumbers);
+          const max = Math.max(...imageNumbers);
+          console.log(`   Image range: ${min}.webp to ${max}.webp`);
+        }
+        
+        if (slides.length < 95) {
+          console.warn(`⚠️ Only found ${slides.length} images. Expected 95+.`);
+          console.warn(`⚠️ This cache will be rejected. Clear cache and rescan to find all images.`);
+        } else {
+          console.log(`✅ Found ${slides.length} images - complete scan!`);
+        }
+        
+        // Cache final results - only cache if we found a reasonable number
+        if (slides.length >= 95) {
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify(slides));
+            localStorage.setItem(cacheTimestampKey, Date.now().toString());
+            console.log(`✅ Successfully cached ${slides.length} images (FINAL - complete scan)`);
+            
+            // Verify all images are in correct order
+            const imageNumbers = slides.map(s => parseInt(s.slideImg.match(/(\d+)\.webp/)?.[1] || '0', 10)).filter(n => n > 0);
+            if (imageNumbers.length > 0) {
+              const min = Math.min(...imageNumbers);
+              const max = Math.max(...imageNumbers);
+              const gaps = [];
+              for (let i = min; i <= max; i++) {
+                if (!imageNumbers.includes(i)) {
+                  gaps.push(i);
+                }
+              }
+              if (gaps.length > 0) {
+                console.warn(`⚠️ Missing images: ${gaps.slice(0, 10).join(', ')}${gaps.length > 10 ? '...' : ''} (${gaps.length} total gaps)`);
+              } else {
+                console.log(`✅ All images found in range ${min}-${max} (${imageNumbers.length} total, no gaps)`);
+              }
+            }
+          } catch (e) {
+            console.warn('Failed to cache slides:', e);
+          }
+        } else {
+          console.warn(`⚠️ Only found ${slides.length} images - NOT caching (need at least 95)`);
+          console.warn(`⚠️ This prevents partial caches. Clear cache and let full scan complete.`);
+          
+          // Don't cache partial results - force fresh scan next time
+          try {
+            localStorage.removeItem(cacheKey);
+            localStorage.removeItem(cacheTimestampKey);
+          } catch (e) {
+            // Ignore
+          }
+        }
       }
 
       document.addEventListener("DOMContentLoaded", async () => {
@@ -522,7 +645,31 @@
           backButton.href = isMobile ? 'commercial-mobile.html' : 'commercial.html';
         }
         
+        // Initialize with cached data if available (for instant load)
+        const cacheKey = 'turkey-slides-cache';
+        let hasInitialCache = false;
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+              slides = parsed;
+              hasInitialCache = true;
+              console.log(`Loaded ${slides.length} images from cache for initial display`);
+            } else {
+              console.log('Cache exists but is empty or invalid - clearing');
+              localStorage.removeItem(cacheKey);
+              localStorage.removeItem('turkey-slides-cache-time');
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to load initial cache:', e);
+        }
+        
         await buildTurkeySlides();
+        
+        console.log(`buildTurkeySlides completed with ${slides.length} slides`);
+        
         // Better mobile viewport handling for address bar
         if (window.innerHeight < 800) { // Mobile device
           // Use a more reliable method to handle mobile viewport

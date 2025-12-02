@@ -19,12 +19,28 @@
       "destination": "/public/Mesa/:path*"
     },
     {
+      "source": "/Mesa-mobile/:path*",
+      "destination": "/public/Mesa mobile/:path*"
+    },
+    {
       "source": "/Turkey/:path*",
       "destination": "/public/Turkey/:path*"
     },
     {
+      "source": "/Turkey-mobile/:path*",
+      "destination": "/public/Turkey mobile/:path*"
+    },
+    {
       "source": "/Cooledge/:path*",
       "destination": "/public/Cooledge/:path*"
+    },
+    {
+      "source": "/Cooledge-mobile/:path*",
+      "destination": "/public/Cooledge_Mobile/:path*"
+    },
+    {
+      "source": "/Cooledge_Mobile/:path*",
+      "destination": "/public/Cooledge_Mobile/:path*"
     },
     {
       "source": "/Home/:path*",

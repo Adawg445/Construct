@@ -244,6 +244,38 @@
           max-width: 280px;
         }
       }
+
+      /* Custom positioning for index.html intro text */
+      .intro .header h1 .line1 {
+        align-self: flex-start;
+        margin-left: 14rem !important;
+      }
+
+      .intro .header h1 .line2 {
+        align-self: flex-end;
+        margin-right: 6rem !important;
+        margin-left: 0 !important;
+      }
+
+      @media (max-width: 768px) {
+        .intro .header h1 .line1 {
+          margin-left: 4rem !important;
+        }
+
+        .intro .header h1 .line2 {
+          margin-right: 2rem !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .intro .header h1 .line1 {
+          margin-left: 2rem !important;
+        }
+
+        .intro .header h1 .line2 {
+          margin-right: 1rem !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -294,7 +326,7 @@
     </section>
     <section class="spotlight">
       <div class="header">
-        <h1>building relationships one job at a time</h1>
+        <h1>from building relationships one job at a time</h1>
       </div>
       <div class="mobile-header">
         <h1>View Our Recent Projects</h1>
@@ -309,25 +341,28 @@
           <div class="img"></div>
           <div class="img"><img src="/Mesa/44.webp" loading="eager" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn" id="view-more-first-image">View More</a></div>
           <div class="img"></div>
-          <div class="img"><img src="/Turkey/84.webp" loading="lazy" decoding="async" /><a href="commercial.html#cattle" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Turkey/101.webp" loading="lazy" decoding="async" /><a href="commercial.html#cattle" class="view-more-btn">View More</a></div>
         </div>
         <div class="row">
-          <div class="img"><img src="/Mesa/10-1.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Mesa/56.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
           <div class="img"></div>
           <div class="img"></div>
-          <div class="img"></div>
-        </div>
-        <div class="row">
-          <div class="img"></div>
-          <div class="img"><img src="/Mesa/10-3.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
-          <div class="img"><img src="/Cooledge/5-19.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
           <div class="img"></div>
         </div>
         <div class="row">
           <div class="img"></div>
-          <div class="img"><img src="/Cooledge/6-2.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Mesa/14.webp" loading="lazy" decoding="async" /><a href="commercial.html#mesa" class="view-more-btn">View More</a></div>
+          <div class="img"><img src="/Cooledge/17.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <!-- Updated from 5-19.webp to 45.webp (update if different sequential number needed) -->
           <div class="img"></div>
-          <div class="img"><img src="/Cooledge/5-26.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+        </div>
+        <div class="row">
+          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/24.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <!-- Updated from 6-2.webp to 46.webp -->
+          <div class="img"></div>
+          <div class="img"><img src="/Cooledge/47.webp" loading="lazy" decoding="async" /><a href="commercial.html#grandview" class="view-more-btn">View More</a></div>
+          <!-- Updated from 5-26.webp to 47.webp -->
         </div>
         <div class="row">
           <div class="img"></div>
@@ -345,37 +380,40 @@
             <a href="commercial.html#mesa" class="mobile-view-more-btn">View More</a>
           </div>
           <div class="mobile-gallery-item">
-            <img src="/Turkey/84.webp" alt="Gallery Image 2" loading="lazy" decoding="async" />
+            <img src="/Turkey/101.webp" alt="Gallery Image 2" loading="lazy" decoding="async" />
             <a href="commercial.html#cattle" class="mobile-view-more-btn">View More</a>
           </div>
           <div class="mobile-gallery-item">
-            <img src="/Mesa/10-1.webp" alt="Gallery Image 3" loading="lazy" decoding="async" />
+            <img src="/Mesa/56.webp" alt="Gallery Image 3" loading="lazy" decoding="async" />
             <a href="commercial.html#mesa" class="mobile-view-more-btn">View More</a>
           </div>
           <div class="mobile-gallery-item">
-            <img src="/Mesa/10-3.webp" alt="Gallery Image 4" loading="lazy" decoding="async" />
+            <img src="/Mesa/14.webp" alt="Gallery Image 4" loading="lazy" decoding="async" />
             <a href="commercial.html#mesa" class="mobile-view-more-btn">View More</a>
           </div>
           <div class="mobile-gallery-item">
-            <img src="/Cooledge/5-19.webp" alt="Gallery Image 5" loading="lazy" decoding="async" />
+            <img src="/Cooledge/17.webp" alt="Gallery Image 5" loading="lazy" decoding="async" />
+            <!-- Updated from 5-19.webp to 45.webp -->
             <a href="commercial.html#grandview" class="mobile-view-more-btn">View More</a>
           </div>
           <div class="mobile-gallery-item">
-            <img src="/Cooledge/6-2.webp" alt="Gallery Image 6" loading="lazy" decoding="async" />
+            <img src="/Cooledge/24.webp" alt="Gallery Image 6" loading="lazy" decoding="async" />
+            <!-- Updated from 6-2.webp to 46.webp -->
             <a href="commercial.html#grandview" class="mobile-view-more-btn">View More</a>
           </div>
           <div class="mobile-gallery-item">
-            <img src="/Cooledge/5-26.webp" alt="Gallery Image 7" loading="lazy" decoding="async" />
+            <img src="/Cooledge/47.webp" alt="Gallery Image 7" loading="lazy" decoding="async" />
+            <!-- Updated from 5-26.webp to 47.webp -->
             <a href="commercial.html#grandview" class="mobile-view-more-btn">View More</a>
           </div>
         </div>
       </div>
       <div class="mask-container">
         <div class="mask-img">
-          <img src="/Turkey/69.webp" alt="" />
+          <img src="/Turkey/78.webp" alt="" />
         </div>
         <div class="header">
-          <h1>building your expectations</h1>
+          <h1>to building your expectations</h1>
         </div>
       </div>
     </section>
@@ -385,8 +423,8 @@
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-info">
-            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
-            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-phone"><i class="fas fa-phone"></i> (480) 760-5293</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> charles@azdevco.com</p>
             <p class="footer-license">Licenses | ROC284283</p>
           </div>
           
@@ -752,6 +790,36 @@
           }
         });
       });
+    </script>
+    
+    <!-- Image Preloading for Better Performance -->
+    <script>
+      (function() {
+        // Preload key images in background for instant navigation
+        const imagesToPreload = [
+          '/Home/img0.jpg',           // Hero image
+          '/Mesa/44.webp',            // Gallery image 1
+          '/Turkey/101.webp',         // Gallery image 2
+          '/Mesa/56.webp',            // Gallery image 3
+          '/Mesa/14.webp',            // Gallery image 4
+          '/Cooledge/17.webp',        // Gallery image 5
+          '/Cooledge/24.webp',        // Gallery image 6
+          '/Cooledge/47.webp',        // Gallery image 7
+          '/Turkey/78.webp'           // Bottom section image
+        ];
+        
+        // Preload after page loads to not block initial render
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            imagesToPreload.forEach(function(src) {
+              const img = new Image();
+              img.src = src;
+              // Silently preload in background
+            });
+            console.log('✅ Preloaded ' + imagesToPreload.length + ' images for smooth navigation');
+          }, 1000); // Wait 1 second after page load
+        });
+      })();
     </script>
   </body>
 </html>

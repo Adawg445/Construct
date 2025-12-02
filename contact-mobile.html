@@ -87,7 +87,7 @@
         left: 0;
         width: 100%;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 0, 0, 1);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -274,34 +274,6 @@
         margin-right: 0.5rem;
       }
       
-      /* Mobile Social Links */
-      .contact .social-links {
-        display: flex;
-        gap: 1.5rem;
-        justify-content: center;
-        margin-top: 2rem;
-        flex-wrap: wrap;
-      }
-      
-      .contact .social-links a {
-        color: var(--text-muted);
-        font-size: 1.8rem;
-        transition: color 0.3s ease;
-        padding: 0.5rem;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .contact .social-links a:hover {
-        color: var(--highlight-contact);
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.1);
-      }
       
       /* Mobile Contact Form */
       .contact .contact-form {
@@ -568,11 +540,6 @@
           font-size: 0.9rem;
         }
         
-        .contact .social-links a {
-          width: 45px;
-          height: 45px;
-          font-size: 1.5rem;
-        }
       }
     </style>
   </head>
@@ -607,8 +574,8 @@
       <div class="contact-container">
         <div class="contact-info">
           <h3>Contact Information</h3>
-          <p><i class="fas fa-phone"></i> (123) 456-7890</p>
-          <p><i class="fas fa-envelope"></i> info@armproperty.com</p>
+          <p><i class="fas fa-phone"></i> (480) 760-5293</p>
+          <p><i class="fas fa-envelope"></i> charles@azdevco.com</p>
           
           <!-- Mobile Blob Animation -->
           <div class="blob-container">
@@ -659,7 +626,7 @@
           <h3>Send Us a Message</h3>
           <form action="https://api.web3forms.com/submit" method="POST">
             <!-- Web3Forms access key -->
-            <input type="hidden" name="access_key" value="239a616d-f642-4ebf-a7db-f313a2b46263">
+            <input type="hidden" name="access_key" value="7d344010-c0d3-4f5b-992a-09e56e0fa7b7">
             
             <!-- Honeypot to prevent spam -->
             <input type="text" name="botcheck" style="display:none">
@@ -713,8 +680,8 @@
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-info">
-            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
-            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-phone"><i class="fas fa-phone"></i> (480) 760-5293</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> charles@azdevco.com</p>
             <p class="footer-license">Licenses | ROC284283</p>
           </div>
           
@@ -1284,5 +1251,26 @@
         }
       }
     </style>
+    
+    <!-- Image Preloading for Better Performance -->
+    <script>
+      (function() {
+        // Preload hero and blob images for instant display (mobile)
+        const imagesToPreload = [
+          '/contact/2.webp',              // Hero background
+          '/contact/IMG_0783_result.jpg'  // Blob image
+        ];
+        
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            imagesToPreload.forEach(function(src) {
+              const img = new Image();
+              img.src = src;
+            });
+            console.log('✅ Preloaded ' + imagesToPreload.length + ' contact images (mobile)');
+          }, 1000); // Slightly longer delay on mobile
+        });
+      })();
+    </script>
   </body>
 </html>

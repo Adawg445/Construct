@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="styles.css" />
     <!-- Preload critical resources -->
     <link rel="preload" href="/Cube.svg" as="image" />
-    <link rel="preload" href="/Cooledge/7.webp" as="image" />
+    <link rel="preload" href="/Cooledge/50.webp" as="image" />
+    
     <script src="loader.js" defer></script>
     <script>
       (function() {
@@ -102,7 +103,7 @@
       /* Commercial specific styles */
       .commercial .hero {
         background: linear-gradient(rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.35)), 
-                    url('/Cooledge/25.webp') no-repeat center center/cover;
+                    url('/Cooledge/60.webp') no-repeat center center/cover;
         height: 100vh;
         min-height: 100vh;
         display: flex;
@@ -290,6 +291,21 @@
       .commercial .btn:hover {
         background-color: #600018;
         transform: translateY(-2px);
+      }
+      
+      /* Commercial page fonts */
+      .commercial h1,
+      .commercial h2,
+      .commercial h3,
+      .commercial h4,
+      .commercial h5,
+      .commercial h6 {
+        font-family: 'Arial Narrow', Arial, sans-serif !important;
+      }
+      
+      .commercial p {
+        font-family: 'Creato Display', sans-serif !important;
+        font-style: italic;
       }
       
       /* Commercial page navigation - uses main styles.css */
@@ -865,9 +881,9 @@
         padding: 3rem 2rem;
       }
       
-      /* Make Mesa Main Street Stations image smaller */
+      /* Mesa Main Street Stations image - larger size */
       .mesa-section .section-image {
-        max-width: 75%;
+        max-width: 100%;
         margin: 0 auto;
       }
       
@@ -1395,7 +1411,7 @@
 
       /* Gallery Button Styles */
       .gallery-btn {
-        background: linear-gradient(135deg, #2c3e50, #34495e);
+        background: linear-gradient(135deg, #4a5f7a, #5a6f8a);
         color: white;
         border: none;
         padding: 1rem 2rem;
@@ -1409,7 +1425,7 @@
         justify-content: center;
         gap: 0.5rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        box-shadow: 0 4px 15px rgba(74, 95, 122, 0.3);
         position: relative;
         overflow: hidden;
         flex: 1;
@@ -1419,8 +1435,8 @@
 
       .gallery-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
-        background: linear-gradient(135deg, #34495e, #2c3e50);
+        box-shadow: 0 6px 20px rgba(74, 95, 122, 0.4);
+        background: linear-gradient(135deg, #5a6f8a, #4a5f7a);
       }
 
       .gallery-btn:active {
@@ -1887,7 +1903,7 @@
             <!-- Featured Article (Large) -->
             <div class="featured-article">
               <div class="article-image">
-                <img src="/Cooledge/7.webp" alt="Commercial Development Project" loading="eager" decoding="sync" fetchpriority="high">
+                <img src="/Cooledge/50.webp" alt="Commercial Development Project" loading="eager" decoding="sync" fetchpriority="high">
               </div>
               <div class="article-content">
                 <h3>Grandview Casa Blanca South</h3>
@@ -1900,7 +1916,7 @@
             <div class="small-articles">
               <div class="article-card">
                 <div class="article-image">
-                  <img src="/Mesa/70-1.webp" alt="Office Building Construction" loading="lazy" decoding="async">
+                  <img src="/Mesa/123.webp" alt="Office Building Construction" loading="lazy" decoding="async">
                 </div>
                 <div class="article-content">
                   <h4>Mesa Main Street Stations</h4>
@@ -1910,7 +1926,7 @@
               
               <div class="article-card">
                 <div class="article-image">
-                  <img src="/Turkey/74.webp" alt="Cattle Homestead" loading="lazy" decoding="async">
+                  <img src="/Turkey/86.webp" alt="Cattle Homestead" loading="lazy" decoding="async">
                 </div>
                 <div class="article-content">
                   <h4>Cattle Homestead</h4>
@@ -1924,7 +1940,7 @@
                 </div>
                 <div class="article-content">
                   <h4>Central Commercial Building Renovation</h4>
-                  <a href="#central" class="read-more">Read more</a>
+                  <a href="gallery-4.html" class="read-more">View Gallery</a>
                 </div>
               </div>
               
@@ -2160,7 +2176,7 @@ z"/>
     <!-- Layered Peaks SVG Section -->
     <section class="layered-peaks-section">
       <div class="cooledge-image-overlay">
-        <img src="/Mesa/103.webp" alt="Cooledge Building" class="cooledge-103-image">
+        <img src="/Mesa/139.webp" alt="Cooledge Building" class="cooledge-103-image">
       </div>
     </section>
 
@@ -2176,7 +2192,7 @@ z"/>
           <h1>Grandview Casa Blanca South</h1>
         </div>
         <div class="section-image">
-          <img src="/Cooledge/6-21.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;" loading="eager" decoding="async">
+          <img src="/Cooledge/16.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;" loading="eager" decoding="async">
         </div>
         
         <div class="button-container">
@@ -2244,7 +2260,7 @@ z"/>
             </div>
           </div>
           <div class="section-image">
-            <img src="/Mesa/17-5.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;" loading="eager" decoding="async">
+            <img src="/Mesa/128.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;" loading="eager" decoding="async">
           </div>
         </div>
       </section>
@@ -2253,7 +2269,7 @@ z"/>
       <section class="cattle-section" id="cattle">
         <div class="section-container">
           <div class="section-image">
-            <img src="/Turkey/70.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;" loading="eager" decoding="async">
+            <img src="/Turkey/84.webp" alt="Property Excellence" style="width: 100%; border-radius: 8px;" loading="eager" decoding="async">
           </div>
           <div class="section-content">
             <h2>Cattle Homestead</h2>
@@ -2289,28 +2305,27 @@ z"/>
           <div class="section-content">
             <h2>Central Commercial Building Renovation</h2>
             <p>The Central Commercial Building Renovation transformed a historic downtown structure into a modern mixed-use facility while preserving its architectural character. This comprehensive renovation project breathed new life into the aging commercial space, creating contemporary office and retail environments.</p>
-            <p><strong>Historic Preservation:</strong> Careful restoration of original brick facades, architectural details, and structural elements while upgrading all mechanical, electrical, and plumbing systems to current standards.</p>
-            <p><strong>Modern Upgrades:</strong> Installation of energy-efficient windows, HVAC systems, LED lighting, and smart building technologies to enhance tenant comfort and reduce operational costs.</p>
-            
-            
-            <div class="button-container">
-              <button class="project-specs-btn" data-section="4">
-                <span>Project Specs</span>
-                <span class="arrow">→</span>
-              </button>
-              <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/AoWZLKjuxt3AC74f8', '_blank')">
-                <span>Google Maps</span>
-                <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
-              </button>
-              <button class="gallery-btn" onclick="window.location.href='gallery-4.html'">
-                <svg class="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                  <circle cx="8.5" cy="8.5" r="1.5"/>
-                  <polyline points="21,15 16,10 5,21"/>
-                </svg>
-                <span>Photos & Gallery</span>
-              </button>
-            </div>
+             <p><strong>Historic Preservation:</strong> Careful restoration of original brick facades, architectural details, and structural elements while upgrading all mechanical, electrical, and plumbing systems to current standards.</p>
+             <p><strong>Modern Upgrades:</strong> Installation of energy-efficient windows, HVAC systems, LED lighting, and smart building technologies to enhance tenant comfort and reduce operational costs.</p>
+             
+             <div class="button-container">
+               <button class="project-specs-btn" data-section="4">
+                 <span>Project Specs</span>
+                 <span class="arrow">→</span>
+               </button>
+               <button class="google-maps-btn" onclick="window.open('https://maps.app.goo.gl/AoWZLKjuxt3AC74f8', '_blank')">
+                 <span>Google Maps</span>
+                 <img src="/commercial/google-maps-icon-free-png.png" alt="Google Maps" class="maps-icon">
+               </button>
+               <button class="gallery-btn" onclick="window.location.href='gallery-4.html'">
+                 <svg class="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                   <circle cx="8.5" cy="8.5" r="1.5"/>
+                   <polyline points="21,15 16,10 5,21"/>
+                 </svg>
+                 <span>Photos & Gallery</span>
+               </button>
+             </div>
           </div>
         </div>
       </section>
@@ -2734,12 +2749,6 @@ z"/>
                   <span class="spec-value">${project.specs.projectValue}</span>
                 </div>
               </div>
-              
-              <div class="specs-description">
-                <h4>PROJECT DESCRIPTION</h4>
-                <p>${project.description}</p>
-                <p>Our team is implementing cutting-edge technology and environmentally friendly construction methods to create a landmark development that will serve as a model for future projects in the downtown district.</p>
-              </div>
             `;
           }
         }
@@ -2879,12 +2888,6 @@ z"/>
                 <span class="spec-label">PROJECT VALUE:</span>
                 <span class="spec-value">$18.5M</span>
               </div>
-            </div>
-            
-            <div class="specs-description">
-              <h4>PROJECT DESCRIPTION</h4>
-              <p>This comprehensive commercial development project showcases our commitment to innovative design and sustainable practices. The project includes modern office spaces, retail areas, and state-of-the-art amenities designed to meet the evolving needs of today's businesses.</p>
-              <p>Our team is implementing cutting-edge technology and environmentally friendly construction methods to create a landmark development that will serve as a model for future projects in the downtown district.</p>
             </div>
           </div>
         </div>
@@ -3136,8 +3139,8 @@ z"/>
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-info">
-            <p class="footer-phone"><i class="fas fa-phone"></i> (123) 456-7890</p>
-            <p class="footer-email"><i class="fas fa-envelope"></i> info@armproperty.com</p>
+            <p class="footer-phone"><i class="fas fa-phone"></i> (480) 760-5293</p>
+            <p class="footer-email"><i class="fas fa-envelope"></i> charles@azdevco.com</p>
             <p class="footer-license">Licenses | ROC284283</p>
           </div>
           
@@ -3271,6 +3274,36 @@ z"/>
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Image Preloading for Better Performance -->
+    <script>
+      (function() {
+        // Preload key images for instant navigation
+        const imagesToPreload = [
+          '/Cooledge/50.webp',        // Hero image
+          '/Mesa/123.webp',           // Office Building
+          '/Turkey/86.webp',          // Cattle Homestead
+          '/Central Commercial Building Renovation/3.webp',
+          '/College Condos and Stadium Condos/College Condos.webp',
+          '/Bureau of Land Management/Bureau of Land Management.webp',
+          '/Mohave Mental Health/Mohave Mental Health Clinic.webp',
+          '/Mesa/139.webp',           // Section images
+          '/Cooledge/16.webp',
+          '/Mesa/128.webp',
+          '/Turkey/84.webp'
+        ];
+        
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            imagesToPreload.forEach(function(src) {
+              const img = new Image();
+              img.src = src;
+            });
+            console.log('✅ Preloaded ' + imagesToPreload.length + ' commercial images');
+          }, 1000);
+        });
+      })();
+    </script>
   </body>
 </html>
 

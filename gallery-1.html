@@ -475,67 +475,299 @@
       let slides = [];
 
       function naturalCompare(a, b) {
-        // Robust numeric natural order: 1.webp, 2.webp, 5.webp, 5-1.webp, 5-2.webp, 5-27-1.webp, 6.webp, 6-1.webp, ..., 6-24.webp, 7.webp, ..., 23.webp, 24.webp, 25.webp, ...
-        const toKey = (name) => name
-          .replace(/\.webp$/i, '')
-          .split(/[^0-9]+/) // split on non-digits to capture multi-part numbers
-          .filter(Boolean)
-          .map((n) => parseInt(n, 10));
-        const ak = toKey(a);
-        const bk = toKey(b);
-        const len = Math.max(ak.length, bk.length);
-        for (let i = 0; i < len; i++) {
-          const av = ak[i] !== undefined ? ak[i] : -1; // base image comes before dashed variants
-          const bv = bk[i] !== undefined ? bk[i] : -1;
-          if (av !== bv) return av - bv;
-        }
-        return a.localeCompare(b);
+        // Simple numeric sort for sequential images (1.webp, 2.webp, 3.webp, etc.)
+        const numA = parseInt(a.replace(/\.webp$/i, ''), 10);
+        const numB = parseInt(b.replace(/\.webp$/i, ''), 10);
+        return numA - numB;
       }
 
-      function imageExists(url) {
+      function imageExists(url, timeout = 3500, retries = 0) {
         return new Promise((resolve) => {
           const img = new Image();
-          img.onload = () => resolve(true);
-          img.onerror = () => resolve(false);
+          let resolved = false;
+          let timeoutId;
+          
+          const cleanup = () => {
+            if (!resolved) {
+              resolved = true;
+              img.onload = null;
+              img.onerror = null;
+              if (timeoutId) clearTimeout(timeoutId);
+            }
+          };
+          
+          // Fast path: if image is already cached, resolve immediately
+          img.onload = () => {
+            cleanup();
+            resolve(true);
+          };
+          
+          img.onerror = () => {
+            cleanup();
+            resolve(false);
+          };
+          
+          // Very short timeout for sequential images (they load fast or don't exist)
+          timeoutId = setTimeout(() => {
+            if (!resolved) {
+              cleanup();
+              resolve(false);
+            }
+          }, timeout);
+          
+          // Start loading immediately
           img.src = url;
         });
       }
 
       async function buildCooledgeSlides() {
-        const candidates = new Set();
-        // Plain numeric images (covers 1.webp..200.webp safely)
-        for (let i = 1; i <= 200; i++) candidates.add(`${i}.webp`);
-        // Series with dashes commonly used in folder
-        const dashedSeries = [5, 6, 7];
-        const maxBySeries = { 5: 40, 6: 20, 7: 10 };
-        dashedSeries.forEach((base) => {
-          candidates.add(`${base}.webp`);
-          const maxN = maxBySeries[base] || 0;
-          for (let n = 1; n <= maxN; n++) candidates.add(`${base}-${n}.webp`);
-        });
+        // Check cache first (valid for 24 hours)
+        const cacheKey = 'cooledge-slides-cache';
+        const cacheTimestampKey = 'cooledge-slides-cache-time';
+        const cacheMaxAge = 24 * 60 * 60 * 1000; // 24 hours
+        let useCache = false;
+        
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          const cacheTime = localStorage.getItem(cacheTimestampKey);
+          
+          if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < cacheMaxAge) {
+            const parsed = JSON.parse(cached);
+            // Only use cache if it has a reasonable number of images (at least 40)
+            // This ensures we don't use partial/incomplete scans (like 34 images)
+            if (parsed && Array.isArray(parsed) && parsed.length >= 40) {
+              slides = parsed;
+              console.log(`✅ Using cached gallery with ${slides.length} images`);
+              useCache = true;
+              return; // Use cached data
+            } else {
+              // Cache seems incomplete, clear it and do fresh scan
+              console.log(`❌ Cache has only ${parsed?.length || 0} images (need at least 40) - clearing and rescanning`);
+              try {
+                localStorage.removeItem(cacheKey);
+                localStorage.removeItem(cacheTimestampKey);
+              } catch (e) {
+                // Ignore clear errors
+              }
+              // Continue to scan for images below
+            }
+          } else {
+            console.log('No valid cache found - will scan for images');
+          }
+        } catch (e) {
+          console.warn('Cache read error:', e);
+          // Cache read failed, clear it and continue with fresh check
+          try {
+            localStorage.removeItem(cacheKey);
+            localStorage.removeItem(cacheTimestampKey);
+          } catch (clearErr) {
+            // Ignore clear errors
+          }
+        }
+        
+        // If we're using cache, we already returned above
+        // Otherwise, continue to scan for images
+        console.log('Starting image scan...');
+
+        // Mobile detection for optimized scanning
+        const isMobileDevice = window.innerWidth <= 1000 || 
+                              /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                              ('ontouchstart' in window);
+        
+        // NEW NAMING PATTERN: Simple sequential numbers (1.webp, 2.webp, 3.webp, etc.)
+        // Smart range detection: Check 1-200, but use optimized approach for speed
+        const maxImageNumber = 200;
+        const candidates = [];
+        
+        // For mobile: Check in smart chunks to find actual range faster
+        if (isMobileDevice) {
+          // Check key points first to find the actual range
+          const keyPoints = [1, 50, 100, 150, 200];
+          keyPoints.forEach(i => candidates.push(`${i}.webp`));
+          
+          // Then fill in the rest
+          for (let i = 1; i <= maxImageNumber; i++) {
+            if (!keyPoints.includes(i)) {
+              candidates.push(`${i}.webp`);
+            }
+          }
+        } else {
+          // Desktop: check all sequentially
+          for (let i = 1; i <= maxImageNumber; i++) {
+            candidates.push(`${i}.webp`);
+          }
+        }
+        
+        console.log(`⚡ Checking ${candidates.length} sequential patterns (${isMobileDevice ? 'MOBILE - SMART SCAN' : 'DESKTOP'})...`);
 
         const present = [];
-        const checks = [];
-        candidates.forEach((name) => {
-          const url = `/Cooledge/${name}`;
-          checks.push(
-            imageExists(url).then((ok) => {
-              if (ok) present.push(name);
+        const candidateArray = candidates; // Already an array
+        
+        // ULTRA-FAST mobile caching - MAXIMUM optimization
+        const batchSize = isMobileDevice ? 20 : 30; // Smaller batches for reliability
+        const timeout = isMobileDevice ? 5000 : 3500; // Longer timeout to ensure all images load
+        const retries = 0; // No retries
+        const totalBatches = Math.ceil(candidateArray.length / batchSize);
+        let currentBatch = 0;
+        
+        // Mobile: Cache early but ensure full scan completes
+        const mobileEarlyCacheThreshold = 20; // Cache at 20 images (early but reliable)
+        
+        console.log(`Starting image scan (${isMobileDevice ? 'MOBILE' : 'DESKTOP'}): ${candidateArray.length} candidates in ${totalBatches} batches...`);
+        console.log(`Settings: batchSize=${batchSize}, timeout=${timeout}ms, retries=${retries}`);
+        
+        // Reliable batch processing - ensures all images are found
+        // Use batches to avoid overwhelming mobile browser/network
+        for (let i = 0; i < candidateArray.length; i += batchSize) {
+          currentBatch++;
+          const batch = candidateArray.slice(i, i + batchSize);
+          
+          // Parallel checking within batch
+          const batchResults = await Promise.allSettled(
+            batch.map((name) => {
+              const url = `/Cooledge/${name}`;
+              return imageExists(url, timeout, retries);
             })
           );
+          
+          // Process results - ensure we capture all found images
+          batchResults.forEach((result, index) => {
+            if (result.status === 'fulfilled' && result.value === true) {
+              const imageName = batch[index];
+              // Avoid duplicates
+              if (!present.includes(imageName)) {
+                present.push(imageName);
+              }
+            }
+          });
+          
+          // Update slides array progressively (every batch)
+          if (present.length > 0) {
+            // Sort numerically (ensure correct order)
+            const sortedPresent = [...present].sort((a, b) => {
+              const numA = parseInt(a.replace('.webp', ''), 10);
+              const numB = parseInt(b.replace('.webp', ''), 10);
+              return numA - numB;
+            });
+            
+            // Always update slides array (ensures all images are included)
+            slides = sortedPresent.map((image) => {
+              const imageNumber = image.replace(/\.webp$/i, '');
+              return {
+                slideTitle: `Grandview Casa Blanca South`,
+                slideDescription: `Documentation of the Grandview Casa Blanca South development project, showcasing the comprehensive construction and design process.`,
+                slideImg: `/Cooledge/${image}`,
+              };
+            });
+            
+            // MOBILE: Early cache when we have enough (but continue scan)
+            if (isMobileDevice && present.length >= mobileEarlyCacheThreshold && 
+                currentBatch < totalBatches && !window._mobileEarlyCached) {
+              try {
+                localStorage.setItem(cacheKey + '_temp', JSON.stringify(slides));
+                window._mobileEarlyCached = true;
+                console.log(`📱 ⚡ Early cached ${slides.length} images (temporary - full scan continuing...)`);
+              } catch (e) {
+                // Ignore cache errors
+              }
+            }
+            
+            // Trigger UI update
+            window.dispatchEvent(new CustomEvent('slidesUpdated', { 
+              detail: { 
+                count: slides.length,
+                present: [...sortedPresent]
+              } 
+            }));
+          }
+          
+          // Progress logging
+          if (currentBatch === 1 || currentBatch === totalBatches || (currentBatch % 3 === 0 && isMobileDevice)) {
+            console.log(`⚡ ${currentBatch}/${totalBatches} batches → ${present.length} images found`);
+          }
+        }
+        
+        console.log(`✅ Scan complete! Found ${present.length} images total.`);
+        
+        // Ensure we have all images - remove duplicates and sort
+        const uniquePresent = [...new Set(present)]; // Remove any duplicates
+        uniquePresent.sort((a, b) => {
+          const numA = parseInt(a.replace('.webp', ''), 10);
+          const numB = parseInt(b.replace('.webp', ''), 10);
+          return numA - numB;
         });
-        await Promise.all(checks);
-
-        present.sort(naturalCompare);
-        slides = present.map((image, index) => {
-          // Extract the image number from the filename for the title
-          const imageNumber = image.replace(/\.webp$/i, '').replace(/-/g, '-');
+        
+        // Final slides array - ALWAYS use complete scan results
+        slides = uniquePresent.map((image) => {
+          const imageNumber = image.replace(/\.webp$/i, '');
           return {
-            slideTitle: `Grandview Casa Blanca South - Image ${imageNumber}`,
+            slideTitle: `Grandview Casa Blanca South`,
             slideDescription: `Documentation of the Grandview Casa Blanca South development project, showcasing the comprehensive construction and design process.`,
             slideImg: `/Cooledge/${image}`,
           };
         });
+        
+        // Log final result with details
+        console.log(`✅ Final result: ${slides.length} images found and sorted`);
+        console.log(`   Image range: ${uniquePresent[0]} to ${uniquePresent[uniquePresent.length - 1]}`);
+        
+        // Warn if we found fewer than expected
+        if (slides.length < 40) {
+          console.warn(`⚠️ Only found ${slides.length} images. Expected 40+.`);
+          console.warn(`⚠️ This cache will be rejected. Clear cache and rescan to find all images.`);
+        } else {
+          console.log(`✅ Found ${slides.length} images - complete scan!`);
+        }
+        
+        // Cache final results - ALWAYS overwrite any early/temporary cache
+        // Only cache if we found a reasonable number (prevents partial caches)
+        if (slides.length >= 40) {
+          try {
+            // Remove any temporary early cache
+            try {
+              localStorage.removeItem(cacheKey + '_temp');
+            } catch (e) {
+              // Ignore
+            }
+            
+            // Save final complete cache
+            localStorage.setItem(cacheKey, JSON.stringify(slides));
+            localStorage.setItem(cacheTimestampKey, Date.now().toString());
+            console.log(`✅ Successfully cached ${slides.length} images (FINAL - complete scan)`);
+            
+            // Verify all images are in correct order
+            const imageNumbers = slides.map(s => parseInt(s.slideImg.match(/(\d+)\.webp/)?.[1] || '0', 10)).filter(n => n > 0);
+            if (imageNumbers.length > 0) {
+              const min = Math.min(...imageNumbers);
+              const max = Math.max(...imageNumbers);
+              const gaps = [];
+              for (let i = min; i <= max; i++) {
+                if (!imageNumbers.includes(i)) {
+                  gaps.push(i);
+                }
+              }
+              if (gaps.length > 0) {
+                console.warn(`⚠️ Missing images: ${gaps.slice(0, 10).join(', ')}${gaps.length > 10 ? '...' : ''} (${gaps.length} total gaps)`);
+              } else {
+                console.log(`✅ All images found in range ${min}-${max} (${imageNumbers.length} total, no gaps)`);
+              }
+            }
+          } catch (e) {
+            console.warn('Failed to cache slides:', e);
+          }
+        } else {
+          console.warn(`⚠️ Only found ${slides.length} images - NOT caching (need at least 40)`);
+          console.warn(`⚠️ This prevents partial caches. Clear cache and let full scan complete.`);
+          
+          // Don't cache partial results - force fresh scan next time
+          try {
+            localStorage.removeItem(cacheKey);
+            localStorage.removeItem(cacheTimestampKey);
+            localStorage.removeItem(cacheKey + '_temp');
+          } catch (e) {
+            // Ignore
+          }
+        }
       }
 
       document.addEventListener("DOMContentLoaded", async () => {
@@ -546,8 +778,47 @@
           backButton.href = isMobile ? 'commercial-mobile.html' : 'commercial.html';
         }
         
-        // Build slide manifest dynamically based on actual files present
-        await buildCooledgeSlides();
+        // Initialize with cached data if available (for instant load)
+        // But be strict - only use cache if it has images
+        const cacheKey = 'cooledge-slides-cache';
+        let hasInitialCache = false;
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            // Only use cache if it has images (strict check)
+            if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+              slides = parsed;
+              hasInitialCache = true;
+              console.log(`Loaded ${slides.length} images from cache for initial display`);
+            } else {
+              // Bad cache - clear it
+              console.log('Cache exists but is empty or invalid - clearing');
+              localStorage.removeItem(cacheKey);
+              localStorage.removeItem('cooledge-slides-cache-time');
+            }
+          }
+        } catch (e) {
+          console.warn('Cache read error:', e);
+          // Clear bad cache
+          try {
+            localStorage.removeItem(cacheKey);
+            localStorage.removeItem('cooledge-slides-cache-time');
+          } catch (clearErr) {
+            // Ignore
+          }
+        }
+        
+        // If no valid cache, show loading message
+        if (!hasInitialCache || slides.length === 0) {
+          slides = []; // Ensure it's empty array, not undefined
+          const imageCounterEl = document.getElementById('imageCounter');
+          if (imageCounterEl) {
+            imageCounterEl.textContent = 'Scanning for images...';
+          }
+          console.log('No valid cache - will scan for images');
+        }
+        
         // Better mobile viewport handling for address bar
         if (window.innerHeight < 800) { // Mobile device
           // Use a more reliable method to handle mobile viewport
@@ -563,7 +834,8 @@
           });
         }
 
-        const totalSlides = slides.length;
+        // Use a getter function for totalSlides so it always reflects current slides.length
+        const getTotalSlides = () => slides.length;
         let currentSlide = 1;
         let currentPage = 0; // Current page of thumbnails (0-4)
         const slidesPerPage = 5;
@@ -579,7 +851,7 @@
         function generateThumbnails() {
           thumbnailContainer.innerHTML = '';
           const startIndex = currentPage * slidesPerPage;
-          const endIndex = Math.min(startIndex + slidesPerPage, totalSlides);
+          const endIndex = Math.min(startIndex + slidesPerPage, getTotalSlides());
 
           for (let i = startIndex; i < endIndex; i++) {
             const thumbnail = document.createElement('div');
@@ -607,7 +879,7 @@
 
         function updateImageCounter() {
           const imageCounter = document.getElementById('imageCounter');
-          imageCounter.textContent = `Image ${currentSlide} of ${totalSlides}`;
+          imageCounter.textContent = `Image ${currentSlide} of ${getTotalSlides()}`;
         }
 
         function updateCurrentPage() {
@@ -685,9 +957,9 @@
             currentSlideElement.remove();
 
             if (direction === "down") {
-              currentSlide = currentSlide === totalSlides ? 1 : currentSlide + 1;
+              currentSlide = currentSlide === getTotalSlides() ? 1 : currentSlide + 1;
             } else {
-              currentSlide = currentSlide === 1 ? totalSlides : currentSlide - 1;
+              currentSlide = currentSlide === 1 ? getTotalSlides() : currentSlide - 1;
             }
 
             const newSlide = createSlide(currentSlide);
@@ -823,52 +1095,60 @@
         }
 
         // Thumbnail click handler
-        thumbnailContainer.addEventListener('click', (e) => {
-          const thumbnail = e.target.closest('.thumbnail');
-          if (thumbnail) {
-            const targetSlide = parseInt(thumbnail.getAttribute('data-slide'));
-            jumpToSlide(targetSlide);
-          }
-        });
+        if (thumbnailContainer) {
+          thumbnailContainer.addEventListener('click', (e) => {
+            const thumbnail = e.target.closest('.thumbnail');
+            if (thumbnail && getTotalSlides() > 0) {
+              const targetSlide = parseInt(thumbnail.getAttribute('data-slide'));
+              if (targetSlide && targetSlide <= getTotalSlides()) {
+                jumpToSlide(targetSlide);
+              }
+            }
+          });
+        }
 
         // Arrow navigation
-        leftArrow.addEventListener('click', () => {
-          if (isAnimating || !scrollAllowed) return;
+        if (leftArrow) {
+          leftArrow.addEventListener('click', () => {
+            if (isAnimating || !scrollAllowed || getTotalSlides() === 0) return;
 
-          // Go to first image of previous 5
-          let newSlide = Math.floor((currentSlide - 1) / slidesPerPage) * slidesPerPage;
-          if (newSlide < 1) {
-            // If we go below 1, wrap to the last page
-            newSlide = Math.floor((totalSlides - 1) / slidesPerPage) * slidesPerPage + 1;
-          }
-          
-          const newPage = Math.floor((newSlide - 1) / slidesPerPage);
-          if (newPage !== currentPage) {
-            currentPage = newPage;
-            generateThumbnails();
-          }
-          
-          jumpToSlide(newSlide);
-        });
+            // Go to first image of previous 5
+            let newSlide = Math.floor((currentSlide - 1) / slidesPerPage) * slidesPerPage;
+            if (newSlide < 1) {
+              // If we go below 1, wrap to the last page
+              newSlide = Math.floor((getTotalSlides() - 1) / slidesPerPage) * slidesPerPage + 1;
+            }
+            
+            const newPage = Math.floor((newSlide - 1) / slidesPerPage);
+            if (newPage !== currentPage) {
+              currentPage = newPage;
+              generateThumbnails();
+            }
+            
+            jumpToSlide(newSlide);
+          });
+        }
 
-        rightArrow.addEventListener('click', () => {
-          if (isAnimating || !scrollAllowed) return;
+        if (rightArrow) {
+          rightArrow.addEventListener('click', () => {
+            if (isAnimating || !scrollAllowed || getTotalSlides() === 0) return;
 
-          // Go to first image of next 5
-          let newSlide = Math.floor((currentSlide - 1) / slidesPerPage) * slidesPerPage + slidesPerPage + 1;
-          if (newSlide > totalSlides) {
-            // If we go above total, wrap to the beginning
-            newSlide = 1;
-          }
-          
-          const newPage = Math.floor((newSlide - 1) / slidesPerPage);
-          if (newPage !== currentPage) {
-            currentPage = newPage;
-            generateThumbnails();
-          }
-          
-          jumpToSlide(newSlide);
-        });
+            // Go to first image of next 5
+            let newSlide = Math.floor((currentSlide - 1) / slidesPerPage) * slidesPerPage + slidesPerPage + 1;
+            if (newSlide > getTotalSlides()) {
+              // If we go above total, wrap to the beginning
+              newSlide = 1;
+            }
+            
+            const newPage = Math.floor((newSlide - 1) / slidesPerPage);
+            if (newPage !== currentPage) {
+              currentPage = newPage;
+              generateThumbnails();
+            }
+            
+            jumpToSlide(newSlide);
+          });
+        }
 
         // Mouse wheel navigation with throttling
         let wheelTimeout;
@@ -917,10 +1197,118 @@
 
         // Mobile viewport handling - no more problematic scroll-based address bar hiding
 
-        // Initialize the gallery
-        generateThumbnails();
-        updateNavigation();
-        updateImageCounter();
+        // Initialize the gallery immediately with cached data (if available)
+        // This makes the page appear instantly on mobile
+        if (slides.length > 0) {
+          generateThumbnails();
+          updateNavigation();
+          updateImageCounter();
+        } else {
+          // Even if no slides yet, initialize the UI so gallery is ready
+          updateImageCounter();
+        }
+        
+        // Listen for progressive slide updates during scan
+        // Throttle updates to avoid performance issues on mobile
+        let lastUpdateTime = 0;
+        const updateThrottle = 300; // Update UI max once per 300ms (faster updates)
+        
+        window.addEventListener('slidesUpdated', function(e) {
+          const now = Date.now();
+          if (now - lastUpdateTime < updateThrottle) return;
+          lastUpdateTime = now;
+          
+          const count = e.detail.count;
+          const presentArray = e.detail.present;
+          
+          if (count > 0 && presentArray && presentArray.length > 0) {
+            // Use numeric sort for sequential images (consistent with scan)
+            const sortedArray = [...presentArray].sort((a, b) => {
+              const numA = parseInt(a.replace('.webp', ''), 10);
+              const numB = parseInt(b.replace('.webp', ''), 10);
+              return numA - numB;
+            });
+            
+            // Only update if we have more images than before (prevents missing images)
+            if (sortedArray.length >= slides.length) {
+              slides = sortedArray.map((image) => {
+                const imageNumber = image.replace(/\.webp$/i, '');
+                return {
+                  slideTitle: `Grandview Casa Blanca South`,
+                  slideDescription: `Documentation of the Grandview Casa Blanca South development project, showcasing the comprehensive construction and design process.`,
+                  slideImg: `/Cooledge/${image}`,
+                };
+              });
+              
+              updateImageCounter();
+              if (currentSlide === 1 && slides.length > 0) {
+                updateCurrentPage();
+                generateThumbnails();
+                updateNavigation();
+                
+                // Create first slide if it doesn't exist
+                const slider = document.querySelector(".slider");
+                if (slider && !slider.querySelector(".slide")) {
+                  const firstSlide = createSlide(1);
+                  slider.appendChild(firstSlide);
+                  splitText(firstSlide);
+                }
+              }
+            }
+          }
+        });
+        
+        // Build slide manifest in background (non-blocking)
+        // Images will appear progressively as they're found
+        buildCooledgeSlides().then(() => {
+          console.log(`buildCooledgeSlides completed with ${slides.length} slides`);
+          
+          // Final update when scan completes
+          updateImageCounter();
+          
+          if (slides.length > 0) {
+            // Final gallery update
+            updateCurrentPage();
+            generateThumbnails();
+            updateNavigation();
+            
+            // Ensure first slide is displayed
+            const slider = document.querySelector(".slider");
+            if (slider) {
+              const existingSlide = slider.querySelector(".slide");
+              if (!existingSlide || currentSlide === 1) {
+                if (existingSlide) {
+                  existingSlide.remove();
+                }
+                const firstSlide = createSlide(1);
+                slider.appendChild(firstSlide);
+                splitText(firstSlide);
+              }
+            }
+          } else {
+            // No slides found - show message
+            const imageCounterEl = document.getElementById('imageCounter');
+            if (imageCounterEl) {
+              imageCounterEl.textContent = 'No images found. Check console.';
+              imageCounterEl.style.background = 'rgba(255, 0, 0, 0.3)';
+            }
+            console.error('No images found! Check network connection and image paths.');
+          }
+        }).catch(err => {
+          console.error('Error building slides:', err);
+          updateImageCounter();
+          if (slides.length > 0) {
+            updateCurrentPage();
+            generateThumbnails();
+            updateNavigation();
+          } else {
+            const imageCounterEl = document.getElementById('imageCounter');
+            if (imageCounterEl) {
+              imageCounterEl.textContent = 'Error loading images';
+              imageCounterEl.style.background = 'rgba(255, 0, 0, 0.3)';
+            }
+          }
+        });
       });
     </script>
   </body>

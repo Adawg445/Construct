@@ -252,13 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
       lastScroll = currentScroll;
     });
     
-    // Move mask container up slowly as you scroll
+    // Move mask container up slowly as you scroll (mobile)
     if (maskContainer) {
       ScrollTrigger.create({
         trigger: ".commercial-footer",
-        start: "top bottom", // When footer comes into view
-        end: "top top", // Medium range - between fast and slow
-        scrub: 0.5, // Slower movement
+        start: "top bottom", // Start immediately when footer enters viewport
+        end: "bottom+=300 top", // Extended range - animation lasts longer
+        scrub: 8, // Very slow, super smooth movement
         onUpdate: (self) => {
           // Move mask up slowly based on scroll progress
           const progress = self.progress;
@@ -271,5 +271,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
+  }
+  
+  // Desktop version - move mask up as soon as footer appears
+  if (!isMobile && maskContainer) {
+    ScrollTrigger.create({
+      trigger: ".commercial-footer",
+      start: "top bottom", // Start immediately when footer enters viewport
+      end: "bottom+=500 top", // Much longer range for desktop - very gradual
+      scrub: 10, // Very slow movement for ultra-smooth natural feel
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const translateY = -100 * progress;
+        maskContainer.style.transform = `translateY(${translateY}vh)`;
+      },
+      onLeaveBack: () => {
+        maskContainer.style.transform = 'none';
+      }
+    });
   }
 });
