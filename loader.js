@@ -54,19 +54,23 @@
       .catch(function(){ /* ignore, loader will still work */ });
   }
 
-    function startLoaderAnimation(root, config) {
-      var currentCube = 1;
-      var cubeInterval;
-      var resolvedCount = 0;
-      var totalCount = 0;
-      var forcedDone = false;
-      var startTime = Date.now();
-      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                     ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-      
-      // Use page-specific config or defaults
-      var minTime = (config && config.minTime) || 300;
-      var maxTime = (config && config.maxTime) || 12000;
+  function startLoaderAnimation(root, config) {
+    var currentCube = 1;
+    var cubeInterval;
+    var tickInterval;
+    var safetyTimer;
+    var observer;
+    var startTime = Date.now();
+    var minTime = (config && config.minTime) || 300;
+    var maxTime = (config && config.maxTime) || 12000;
+    var QUIET_TIME = 300; // everything must stay loaded this long before closing
+
+    var tracked = [];            // one entry per thing we wait for: { done: bool }
+    var seen = new WeakSet();    // images already being tracked
+    var windowLoaded = document.readyState === 'complete';
+    var shownPct = 0;
+    var quietSince = 0;
+    var finished = false;
 
     function switchCubes() {
       var cube1 = root.querySelector('#arm-cube1');
@@ -87,139 +91,130 @@
       }
     }
 
-    function setProgress(pct) {
-      var clamped = Math.max(0, Math.min(100, pct));
+    function render(pct) {
       var loadingBar = root.querySelector('#arm-loadingBar');
       var percentage = root.querySelector('#arm-percentage');
-      if (loadingBar) loadingBar.style.width = clamped + '%';
-      if (percentage) percentage.textContent = Math.round(clamped) + '%';
-      if (clamped >= 100) {
+      if (loadingBar) loadingBar.style.width = pct + '%';
+      if (percentage) percentage.textContent = Math.round(pct) + '%';
+    }
+
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearInterval(tickInterval);
+      clearTimeout(safetyTimer);
+      if (observer) observer.disconnect();
+      render(100);
+      // brief pause so the bar visibly reaches 100%, then fade out
+      setTimeout(function() {
         clearInterval(cubeInterval);
-        // allow a brief pause to let content settle
+        root.classList.add('hidden');
         setTimeout(function() {
-          root.classList.add('hidden');
-          // remove after transition
-          setTimeout(function(){
-            if (root && root.parentNode) root.parentNode.removeChild(root);
-            // re-enable page scroll
-            document.documentElement.classList.remove('arm-has-loader');
-          }, 600);
-        }, 250);
+          if (root && root.parentNode) root.parentNode.removeChild(root);
+          // re-enable page scroll (other scripts wait for this class to go away)
+          document.documentElement.classList.remove('arm-has-loader');
+        }, 600);
+      }, 250);
+    }
+
+    function addEntry() {
+      var entry = { done: false };
+      tracked.push(entry);
+      return entry;
+    }
+
+    // Lazy images that are hidden or off screen are never downloaded by the
+    // browser, so waiting for them would stall the loader.
+    function willBrowserLoad(img) {
+      if (img.loading !== 'lazy') return true;
+      var r = img.getBoundingClientRect();
+      if (!r.width && !r.height) return false;
+      return r.bottom > 0 && r.top < window.innerHeight &&
+             r.right > 0 && r.left < window.innerWidth;
+    }
+
+    function trackImage(img) {
+      if (seen.has(img) || root.contains(img)) return;
+      seen.add(img);
+      if (img.complete || !willBrowserLoad(img)) return;
+
+      var entry = addEntry();
+      var markDone = function() { entry.done = true; };
+      img.addEventListener('load', markDone, { once: true });
+      img.addEventListener('error', markDone, { once: true }); // broken images shouldn't block
+      setTimeout(markDone, 10000);                             // per-image safety net
+      if (img.complete) markDone();                            // finished while attaching
+    }
+
+    function trackImagesIn(node) {
+      if (node.nodeType !== 1) return;
+      if (node.tagName === 'IMG') trackImage(node);
+      else if (node.querySelectorAll) Array.prototype.forEach.call(node.querySelectorAll('img'), trackImage);
+    }
+
+    function realProgress() {
+      var total = tracked.length + 1;        // +1 for the window "load" event
+      var done = windowLoaded ? 1 : 0;
+      for (var i = 0; i < tracked.length; i++) if (tracked[i].done) done++;
+      return { pct: (done / total) * 100, allDone: done === total };
+    }
+
+    function tick() {
+      var p = realProgress();
+      // Ease the bar toward the real progress; never move backwards and
+      // never show 100% until the page is actually ready.
+      var target = Math.min(p.pct, 99);
+      if (target > shownPct) shownPct = Math.min(target, shownPct + Math.max((target - shownPct) * 0.3, 0.5));
+      render(shownPct);
+
+      if (p.allDone) {
+        if (!quietSince) quietSince = Date.now();
+        // Wait a short quiet period to catch images added right after load
+        // (gallery pages build their slides with script).
+        if (Date.now() - quietSince >= QUIET_TIME && Date.now() - startTime >= minTime) {
+          finish();
+        }
+      } else {
+        quietSince = 0;
       }
     }
 
-    function onOneResolved() {
-      resolvedCount++;
-      if (totalCount > 0) {
-        // Calculate progress based on actual asset loading
-        var basePct = (resolvedCount / totalCount) * 100;
-        var timeElapsed = Date.now() - startTime;
-        
-        // Only apply minimum time if loading is very fast (likely cached)
-        // This prevents the loader from flashing, but allows natural completion
-        var pct = basePct;
-        if (timeElapsed < minTime && basePct >= 100) {
-          // If everything loaded super fast (cached), wait just a tiny bit
-          pct = Math.min(pct, 95);
-        }
-        
-        // Allow progress to reach 100% naturally when all assets are loaded
-        // Don't cap at 98% - let it complete when ready
-        setProgress(pct);
-      }
-    }
-
-    function collectAssetPromises() {
-      var promises = [];
-
-      // Collect all images on the page (including those in hidden containers)
-      // Wait for all images to load, whether they're cached or not
-      Array.prototype.forEach.call(document.images || [], function(img) {
-        // If image is already fully loaded (cached), resolve immediately
-        if (img.complete && img.naturalWidth !== 0) {
-          promises.push(Promise.resolve()); // Already loaded, count as resolved
-          return;
-        }
-        // Track this image's loading
-        promises.push(new Promise(function(resolve) {
-          // Handle both successful load and errors (count errors as "loaded" to not block)
-          img.addEventListener('load', resolve, { once: true });
-          img.addEventListener('error', resolve, { once: true });
-          
-          // Safety: if image doesn't load within reasonable time, resolve anyway
-          setTimeout(resolve, 10000);
-        }));
-      });
-
-      // Fonts
-      if (document.fonts && document.fonts.ready) {
-        promises.push(document.fonts.ready.catch(function(){ /* ignore */ }));
-      }
-
-      // CSS files and stylesheets
-      Array.prototype.forEach.call(document.styleSheets || [], function(ss) {
-        if (ss.href) {
-          promises.push(new Promise(function(resolve) {
-            var link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = ss.href;
-            link.addEventListener('load', resolve, { once: true });
-            link.addEventListener('error', resolve, { once: true });
-            // Don't actually add to DOM, just test loading
-          }));
-        }
-      });
-
-      // Mobile-specific: Wait for touch events to be ready
-      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        promises.push(new Promise(function(resolve) {
-          // Wait for mobile-specific resources
-          setTimeout(resolve, 100);
-        }));
-      }
-
-      // Window load (ensures CSS/other sub-resources)
-      promises.push(new Promise(function(resolve){
-        if (document.readyState === 'complete') resolve();
-        else window.addEventListener('load', resolve, { once: true });
-      }));
-
-      return promises;
-    }
-
-    // Start cube switching animation
     cubeInterval = setInterval(switchCubes, 1500);
 
-    var assetPromises = collectAssetPromises();
-    totalCount = assetPromises.length;
+    // Images already on the page
+    Array.prototype.forEach.call(document.images || [], trackImage);
 
-    if (totalCount === 0) {
-      // Nothing to wait for, finish quickly
-      setProgress(100);
-      return;
+    // Images added by scripts while the loader is showing (gallery slides, thumbnails)
+    if (window.MutationObserver) {
+      observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          Array.prototype.forEach.call(m.addedNodes, trackImagesIn);
+        });
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    assetPromises.forEach(function(p){
-      p.then(onOneResolved);
-    });
+    // Web fonts
+    if (document.fonts && document.fonts.ready) {
+      var fontEntry = addEntry();
+      document.fonts.ready.then(
+        function() { fontEntry.done = true; },
+        function() { fontEntry.done = true; }
+      );
+    }
 
-    // Finalize when all have resolved - complete immediately when ready
-    Promise.allSettled(assetPromises).then(function(){
-      // Small delay to ensure smooth transition (200ms)
-      setTimeout(function(){
-        forcedDone = true;
-        setProgress(100);
-      }, 200);
-    });
+    // Stylesheets, scripts and everything else the browser was already loading
+    if (!windowLoaded) {
+      window.addEventListener('load', function() { windowLoaded = true; }, { once: true });
+    }
 
-    // Safety timeout: force completion after appropriate time (in case of network issues)
-    // Use page-specific maxTime
-    setTimeout(function(){
-      if (!forcedDone) {
-        forcedDone = true;
-        console.log('Loader timeout reached after ' + maxTime + 'ms for ' + (config && config.description || 'unknown') + ' page');
-        setProgress(100);
-      }
+    tickInterval = setInterval(tick, 100);
+    tick();
+
+    // Safety net for very slow or failed connections
+    safetyTimer = setTimeout(function() {
+      console.log('Loader timeout reached after ' + maxTime + 'ms for ' + (config && config.description || 'unknown') + ' page');
+      finish();
     }, maxTime);
   }
 
