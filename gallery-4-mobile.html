@@ -450,7 +450,7 @@
 
     <!-- Image Counter -->
     <div class="image-counter" id="imageCounter">
-        Image 1 of 79
+        Image 1 of 5
     </div>
 
     <div class="slider">
@@ -493,294 +493,24 @@
         return a.localeCompare(b);
       }
 
-      function imageExists(url, timeout = 10000, retries = 2) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          let resolved = false;
-          let timeoutId;
-          
-          const cleanup = () => {
-            if (!resolved) {
-              resolved = true;
-              img.onload = null;
-              img.onerror = null;
-              if (timeoutId) clearTimeout(timeoutId);
-            }
-          };
-          
-          // Fast path: if image is already cached, resolve immediately
-          img.onload = () => {
-            cleanup();
-            resolve(true);
-          };
-          
-          img.onerror = () => {
-            cleanup();
-            // Retry logic for mobile networks
-            if (retries > 0) {
-              setTimeout(() => {
-                imageExists(url, timeout, retries - 1).then(resolve);
-              }, 500);
-            } else {
-              resolve(false);
-            }
-          };
-          
-          // Longer timeout for mobile/iOS (5 seconds default)
-          timeoutId = setTimeout(() => {
-            if (!resolved) {
-              cleanup();
-              // Retry on timeout for mobile
-              if (retries > 0) {
-                setTimeout(() => {
-                  imageExists(url, timeout, retries - 1).then(resolve);
-                }, 500);
-              } else {
-                resolve(false);
-              }
-            }
-          }, timeout);
-          
-          // Start loading immediately
-          img.src = url;
-        });
-      }
 
       async function buildCentralMobileSlides() {
-        const cacheKey = 'central-mobile-slides-cache';
-        const cacheTimestampKey = 'central-mobile-slides-cache-time';
-        const cacheMaxAge = 24 * 60 * 60 * 1000; // 24 hours
-        let hasInitialCache = false;
+        // Static list of the images in /public/Central Commercial Building Renovation/.
+        // If you add or remove photos in that folder, update this list.
+        const imageNumbers = [1, 2, 3, 4, 5];
 
+        // Remove lists saved by the old image-scanning code
         try {
-          const cached = localStorage.getItem(cacheKey);
-          const cacheTime = localStorage.getItem(cacheTimestampKey);
+          localStorage.removeItem('central-mobile-slides-cache');
+          localStorage.removeItem('central-mobile-slides-cache-time');
+          localStorage.removeItem('central-mobile-slides-cache_temp');
+        } catch (e) {}
 
-          if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < cacheMaxAge) {
-            const parsed = JSON.parse(cached);
-            // Only use cache if it has a reasonable number of images (at least 15 for mobile)
-            // Central Commercial has 5 images, so 3 is a good threshold (allows for some missing)
-            if (parsed && Array.isArray(parsed) && parsed.length >= 3) {
-              slides = parsed;
-              console.log(`Using cached gallery with ${slides.length} images`);
-              hasInitialCache = true;
-              // No return here, always run scan to ensure full set and update cache
-            } else {
-              console.log(`Cache has only ${parsed?.length || 0} images (need at least 15) - clearing and rescanning`);
-              localStorage.removeItem(cacheKey);
-              localStorage.removeItem(cacheTimestampKey);
-            }
-          } else {
-            if (cached) {
-              console.log('Cache expired or invalid timestamp - will scan for images');
-            } else {
-              console.log('No valid cache found - will scan for images');
-            }
-          }
-        } catch (e) {
-          console.warn('Cache read error:', e);
-          localStorage.removeItem(cacheKey);
-          localStorage.removeItem(cacheTimestampKey);
-        }
-
-        // If no valid cache, show loading message
-        if (!hasInitialCache || slides.length === 0) {
-          slides = []; // Ensure it's empty array, not undefined
-          const imageCounterEl = document.getElementById('imageCounter');
-          if (imageCounterEl) {
-            imageCounterEl.textContent = 'Scanning for images...';
-          }
-        }
-
-        // FORCE mobile mode for mobile gallery (always use mobile settings)
-        const isMobileDevice = true; // Always mobile for mobile gallery file
-        
-        // NEW NAMING PATTERN: Simple sequential numbers (1.webp, 2.webp, 3.webp, etc.)
-        // Mobile folder has sequential images 1-21, so check only that range for speed
-        const maxImageNumber = 10; // Check range - images are 1-5
-        const candidates = [];
-        
-        // For mobile: Check all numbers sequentially (images are 1-21, all sequential)
-        // Check all numbers from 1 to maxImageNumber
-        for (let i = 1; i <= maxImageNumber; i++) {
-          candidates.push(`${i}.webp`);
-        }
-        
-        console.log(`⚡ Checking ${candidates.length} sequential patterns (${isMobileDevice ? 'MOBILE - SMART SCAN' : 'DESKTOP'})...`);
-
-        const present = [];
-        const candidateArray = candidates; // Already an array
-        
-        // Detect base path for local network access (do this early so it's available everywhere)
-        // Start with absolute path (works better with Vite)
-        let imageBasePath = '/Central Commercial Building Renovation';
-        const basePath = window.location.origin;
-        console.log(`Base URL: ${basePath}`);
-        console.log(`Initial image base path: ${imageBasePath}`);
-        
-        console.log(`Starting image scan (${isMobileDevice ? 'MOBILE' : 'DESKTOP'}): ${candidateArray.length} candidates...`);
-        
-        // For mobile: Process images SEQUENTIALLY (one at a time) to avoid network overload
-        const timeout = isMobileDevice ? 10000 : 1500; // 10s timeout for mobile/iOS
-        const retries = isMobileDevice ? 2 : 0;
-        
-        console.log(`Starting image scan (${isMobileDevice ? 'MOBILE - SEQUENTIAL' : 'DESKTOP'}): ${candidateArray.length} candidates...`);
-        console.log(`Settings: timeout=${timeout}ms, retries=${retries}`);
-        console.log(`Processing images one at a time for reliability...`);
-        
-        // Mobile: Cache immediately when we find images (mobile folders are small)
-        const mobileEarlyCacheThreshold = 5; // Cache when we find 5 images
-        
-        // Process images SEQUENTIALLY on mobile (one at a time) for maximum reliability
-        try {
-          for (let i = 0; i < candidateArray.length; i++) {
-            const name = candidateArray[i];
-            const url = `/Central Commercial Building Renovation/${name}`;
-            
-            // Check image one at a time
-            const exists = await imageExists(url, timeout, retries);
-            
-            if (exists) {
-              if (!present.includes(name)) {
-                present.push(name);
-                console.log(`✅ Found: ${name} (${present.length}/${candidateArray.length})`);
-              }
-            } else {
-              // Only log missing images occasionally to avoid spam
-              if (i < 5 || i % 5 === 0) {
-                console.log(`❌ Not found: ${name}`);
-              }
-            }
-            
-            // Update slides array progressively
-            if (present.length > 0) {
-              // Sort numerically
-              const sortedPresent = [...present].sort((a, b) => {
-                const numA = parseInt(a.replace('.webp', ''), 10);
-                const numB = parseInt(b.replace('.webp', ''), 10);
-                return numA - numB;
-              });
-              
-              // Always update slides array
-              slides = sortedPresent.map((image) => {
-                const imageNumber = image.replace(/\.webp$/i, '');
-                return {
-                  slideTitle: `Central Commercial Building Renovation`,
-                  slideDescription: `Documentation of the Central Commercial Building Renovation development project, showcasing the comprehensive construction and design process.`,
-                  slideImg: `/Central Commercial Building Renovation/${image}`,
-                };
-              });
-              
-              // MOBILE: Early cache when we have enough (but continue scan)
-              if (isMobileDevice && present.length >= mobileEarlyCacheThreshold && 
-                  i < candidateArray.length - 1 && !window._mobileEarlyCached) {
-                try {
-                  localStorage.setItem(cacheKey + '_temp', JSON.stringify(slides));
-                  window._mobileEarlyCached = true;
-                  console.log(`📱 ⚡ Early cached ${slides.length} images (temporary - scan continuing...)`);
-                } catch (e) {
-                  // Ignore cache errors
-                }
-              }
-              
-              // Trigger UI update every 3 images found
-              if (present.length % 3 === 0 || i === candidateArray.length - 1) {
-                window.dispatchEvent(new CustomEvent('slidesUpdated', { 
-                  detail: { 
-                    count: slides.length,
-                    present: [...sortedPresent]
-                  } 
-                }));
-              }
-            }
-            
-            // Small delay between images on mobile to avoid overwhelming network
-            if (isMobileDevice && i < candidateArray.length - 1) {
-              await new Promise(resolve => setTimeout(resolve, 200));
-            }
-            
-            // Progress logging
-            if ((i + 1) % 5 === 0 || i === candidateArray.length - 1) {
-              console.log(`⚡ Progress: ${i + 1}/${candidateArray.length} checked → ${present.length} images found`);
-            }
-          }
-        } catch (err) {
-          console.error('Error during sequential processing:', err);
-          console.error('Error stack:', err.stack);
-          // Continue with whatever images we found so far
-        }
-        
-        console.log(`✅ Scan complete! Found ${present.length} images total.`);
-        
-        // Ensure we have all images - remove duplicates and sort
-        const uniquePresent = [...new Set(present)]; // Remove any duplicates
-        uniquePresent.sort((a, b) => {
-          const numA = parseInt(a.replace('.webp', ''), 10);
-          const numB = parseInt(b.replace('.webp', ''), 10);
-          return numA - numB;
-        });
-        
-        // Final slides array - ALWAYS use complete scan results
-        slides = uniquePresent.map((image) => {
-          const imageNumber = image.replace(/\.webp$/i, '');
-          return {
-            slideTitle: `Central Commercial Building Renovation`,
-            slideDescription: `Documentation of the Central Commercial Building Renovation development project, showcasing the comprehensive construction and design process.`,
-            slideImg: `/Central Commercial Building Renovation/${image}`,
-          };
-        });
-        
-        // Log final result with details
-        console.log(`✅ Final result: ${slides.length} images found and sorted`);
-        console.log(`   Image range: ${uniquePresent[0]} to ${uniquePresent[uniquePresent.length - 1]}`);
-        
-        // Verify image sequence for gaps
-        const imageNumbers = slides.map(s => parseInt(s.slideImg.match(/(\d+)\.webp/)?.[1] || '0', 10)).filter(n => n > 0);
-        if (imageNumbers.length > 0) {
-          const min = Math.min(...imageNumbers);
-          const max = Math.max(...imageNumbers);
-          const expected = max - min + 1;
-          if (imageNumbers.length < expected) {
-            const missing = [];
-            for (let i = min; i <= max; i++) {
-              if (!imageNumbers.includes(i)) {
-                missing.push(`${i}.webp`);
-              }
-            }
-            console.warn(`⚠️ Found ${imageNumbers.length} images but expected ${expected} (range ${min}-${max}). Missing: ${missing.join(', ')}`);
-          } else {
-            console.log(`✅ All images found in range ${min}-${max} (${imageNumbers.length} total)`);
-          }
-        }
-
-        console.log(`✅ Final result: ${slides.length} images in Cooledge_Mobile directory`);
-
-        // Cache final results - ALWAYS overwrite any early/temporary cache
-        // Only cache if we found a reasonable number of images (15+ out of 21)
-        if (slides.length >= 15) {
-          try {
-            // Remove any temporary early cache
-            try {
-              localStorage.removeItem(cacheKey + '_temp');
-            } catch (e) {
-              // Ignore
-            }
-            
-            // Save final complete cache
-            localStorage.removeItem(cacheKey + '_temp'); // Remove any temporary early cache
-            localStorage.setItem(cacheKey, JSON.stringify(slides));
-            localStorage.setItem(cacheTimestampKey, Date.now().toString());
-            console.log(`✅ Successfully cached ${slides.length} images (FINAL - complete scan)`);
-          } catch (e) {
-            console.warn('Failed to cache slides:', e);
-          }
-        } else {
-          console.warn(`⚠️ Only found ${slides.length} images (need at least 15 for final cache) - NOT caching final result.`);
-          console.warn(`⚠️ This may be due to network issues. Images will be rescanned on next load.`);
-          // Don't clear existing cache if we have one - it might be better than nothing
-          // localStorage.removeItem(cacheKey);
-          // localStorage.removeItem(cacheTimestampKey);
-        }
+        slides = imageNumbers.map((n) => ({
+          slideTitle: `Central Commercial Building Renovation`,
+          slideDescription: `Documentation of the Central Commercial Building Renovation development project, showcasing the comprehensive construction and design process.`,
+          slideImg: `/Central Commercial Building Renovation/${n}.webp`,
+        }));
       }
 
       document.addEventListener("DOMContentLoaded", async () => {
@@ -796,7 +526,7 @@
         const cacheKey = 'central-mobile-slides-cache';
         let hasInitialCache = false;
         try {
-          const cached = localStorage.getItem(cacheKey);
+          const cached = null; // old saved lists are no longer used
           if (cached) {
             const parsed = JSON.parse(cached);
             // Only use cache if it has images (strict check)

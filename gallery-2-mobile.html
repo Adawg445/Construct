@@ -452,7 +452,7 @@
 
     <!-- Image Counter -->
     <div class="image-counter" id="imageCounter">
-        Image 1 of 86
+        Image 1 of 35
     </div>
 
     <div class="slider">
@@ -484,222 +484,24 @@
         return numA - numB;
       }
 
-      function imageExists(url, timeout = 10000, retries = 2) {
-        return new Promise((resolve) => {
-          const img = new Image();
-          let resolved = false;
-          let timeoutId;
-          
-          const cleanup = () => {
-            if (!resolved) {
-              resolved = true;
-              img.onload = null;
-              img.onerror = null;
-              if (timeoutId) clearTimeout(timeoutId);
-            }
-          };
-          
-          // Fast path: if image is already cached, resolve immediately
-          img.onload = () => {
-            cleanup();
-            resolve(true);
-          };
-          
-          img.onerror = () => {
-            cleanup();
-            // Retry logic for mobile networks
-            if (retries > 0) {
-              setTimeout(() => {
-                imageExists(url, timeout, retries - 1).then(resolve);
-              }, 500);
-            } else {
-              resolve(false);
-            }
-          };
-          
-          // Longer timeout for mobile/iOS (10 seconds default)
-          timeoutId = setTimeout(() => {
-            if (!resolved) {
-              cleanup();
-              // Retry on timeout for mobile
-              if (retries > 0) {
-                setTimeout(() => {
-                  imageExists(url, timeout, retries - 1).then(resolve);
-                }, 500);
-              } else {
-                resolve(false);
-              }
-            }
-          }, timeout);
-          
-          // Start loading immediately
-          img.src = url;
-        });
-      }
 
       async function buildMesaMobileSlides() {
-        const cacheKey = 'mesa-mobile-slides-cache';
-        const cacheTimestampKey = 'mesa-mobile-slides-cache-time';
-        const cacheMaxAge = 24 * 60 * 60 * 1000; // 24 hours
-        let hasInitialCache = false;
+        // Static list of the images in /public/Mesa_mobile/.
+        // If you add or remove photos in that folder, update this list.
+        const imageNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35];
 
+        // Remove lists saved by the old image-scanning code
         try {
-          const cached = localStorage.getItem(cacheKey);
-          const cacheTime = localStorage.getItem(cacheTimestampKey);
+          localStorage.removeItem('mesa-mobile-slides-cache');
+          localStorage.removeItem('mesa-mobile-slides-cache-time');
+          localStorage.removeItem('mesa-mobile-slides-cache_temp');
+        } catch (e) {}
 
-          if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < cacheMaxAge) {
-            const parsed = JSON.parse(cached);
-            // Only use cache if it has a reasonable number of images (at least 25 for mobile)
-            // Mobile folder has 35 images, so 25 is a good threshold
-            if (parsed && Array.isArray(parsed) && parsed.length >= 25) {
-              slides = parsed;
-              console.log(`Using cached gallery with ${slides.length} images`);
-              hasInitialCache = true;
-            } else {
-              console.log(`Cache has only ${parsed?.length || 0} images (need at least 25) - clearing and rescanning`);
-              localStorage.removeItem(cacheKey);
-              localStorage.removeItem(cacheTimestampKey);
-            }
-          } else {
-            if (cached) {
-              console.log('Cache expired or invalid timestamp - will scan for images');
-            } else {
-              console.log('No valid cache found - will scan for images');
-            }
-          }
-        } catch (e) {
-          console.warn('Cache read error:', e);
-          localStorage.removeItem(cacheKey);
-          localStorage.removeItem(cacheTimestampKey);
-        }
-
-        // If no valid cache, show loading message
-        if (!hasInitialCache || slides.length === 0) {
-          slides = [];
-          const imageCounterEl = document.getElementById('imageCounter');
-          if (imageCounterEl) {
-            imageCounterEl.textContent = 'Scanning for images...';
-          }
-        }
-
-        const isMobileDevice = true;
-        const maxImageNumber = 35; // Mesa_mobile has 35 images
-        const candidates = [];
-        
-        for (let i = 1; i <= maxImageNumber; i++) {
-          candidates.push(`${i}.webp`);
-        }
-        
-        console.log(`⚡ Checking ${candidates.length} sequential patterns (MOBILE)...`);
-
-        const present = [];
-        const candidateArray = candidates;
-        
-        const timeout = isMobileDevice ? 10000 : 1500;
-        const retries = isMobileDevice ? 2 : 0;
-        
-        console.log(`Starting image scan (MOBILE - SEQUENTIAL): ${candidateArray.length} candidates...`);
-        console.log(`Settings: timeout=${timeout}ms, retries=${retries}`);
-        
-        const mobileEarlyCacheThreshold = 5;
-        
-        try {
-          for (let i = 0; i < candidateArray.length; i++) {
-            const name = candidateArray[i];
-            const url = `/Mesa_mobile/${name}`;
-            
-            const exists = await imageExists(url, timeout, retries);
-            
-            if (exists) {
-              if (!present.includes(name)) {
-                present.push(name);
-                console.log(`✅ Found: ${name} (${present.length}/${candidateArray.length})`);
-              }
-            } else {
-              if (i < 5 || i % 5 === 0) {
-                console.log(`❌ Not found: ${name}`);
-              }
-            }
-            
-            if (present.length > 0) {
-              const sortedPresent = [...present].sort((a, b) => {
-                const numA = parseInt(a.replace('.webp', ''), 10);
-                const numB = parseInt(b.replace('.webp', ''), 10);
-                return numA - numB;
-              });
-              
-              slides = sortedPresent.map((image) => {
-                const imageNumber = image.replace(/\.webp$/i, '');
-                return {
-                  slideTitle: `Mesa Main Street Stations`,
-                  slideDescription: `Documentation of the Mesa Main Street Stations development project, showcasing the construction and design process.`,
-                  slideImg: `/Mesa_mobile/${image}`,
-                };
-              });
-              
-              if (isMobileDevice && present.length >= mobileEarlyCacheThreshold && 
-                  i < candidateArray.length - 1 && !window._mesaMobileEarlyCached) {
-                try {
-                  localStorage.setItem(cacheKey + '_temp', JSON.stringify(slides));
-                  window._mesaMobileEarlyCached = true;
-                  console.log(`📱 ⚡ Early cached ${slides.length} images (temporary - scan continuing...)`);
-                } catch (e) {}
-              }
-              
-              if (present.length % 3 === 0 || i === candidateArray.length - 1) {
-                window.dispatchEvent(new CustomEvent('slidesUpdated', { 
-                  detail: { 
-                    count: slides.length,
-                    present: [...sortedPresent]
-                  } 
-                }));
-              }
-            }
-            
-            if (isMobileDevice && i < candidateArray.length - 1) {
-              await new Promise(resolve => setTimeout(resolve, 200));
-            }
-            
-            if ((i + 1) % 5 === 0 || i === candidateArray.length - 1) {
-              console.log(`⚡ Progress: ${i + 1}/${candidateArray.length} checked → ${present.length} images found`);
-            }
-          }
-        } catch (err) {
-          console.error('Error during sequential processing:', err);
-        }
-        
-        console.log(`✅ Scan complete! Found ${present.length} images total.`);
-        
-        const uniquePresent = [...new Set(present)];
-        uniquePresent.sort((a, b) => {
-          const numA = parseInt(a.replace('.webp', ''), 10);
-          const numB = parseInt(b.replace('.webp', ''), 10);
-          return numA - numB;
-        });
-        
-        slides = uniquePresent.map((image) => {
-          const imageNumber = image.replace(/\.webp$/i, '');
-          return {
-            slideTitle: `Mesa Main Street Stations`,
-            slideDescription: `Documentation of the Mesa Main Street Stations development project, showcasing the construction and design process.`,
-            slideImg: `/Mesa_mobile/${image}`,
-          };
-        });
-        
-        console.log(`✅ Final result: ${slides.length} images found and sorted`);
-
-        if (slides.length >= 25) {
-          try {
-            localStorage.removeItem(cacheKey + '_temp');
-            localStorage.setItem(cacheKey, JSON.stringify(slides));
-            localStorage.setItem(cacheTimestampKey, Date.now().toString());
-            console.log(`✅ Successfully cached ${slides.length} images (FINAL - complete scan)`);
-          } catch (e) {
-            console.warn('Failed to cache slides:', e);
-          }
-        } else {
-          console.warn(`⚠️ Only found ${slides.length} images (need at least 25 for final cache) - NOT caching final result.`);
-        }
+        slides = imageNumbers.map((n) => ({
+          slideTitle: `Mesa Main Street Stations`,
+          slideDescription: `Documentation of the Mesa Main Street Stations development project, showcasing the construction and design process.`,
+          slideImg: `/Mesa_mobile/${n}.webp`,
+        }));
       }
 
       document.addEventListener("DOMContentLoaded", async () => {
@@ -714,7 +516,7 @@
         const cacheKey = 'mesa-mobile-slides-cache';
         let hasInitialCache = false;
         try {
-          const cached = localStorage.getItem(cacheKey);
+          const cached = null; // old saved lists are no longer used
           if (cached) {
             const parsed = JSON.parse(cached);
             if (parsed && Array.isArray(parsed) && parsed.length > 0) {
